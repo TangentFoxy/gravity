@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Gravity</title>
+<style>
+body {
+    background: #000000;
+    color: #FFFFFF;
+}
+canvas {
+    border: 3px #FFFFFF solid;
+}
+table {
+    border: 1px #FFFFFF solid;
+    width: 100%;
+}
+</style>
+</head>
+<body>
+<center>
+<h1>Gravity</h1>
+<div id="playerStats"></div>
+<canvas id="canvas" width="960" height="540"></canvas>
+<div id="debug"></div>
+</center>
+<script>
+
+var canvas=document.getElementById("canvas");
+var context=canvas.getContext("2d");
+var objects=new Array();
+
+//screen position vars here
+
+var runSpeed=1 // how many milliseconds between each iteration
+var path=true;  // draw path?
+var playerId=1; // ID of Thing that is the player
+var renderId=0; // ID of Thing to put at center of frame
+
+initialize();
+
+function initialize()
+{
+    stableySystem();  //change to center around origin
+    //objects[0]=new Thing(100,canvas.clientWidth/2,canvas.clientHeight/2,0,0);
+    setInterval("loop()",runSpeed);
+}
+
+function loop()
+{
+    for (var i = 0; i < objects.length; i++)
+    {
+        objects[i].gravity();
+    }
+    for (var i = 0; i < objects.length; i++)
+    {
+        objects[i].update();
+    }
+    redraw();
+    debugOut();
+    playerOut();
+}
+
+function Thing(m,x,y,Vx,Vy)
+{
+    this.m=m; //mass
+    this.rad=Math.sqrt(m)/2; //make density/radius not dependent on mass
+    if (this.rad < 1) this.rad=1;
+    this.x=x; //location
+    this.y=y;
+    this.Vx=Vx; //velocity
+    this.Vy=Vy;
+    //this.rot=0; //rotation
+    this.fill="#FFFFFF"; //fill color, looking to replace with images?
+    this.fixed=false;
+    
+    this.gravity = function()
+    {
+        for (var i = 0; i < objects.length; i++)
+        {
+            if (!this.fixed)
+            {
+                if (objects[i]==this) continue;
+                var Nx=false;
+                var Ny=false;
+                var Dx=this.x-objects[i].x; //get distances
+                var Dy=this.y-objects[i].y;
+                if (Dx < 0)
+                {
+                    Nx=true;                //fix negative distance
+                    Dx=-Dx;
+                }
+                if (Dy < 0)
+                {
+                    Ny=true;
+                    Dy=-Dy;
+                }
+                var g=10*objects[i].m/(Dx*Dx+Dy*Dy); //calculate gravitational acceleration
+                var Ax=Dx*g/(Dx+Dy);  //solve for acceleration x
+                var Ay=g-Ax;          //      for              y
+                if (Nx) Ax=-Ax; //fix negative values
+                if (Ny) Ay=-Ay;
+                Ax=-Ax;         //fix antigravity
+                Ay=-Ay;
+                this.Vx=this.Vx+Ax;  //apply change of velocity
+                this.Vy=this.Vy+Ay;
+            }
+        }
+    }
+    
+    this.update = function()
+    {
+        //Movement:
+        if (!this.fixed)
+        {
+            this.x=this.x+this.Vx; //apply acceleration
+            this.y=this.y+this.Vy;
+        }
+        // Collider:
+        for (var i = 0; i < objects.length; i++)
+        {
+            if (objects[i]==this) continue;
+            //if (this.x-objects[i].x < this.rad+objects[i].rad && this.y-objects[i].y < this.rad+objects[i].rad)
+            //{
+                //collided
+            //}
+        }
+    }
+    
+    this.getVelocity = function()
+    {
+        return Math.abs(this.Vx)+Math.abs(this.Vy);
+    }
+    
+    this.dataOut = function()
+    {
+        return "<tr><td>Mass: "+this.m.toString()+"</td><td>Radius: "+this.rad.toFixed(2)+"</td><td>X: "+this.x.toFixed(2)+"</td><td>Y: "+this.y.toFixed(2)+"</td><td>Velocity X: "+this.Vx.toFixed(2)+"</td><td>Velocity Y: "+this.Vy.toFixed(2)+"</td><td>Fill color: "+this.fill+"</td><td>Fixed? "+this.fixed.toString()+"</td></tr>";
+    }
+}
+
+function redraw()
+{
+    if (!path)
+    {
+        context.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
+    }
+    for (var i = 0; i < objects.length; i++)
+    {
+        context.beginPath();
+        // add images support
+        //context.arc(objects[i].x,objects[i].y,objects[i].rad,0,2*Math.PI,false);
+        /*
+        we have x and y of objects, which we are going to assume are 0,0 but could be anything
+        we have a screen of size 960x540, and we need to draw to (the center?)
+        set a focused object? the playerId object? objects[playerId].x is center of screen?
+        let's pretend for the moment that the object we want to focus on is the object being drawn
+        x=objects[i].x+canvas.clientWidth/2 (value of where object is plus clientWidth..which only works for something at 0,0)
+        x=canvas.clientWidth/2 (well now, anything drawn is at the center)
+        x=objects[i].x-objects[playerId].x+canvas.clientWidth/2 (take our x, subject where we are from it, add the length to reach center)
+        */
+        context.arc(objects[i].x-objects[renderId].x+canvas.clientWidth/2,objects[i].y-objects[renderId].y+canvas.clientHeight/2,objects[i].rad,0,2*Math.PI,false);
+        context.fillStyle=objects[i].fill;
+        context.fill();
+    }
+}
+
+function playerOut()
+{
+    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='8'>Total velocity: "+objects[playerId].getVelocity()+"</td</tr></table>";
+    document.getElementById("playerStats").innerHTML = out;
+}
+
+function debugOut()
+{
+    var out="<table>"
+    for (var i = 0; i < objects.length; i++)
+    {
+        var out=out+objects[i].dataOut();
+    }
+    document.getElementById("debug").innerHTML = out;
+}
+
+function stableySystem()
+{
+    objects[0]=new Thing(100,0,0,0,0);
+    objects[0].fill="yellow";
+    objects[0].fixed=true;
+    objects[1]=new Thing(10,50,0,0,-4);
+    objects[1].fill="green";
+    objects[2]=new Thing(0.005,180,0,0,2.32);
+    objects[2].fill="#6A6A87";
+    objects[3]=new Thing(26,400,0,0,-1.5);
+    objects[3].fill="red";
+    objects[4]=new Thing(0.01,420,0,0,-4);
+    objects[4].fill="blue";
+}
+
+</script>
+</body>
+</html>

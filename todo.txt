@@ -1,0 +1,3 @@
+Add calculation for average distance to another Thing.
+Add way to save and load simulations.
+Add calculation for average velocity (and average velocity relative to another Thing).
