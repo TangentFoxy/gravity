@@ -8,6 +8,4 @@ Graph for playerId relative distance and velocity to another Thing.
 Image rendering (objects can be defined as an image).
 Support for rotation of objects (after adding images).
 Support for rotation of reference frame.
-Support for scaling. WORKING ON
-Change mass numbers to be better/bigger.
 Make radius not dependent on mass (variable density).

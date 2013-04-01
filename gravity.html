@@ -29,8 +29,10 @@ var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
 var objects=new Array();
 
-var runSpeed=1 // how many milliseconds between each iteration
-var scaleFactor=1 //multiplied by data in rendering to adjust zoom level
+var runSpeed=1; // how many milliseconds between each iteration
+var hyperWarp=false; //not implemented
+var hyperSpeed=10; //not implemented
+var scaleFactor=0.2; //multiplied by data in rendering to adjust zoom level
 var path=true;  // draw path?
 
 var playerId=1; // ID of Thing that is the player
@@ -41,6 +43,7 @@ initialize();
 function initialize()
 {
     stableySystem(); // two planets, moon and asteroid that get kicked out of system
+    //scaledSystem();  // same as above, but scaled up 10x, set scaleFactor to 0.1 to see better
     setInterval("loop()",runSpeed);
 }
 
@@ -130,6 +133,11 @@ function Thing(m,x,y,Vx,Vy)
         return Math.abs(this.Vx)+Math.abs(this.Vy);
     }
     
+    this.getOriginDistance = function()
+    {
+        return Math.sqrt(this.x*this.x+this.y*this.y);
+    }
+    
     this.dataOut = function()
     {
         return "<tr><td>Mass: "+this.m.toString()+"</td><td>Radius: "+this.rad.toFixed(2)+"</td><td>X: "+this.x.toFixed(2)+"</td><td>Y: "+this.y.toFixed(2)+"</td><td>Velocity X: "+this.Vx.toFixed(2)+"</td><td>Velocity Y: "+this.Vy.toFixed(2)+"</td><td>Fill color: "+this.fill+"</td><td>Fixed? "+this.fixed.toString()+"</td></tr>";
@@ -145,7 +153,9 @@ function redraw()
     for (var i = 0; i < objects.length; i++)
     {
         context.beginPath();
-        context.arc(objects[i].x-objects[renderId].x+canvas.clientWidth/2,objects[i].y-objects[renderId].y+canvas.clientHeight/2,objects[i].rad,0,2*Math.PI,false);
+        var radius=objects[i].rad*scaleFactor
+        if (radius < 0.5) radius=0.5;
+        context.arc((objects[i].x-objects[renderId].x)*scaleFactor+canvas.clientWidth/2,(objects[i].y-objects[renderId].y)*scaleFactor+canvas.clientHeight/2,radius,0,2*Math.PI,false);
         context.fillStyle=objects[i].fill;
         context.fill();
     }
@@ -153,7 +163,7 @@ function redraw()
 
 function playerOut()
 {
-    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='8'>Total velocity: "+objects[playerId].getVelocity()+"</td</tr></table>";
+    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='3'>Total velocity: "+objects[playerId].getVelocity()+"</td><td colspan='5'>Distance from origin: "+objects[playerId].getOriginDistance+"</td></tr></table>";
     document.getElementById("playerStats").innerHTML = out;
 }
 
@@ -164,7 +174,7 @@ function debugOut()
     {
         var out=out+objects[i].dataOut();
     }
-    document.getElementById("debug").innerHTML = out;
+    document.getElementById("debug").innerHTML = out+"</table>";
 }
 
 function stableySystem()
@@ -182,7 +192,21 @@ function stableySystem()
     objects[4].fill="blue";
 }
 
-//objects[0]=new Thing(m,x,y,Vx,Vy);
+function scaledSystem()
+{
+    //Interesting quirk to note: do not scale velocities with mass and distance
+    objects[0]=new Thing(1000,0,0,0,0);
+    objects[0].fill="yellow";
+    objects[0].fixed=true;
+    objects[1]=new Thing(100,500,0,0,-4);
+    objects[1].fill="green";
+    objects[2]=new Thing(0.05,1800,0,0,2.32);
+    objects[2].fill="#6A6A87";
+    objects[3]=new Thing(260,4000,0,0,-1.5);
+    objects[3].fill="red";
+    objects[4]=new Thing(0.1,4200,0,0,-4);
+    objects[4].fill="blue";
+}
 
 </script>
 </body>
