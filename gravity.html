@@ -29,10 +29,10 @@ var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
 var objects=new Array();
 
-//screen position vars here
-
 var runSpeed=1 // how many milliseconds between each iteration
+var scaleFactor=1 //multiplied by data in rendering to adjust zoom level
 var path=true;  // draw path?
+
 var playerId=1; // ID of Thing that is the player
 var renderId=0; // ID of Thing to put at center of frame
 
@@ -40,8 +40,7 @@ initialize();
 
 function initialize()
 {
-    stableySystem();  //change to center around origin
-    //objects[0]=new Thing(100,canvas.clientWidth/2,canvas.clientHeight/2,0,0);
+    stableySystem(); // two planets, moon and asteroid that get kicked out of system
     setInterval("loop()",runSpeed);
 }
 
@@ -63,14 +62,14 @@ function loop()
 function Thing(m,x,y,Vx,Vy)
 {
     this.m=m; //mass
-    this.rad=Math.sqrt(m)/2; //make density/radius not dependent on mass
+    this.rad=Math.sqrt(m)/2;
     if (this.rad < 1) this.rad=1;
     this.x=x; //location
     this.y=y;
     this.Vx=Vx; //velocity
     this.Vy=Vy;
     //this.rot=0; //rotation
-    this.fill="#FFFFFF"; //fill color, looking to replace with images?
+    this.fill="#FFFFFF"; //fill color
     this.fixed=false;
     
     this.gravity = function()
@@ -82,11 +81,11 @@ function Thing(m,x,y,Vx,Vy)
                 if (objects[i]==this) continue;
                 var Nx=false;
                 var Ny=false;
-                var Dx=this.x-objects[i].x; //get distances
+                var Dx=this.x-objects[i].x; //get relative distances
                 var Dy=this.y-objects[i].y;
                 if (Dx < 0)
                 {
-                    Nx=true;                //fix negative distance
+                    Nx=true;                //fix negative distance (for calculations)
                     Dx=-Dx;
                 }
                 if (Dy < 0)
@@ -146,17 +145,6 @@ function redraw()
     for (var i = 0; i < objects.length; i++)
     {
         context.beginPath();
-        // add images support
-        //context.arc(objects[i].x,objects[i].y,objects[i].rad,0,2*Math.PI,false);
-        /*
-        we have x and y of objects, which we are going to assume are 0,0 but could be anything
-        we have a screen of size 960x540, and we need to draw to (the center?)
-        set a focused object? the playerId object? objects[playerId].x is center of screen?
-        let's pretend for the moment that the object we want to focus on is the object being drawn
-        x=objects[i].x+canvas.clientWidth/2 (value of where object is plus clientWidth..which only works for something at 0,0)
-        x=canvas.clientWidth/2 (well now, anything drawn is at the center)
-        x=objects[i].x-objects[playerId].x+canvas.clientWidth/2 (take our x, subject where we are from it, add the length to reach center)
-        */
         context.arc(objects[i].x-objects[renderId].x+canvas.clientWidth/2,objects[i].y-objects[renderId].y+canvas.clientHeight/2,objects[i].rad,0,2*Math.PI,false);
         context.fillStyle=objects[i].fill;
         context.fill();
@@ -193,6 +181,8 @@ function stableySystem()
     objects[4]=new Thing(0.01,420,0,0,-4);
     objects[4].fill="blue";
 }
+
+//objects[0]=new Thing(m,x,y,Vx,Vy);
 
 </script>
 </body>

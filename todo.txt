@@ -1,3 +1,13 @@
-Add calculation for average distance to another Thing.
-Add way to save and load simulations.
-Add calculation for average velocity (and average velocity relative to another Thing).
+Saving and loading simulations.
+Make collider (combination of bounce, explode, and combine?).
+Stats for average velocity between playerId and another Thing.
+Stats for average absolute distance of playerId.
+Stats for average distance between playerId and another Thing.
+Stats for average absolute distance of playerId.
+Graph for playerId relative distance and velocity to another Thing.
+Image rendering (objects can be defined as an image).
+Support for rotation of objects (after adding images).
+Support for rotation of reference frame.
+Support for scaling. WORKING ON
+Change mass numbers to be better/bigger.
+Make radius not dependent on mass (variable density).
