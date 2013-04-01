@@ -30,9 +30,9 @@ var context=canvas.getContext("2d");
 var objects=new Array();
 
 var runSpeed=1; // how many milliseconds between each iteration
-var hyperWarp=false; //not implemented
-var hyperSpeed=10; //not implemented
-var scaleFactor=0.2; //multiplied by data in rendering to adjust zoom level
+var hyperWarp=false; // simulation is run multiple times per iteration   WARNING: Messing with this can freeze your browser.
+var hyperSpeed=6; // how many times to run simulation per iteration      WARNING: High values lead to insanity.
+var scaleFactor=0.62; //multiplied by data in rendering to adjust zoom level
 var path=true;  // draw path?
 
 var playerId=1; // ID of Thing that is the player
@@ -44,7 +44,18 @@ function initialize()
 {
     stableySystem(); // two planets, moon and asteroid that get kicked out of system
     //scaledSystem();  // same as above, but scaled up 10x, set scaleFactor to 0.1 to see better
-    setInterval("loop()",runSpeed);
+    if (hyperWarp)
+    {
+        setInterval(function()
+        {
+            for (var i = 0; i < hyperSpeed; i++)
+            {
+                loop();
+            }
+        },runSpeed);
+    } else {
+        setInterval("loop()",runSpeed);
+    }
 }
 
 function loop()
@@ -153,7 +164,7 @@ function redraw()
     for (var i = 0; i < objects.length; i++)
     {
         context.beginPath();
-        var radius=objects[i].rad*scaleFactor
+        var radius=objects[i].rad*scaleFactor;
         if (radius < 0.5) radius=0.5;
         context.arc((objects[i].x-objects[renderId].x)*scaleFactor+canvas.clientWidth/2,(objects[i].y-objects[renderId].y)*scaleFactor+canvas.clientHeight/2,radius,0,2*Math.PI,false);
         context.fillStyle=objects[i].fill;

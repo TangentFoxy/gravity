@@ -21,3 +21,11 @@ Who am I? I am the Wolf of All Trades, Master of None. Why do I give myself this
 But hey, this idea is going well, I'll stick with it.
 
 [1]: http://youtube.com/user/Guard13007 "Guard13007"
+
+Features
+--------
+
+* n-body, 2D, inaccurate
+* hardcoded timing, cheaty pathing by "forgetting" to clear the canvas
+* scale in and out, change the frame of reference
+* colors :P
