@@ -29,10 +29,11 @@ var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
 var objects=new Array();
 
-var runSpeed=1; // how many milliseconds between each iteration
-var hyperWarp=false; // simulation is run multiple times per iteration   WARNING: Messing with this can freeze your browser.
-var hyperSpeed=6; // how many times to run simulation per iteration      WARNING: High values lead to insanity.
-var scaleFactor=0.62; //multiplied by data in rendering to adjust zoom level
+var runSpeed=66; // how many milliseconds between each iteration
+var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
+var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag.
+var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at regular runSpeed (aka slower than your hyperSpeed)
+var scaleFactor=1.05; //multiplied by data in rendering to adjust zoom level (0.62 minimum for stableySystem() in full view)
 var path=true;  // draw path?
 
 var playerId=1; // ID of Thing that is the player
@@ -48,10 +49,8 @@ function initialize()
     {
         setInterval(function()
         {
-            for (var i = 0; i < hyperSpeed; i++)
-            {
-                loop();
-            }
+            for (var i = 0; i < hyperSpeed; i++) loop();
+            if (!hyperRender) redraw();
         },runSpeed);
     } else {
         setInterval("loop()",runSpeed);
@@ -60,15 +59,9 @@ function initialize()
 
 function loop()
 {
-    for (var i = 0; i < objects.length; i++)
-    {
-        objects[i].gravity();
-    }
-    for (var i = 0; i < objects.length; i++)
-    {
-        objects[i].update();
-    }
-    redraw();
+    for (var i = 0; i < objects.length; i++) objects[i].gravity();
+    for (var i = 0; i < objects.length; i++) objects[i].update();
+    if (hyperRender) redraw();
     debugOut();
     playerOut();
 }
@@ -157,10 +150,7 @@ function Thing(m,x,y,Vx,Vy)
 
 function redraw()
 {
-    if (!path)
-    {
-        context.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
-    }
+    if (!path) context.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
     for (var i = 0; i < objects.length; i++)
     {
         context.beginPath();
@@ -174,7 +164,7 @@ function redraw()
 
 function playerOut()
 {
-    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='3'>Total velocity: "+objects[playerId].getVelocity()+"</td><td colspan='5'>Distance from origin: "+objects[playerId].getOriginDistance+"</td></tr></table>";
+    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='3'>Total velocity: "+objects[playerId].getVelocity()+"</td><td colspan='5'>Distance from origin: "+objects[playerId].getOriginDistance()+"</td></tr></table>";
     document.getElementById("playerStats").innerHTML = out;
 }
 
