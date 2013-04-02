@@ -32,8 +32,8 @@ var objects=new Array();
 var runSpeed=66; // how many milliseconds between each iteration
 var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
 var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag.
-var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at regular runSpeed (aka slower than your hyperSpeed)
-var scaleFactor=1.05; //multiplied by data in rendering to adjust zoom level (0.62 minimum for stableySystem() in full view)
+var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at regular runSpeed (aka slower)
+var scaleFactor=1.05; //multiplied by data in rendering to adjust zoom level
 var path=true;  // draw path?
 
 var playerId=1; // ID of Thing that is the player
@@ -125,10 +125,7 @@ function Thing(m,x,y,Vx,Vy)
         for (var i = 0; i < objects.length; i++)
         {
             if (objects[i]==this) continue;
-            //if (this.x-objects[i].x < this.rad+objects[i].rad && this.y-objects[i].y < this.rad+objects[i].rad)
-            //{
-                //collided
-            //}
+            //I never intended to use the box collider :P working on a new one right now
         }
     }
     
@@ -180,6 +177,7 @@ function debugOut()
 
 function stableySystem()
 {
+    //(0.62 minimum for stableySystem() in full view)
     objects[0]=new Thing(100,0,0,0,0);
     objects[0].fill="yellow";
     objects[0].fixed=true;
