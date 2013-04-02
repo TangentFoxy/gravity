@@ -29,15 +29,16 @@ var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
 var objects=new Array();
 
-var runSpeed=66; // how many milliseconds between each iteration
+var runSpeed=20; // how many milliseconds between each iteration
 var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
 var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag.
 var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at regular runSpeed (aka slower)
 var scaleFactor=1.05; //multiplied by data in rendering to adjust zoom level
-var path=true;  // draw path?
+var timeFactor=0.8; // multipled by velocity/movement to change how fast/"accurate" the simulation is
+var path=false;  // draw path?
 
 var playerId=1; // ID of Thing that is the player
-var renderId=0; // ID of Thing to put at center of frame
+var renderId=3; // ID of Thing to put at center of frame
 
 initialize();
 
@@ -50,7 +51,11 @@ function initialize()
         setInterval(function()
         {
             for (var i = 0; i < hyperSpeed; i++) loop();
-            if (!hyperRender) redraw();
+            if (!hyperRender) {
+                redraw();
+                debugOut();
+                playerOut();
+            }
         },runSpeed);
     } else {
         setInterval("loop()",runSpeed);
@@ -61,22 +66,23 @@ function loop()
 {
     for (var i = 0; i < objects.length; i++) objects[i].gravity();
     for (var i = 0; i < objects.length; i++) objects[i].update();
-    if (hyperRender) redraw();
-    debugOut();
-    playerOut();
+    if (hyperRender) {
+        redraw();
+        debugOut();
+        playerOut();
+    }
 }
 
-function Thing(m,x,y,Vx,Vy)
+function Thing(m,x,y,Vx,Vy,color,radius)
 {
     this.m=m; //mass
-    this.rad=Math.sqrt(m)/2;
-    if (this.rad < 1) this.rad=1;
+    !radius ? this.rad=Math.sqrt(m)/2 : this.rad=radius;
     this.x=x; //location
     this.y=y;
     this.Vx=Vx; //velocity
     this.Vy=Vy;
     //this.rot=0; //rotation
-    this.fill="#FFFFFF"; //fill color
+    !color ? this.fill="#FFFFFF" : this.fill=color; //fill color
     this.fixed=false;
     
     this.gravity = function()
@@ -107,8 +113,8 @@ function Thing(m,x,y,Vx,Vy)
                 if (Ny) Ay=-Ay;
                 Ax=-Ax;         //fix antigravity
                 Ay=-Ay;
-                this.Vx=this.Vx+Ax;  //apply change of velocity
-                this.Vy=this.Vy+Ay;
+                this.Vx+=Ax*timeFactor;  //apply change of velocity
+                this.Vy+=Ay*timeFactor;
             }
         }
     }
@@ -118,8 +124,8 @@ function Thing(m,x,y,Vx,Vy)
         //Movement:
         if (!this.fixed)
         {
-            this.x=this.x+this.Vx; //apply acceleration
-            this.y=this.y+this.Vy;
+            this.x+=this.Vx*timeFactor; //apply acceleration
+            this.y+=this.Vy*timeFactor;
         }
         // Collider:
         for (var i = 0; i < objects.length; i++)
@@ -178,34 +184,26 @@ function debugOut()
 function stableySystem()
 {
     //(0.62 minimum for stableySystem() in full view)
-    objects[0]=new Thing(100,0,0,0,0);
-    objects[0].fill="yellow";
+    objects[0]=new Thing(100,0,0,0,0,"yellow");
     objects[0].fixed=true;
-    objects[1]=new Thing(10,50,0,0,-4);
-    objects[1].fill="green";
-    objects[2]=new Thing(0.005,180,0,0,2.32);
-    objects[2].fill="#6A6A87";
-    objects[3]=new Thing(26,400,0,0,-1.5);
-    objects[3].fill="red";
-    objects[4]=new Thing(0.01,420,0,0,-4);
-    objects[4].fill="blue";
+    objects[1]=new Thing(10,50,0,0,-4,"green");
+    objects[2]=new Thing(0.005,180,0,0,2.32,"#6A6A87",1);
+    objects[3]=new Thing(26,400,0,0,-1.5,"red");
+    objects[4]=new Thing(0.01,420,0,0,-4,"blue",1);
 }
 
 function scaledSystem()
 {
-    //Interesting quirk to note: do not scale velocities with mass and distance
-    objects[0]=new Thing(1000,0,0,0,0);
-    objects[0].fill="yellow";
+    //When scaling mass and distance equally, velocities do not scale.
+    objects[0]=new Thing(1000,0,0,0,0,"yellow");
     objects[0].fixed=true;
-    objects[1]=new Thing(100,500,0,0,-4);
-    objects[1].fill="green";
-    objects[2]=new Thing(0.05,1800,0,0,2.32);
-    objects[2].fill="#6A6A87";
-    objects[3]=new Thing(260,4000,0,0,-1.5);
-    objects[3].fill="red";
-    objects[4]=new Thing(0.1,4200,0,0,-4);
-    objects[4].fill="blue";
+    objects[1]=new Thing(100,500,0,0,-4,"green");
+    objects[2]=new Thing(0.05,1800,0,0,2.32,"#6A6A87",1);
+    objects[3]=new Thing(260,4000,0,0,-1.5,"red");
+    objects[4]=new Thing(0.1,4200,0,0,-4,"blue",1);
 }
+
+//objects[i]=new Thing(mass,x,y,Vx,Vy,color,radius);
 
 </script>
 </body>
