@@ -25,16 +25,18 @@ table {
 </center>
 <script>
 
+//window.performance.now() - apparently something you can use to run faster than 1000x per second, but only in Chrome
+
 var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
 var objects=new Array();
 
 var runSpeed=20; // how many milliseconds between each iteration
 var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
-var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag.
+var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag, freezing, crashing.
 var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at regular runSpeed (aka slower)
-var scaleFactor=1.05; //multiplied by data in rendering to adjust zoom level
-var timeFactor=0.8; // multipled by velocity/movement to change how fast/"accurate" the simulation is
+var scaleFactor=1.2; //multiplied by data in rendering to adjust zoom level
+var timeFactor=0.4; // multipled by velocity/movement to change how fast/"accurate" the simulation is
 var path=false;  // draw path?
 
 var playerId=1; // ID of Thing that is the player
@@ -44,8 +46,9 @@ initialize();
 
 function initialize()
 {
-    stableySystem(); // two planets, moon and asteroid that get kicked out of system
+    //stableySystem(); // two planets, moon and asteroid that get kicked out of system
     //scaledSystem();  // same as above, but scaled up 10x, set scaleFactor to 0.1 to see better
+    collidingSystem(); // for testing collisions (use this to see what is wrong with the collider)
     if (hyperWarp)
     {
         setInterval(function()
@@ -84,6 +87,7 @@ function Thing(m,x,y,Vx,Vy,color,radius)
     //this.rot=0; //rotation
     !color ? this.fill="#FFFFFF" : this.fill=color; //fill color
     this.fixed=false;
+    //this.collides=true;
     
     this.gravity = function()
     {
@@ -96,6 +100,8 @@ function Thing(m,x,y,Vx,Vy,color,radius)
                 var Ny=false;
                 var Dx=this.x-objects[i].x; //get relative distances
                 var Dy=this.y-objects[i].y;
+                //IDEA: solve for c^2 here Dx*Dx+Dy*Dy
+                //      then solve for c and check for collisions, call a collision function with this and objects[i]
                 if (Dx < 0)
                 {
                     Nx=true;                //fix negative distance (for calculations)
@@ -128,15 +134,34 @@ function Thing(m,x,y,Vx,Vy,color,radius)
             this.y+=this.Vy*timeFactor;
         }
         // Collider:
-        for (var i = 0; i < objects.length; i++)
+        for (var j = objects.length-1; j > 0; j--)
         {
-            if (objects[i]==this) continue;
-            //I never intended to use the box collider :P working on a new one right now
+            if (objects[j]==this) continue;
+            var Dx=this.x-objects[j].x; //find distances
+            var Dy=this.y-objects[j].y;
+            var d=Math.sqrt(Dx*Dx+Dy*Dy);
+            if (d < this.rad+objects[j].rad) //if within both objects' radius', collided
+            {
+                //if (!this.collides) continue;
+                //console.log("Collision between "+this+" and "+objects[j]+".");
+                var Vx=this.Vx-objects[j].Vx; //get relative velocity
+                var Vy=this.Vy-objects[j].Vy;
+                var Fx=Vx*objects[j].m; // get force of objects[j]
+                var Fy=Vy*objects[j].m;
+                this.Vx-=Fx/this.m; //apply force from objects[j]
+                this.Vy-=Fy/this.m;
+                this.m+=objects[j].m; //add mass
+                if (objects[j].rad > 1) this.rad=this.rad+Math.sqrt(objects[j].rad/4);
+                if (renderId == j) renderId=objects.indexOf(this); // fix renderId if needed
+                if (renderId > j) renderId-=1;
+                objects.splice(j, 1); //delete objects[j]
+            }
         }
     }
     
     this.getVelocity = function()
     {
+        //idea: multiply this by 1000 for a pseudo-m/s velocity reading?
         return Math.abs(this.Vx)+Math.abs(this.Vy);
     }
     
@@ -183,7 +208,7 @@ function debugOut()
 
 function stableySystem()
 {
-    //(0.62 minimum for stableySystem() in full view)
+    //(0.62 scaleFactor minimum for full view)
     objects[0]=new Thing(100,0,0,0,0,"yellow");
     objects[0].fixed=true;
     objects[1]=new Thing(10,50,0,0,-4,"green");
@@ -201,6 +226,20 @@ function scaledSystem()
     objects[2]=new Thing(0.05,1800,0,0,2.32,"#6A6A87",1);
     objects[3]=new Thing(260,4000,0,0,-1.5,"red");
     objects[4]=new Thing(0.1,4200,0,0,-4,"blue",1);
+}
+
+function collidingSystem()
+{
+    objects[0]=new Thing(100,0,0,0,0,"yellow",12);
+    objects[1]=new Thing(1,10,-70,0.2,0,"red",1);
+    objects[2]=new Thing(20,120,10,0.1,0.1,"blue");
+    objects[3]=new Thing(0.00001,-30,-30,0,0,false,1);
+    objects[3].fixed=true;
+    //objects[3].collides=false;
+    objects[4]=new Thing(5,-120,-10,-0.2,0.1,"green",1.3);
+    objects[5]=new Thing(1,-40,-70,-0.1,0.1,"#676789",1);
+    objects[5]=new Thing(100,-200,-200,0,0,"yellow");
+    objects[6]=new Thing(30,400,0,0.01,0.2,"red");
 }
 
 //objects[i]=new Thing(mass,x,y,Vx,Vy,color,radius);
