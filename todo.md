@@ -13,7 +13,7 @@ This is stuff I want to do sooner rather than later.
 * Make it possible to add in an object with a certain orbit using v = sqrt(GM/r)
   G=gravitational force of parent on new object, M=mass of parent object, r=radius of orbit
 * Controllable object (with playerId).
-* Collider(s).
+* timeFactor can be scaled to smallest distance between two objects for higher accuracy with faster simulation when further out
 
 Optimizing
 ----------

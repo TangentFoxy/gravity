@@ -35,8 +35,9 @@ var runSpeed=20; // how many milliseconds between each iteration
 var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
 var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag, freezing, crashing.
 var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at regular runSpeed (aka slower)
-var scaleFactor=0.8; //multiplied by data in rendering to adjust zoom level
-var timeFactor=0.8; // multipled by velocity/movement to change how fast/"accurate" the simulation is
+var scaleFactor=0.5; //multiplied by data in rendering to adjust zoom level
+var timeFactor=1; // multipled by velocity/movement to change how fast/"accurate" the simulation is
+var renderRadius=1; // minimum render radius for an object
 var path=true;  // draw path?
 
 var playerId=1; // ID of Thing that is the player
@@ -49,7 +50,9 @@ function initialize()
     //stableySystem(); // two planets, moon and asteroid that get kicked out of system
     //scaledSystem();  // same as above, but scaled up 10x, set scaleFactor to 0.1 to see better
     //collidingSystem(); // for testing collisions (use this to see what is wrong with the collider)
-    unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
+    //unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
+    //unstableScale(); // scaled up by 100x (for testing screwing with timeFactor)
+    realisticSystem(); // "realistic" my ass
     if (hyperWarp)
     {
         setInterval(function()
@@ -80,7 +83,9 @@ function loop()
 function Thing(m,x,y,Vx,Vy,color,radius)
 {
     this.m=m; //mass
-    !radius ? this.rad=Math.sqrt(m)/2 : this.rad=radius;
+    !radius ? this.rad=Math.pow(m,1/3) : this.rad=radius;
+    //!radius ? this.rad=m/5 : this.rad=radius;
+    //!radius ? this.rad=Math.sqrt(m)/2 : this.rad=radius;
     this.x=x; //location
     this.y=y;
     this.Vx=Vx; //velocity
@@ -188,7 +193,7 @@ function redraw()
     {
         context.beginPath();
         var radius=objects[i].rad*scaleFactor;
-        if (radius < 0.5) radius=0.5;
+        if (radius < renderRadius) radius=renderRadius;
         context.arc((objects[i].x-objects[renderId].x)*scaleFactor+canvas.clientWidth/2,(objects[i].y-objects[renderId].y)*scaleFactor+canvas.clientHeight/2,radius,0,2*Math.PI,false);
         context.fillStyle=objects[i].fill;
         context.fill();
@@ -262,6 +267,30 @@ function unstableSystem()
     objects[8]=new Thing(0.009,-170,10,0,-2,"#6A6A87",1);
     objects[9]=new Thing(0.001,-300,40,0.4,-1.5,"#6A6A87",1);
     //objects[10]=new Thing(0.08,100,0,0,-2.7,"#6A6A87",1);
+}
+
+function unstableScale()
+{
+    //(0.62 scaleFactor minimum for full view)
+    objects[0]=new Thing(10000,0,0,0,0,"yellow");
+    objects[0].fixed=true;
+    objects[1]=new Thing(1000,5000,0,0,-4,"green");
+    objects[2]=new Thing(0.5,18000,0,0,2.32,"#6A6A87");
+    objects[3]=new Thing(2600,40000,0,0,-1.5,"red");
+    objects[4]=new Thing(1,42000,0,0,-4,"blue");
+    objects[5]=new Thing(0.5,20000,0,0,2.3,"#6A6A87");
+    objects[6]=new Thing(0.5,16000,0,0,2.51,"#6A6A87");
+    objects[7]=new Thing(0.5,-18000,0,0,-2.32,"#6A6A87");
+    objects[8]=new Thing(0.9,-17000,1000,0,-2,"#6A6A87");
+    objects[9]=new Thing(0.1,-30000,4000,0.4,-1.5,"#6A6A87");
+    //objects[10]=new Thing(0.08,100,0,0,-2.7,"#6A6A87",1);
+}
+
+function realisticSystem()
+{
+    objects[0]=new Thing(90000,0,0,0,0,"yellow");
+    objects[0].fixed=true;
+    objects[1]=new Thing(100,1000,0,0,-20,"red");
 }
 
 //objects[i]=new Thing(mass,x,y,Vx,Vy,color,radius);
