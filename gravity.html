@@ -35,8 +35,8 @@ var runSpeed=20; // how many milliseconds between each iteration
 var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
 var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag, freezing, crashing.
 var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at regular runSpeed (aka slower)
-var scaleFactor=0.5; //multiplied by data in rendering to adjust zoom level
-var timeFactor=1; // multipled by velocity/movement to change how fast/"accurate" the simulation is
+var scaleFactor=0.1; //multiplied by data in rendering to adjust zoom level
+var timeFactor=0.8; // multipled by velocity/movement to change how fast/"accurate" the simulation is
 var renderRadius=1; // minimum render radius for an object
 var path=true;  // draw path?
 
@@ -48,11 +48,11 @@ initialize();
 function initialize()
 {
     //stableySystem(); // two planets, moon and asteroid that get kicked out of system
-    //scaledSystem();  // same as above, but scaled up 10x, set scaleFactor to 0.1 to see better
+    scaledSystem();  // same as above, but scaled up 10x, set scaleFactor to 0.1 to see better
     //collidingSystem(); // for testing collisions (use this to see what is wrong with the collider)
     //unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
     //unstableScale(); // scaled up by 100x (for testing screwing with timeFactor)
-    realisticSystem(); // "realistic" my ass
+    //realisticSystem(); // "realistic" my ass
     if (hyperWarp)
     {
         setInterval(function()
@@ -147,7 +147,7 @@ function Thing(m,x,y,Vx,Vy,color,radius)
             if (d < this.rad+objects[j].rad) //if within both objects' radius', collided
             {
                 //if (!this.collides) continue;
-                console.log("Collision between "+this.id()+" and "+objects[j].id()+".");
+                console.log("Collision between "+this.index()+" and "+objects[j].index()+".");
                 var Vx=this.Vx-objects[j].Vx; //get relative velocity
                 var Vy=this.Vy-objects[j].Vy;
                 var Fx=Vx*objects[j].m; // get force of objects[j]
@@ -164,7 +164,7 @@ function Thing(m,x,y,Vx,Vy,color,radius)
         }
     }
     
-    this.id = function()
+    this.index = function()
     {
         return objects.indexOf(this);
     }
@@ -260,13 +260,13 @@ function unstableSystem()
     objects[1]=new Thing(10,50,0,0,-4,"green");
     objects[2]=new Thing(0.005,180,0,0,2.32,"#6A6A87",1);
     objects[3]=new Thing(26,400,0,0,-1.5,"red");
-    objects[4]=new Thing(0.01,420,0,0,-4,"blue",1);
+    objects[4]=new Thing(0.01,420,0,0,-4,"blue",1); //reverse the starting direction and this collides into the red planet, find and fix the collider so the red planet isn't ejected by this interaction
     objects[5]=new Thing(0.005,200,0,0,2.3,"#6A6A87",1);
     objects[6]=new Thing(0.005,160,0,0,2.51,"#6A6A87",1);
     objects[7]=new Thing(0.005,-180,0,0,-2.32,"#6A6A87",1);
     objects[8]=new Thing(0.009,-170,10,0,-2,"#6A6A87",1);
     objects[9]=new Thing(0.001,-300,40,0.4,-1.5,"#6A6A87",1);
-    //objects[10]=new Thing(0.08,100,0,0,-2.7,"#6A6A87",1);
+    //objects[10]=new Thing(0.08,100,0,0,-2.7,"#6A6A87",1); //don't add this in until the collision between 9 and 5 is fixed (at timeFactor 0.8 they collide and make a sharp right turn almost into the sun)
 }
 
 function unstableScale()
@@ -283,7 +283,7 @@ function unstableScale()
     objects[7]=new Thing(0.5,-18000,0,0,-2.32,"#6A6A87");
     objects[8]=new Thing(0.9,-17000,1000,0,-2,"#6A6A87");
     objects[9]=new Thing(0.1,-30000,4000,0.4,-1.5,"#6A6A87");
-    //objects[10]=new Thing(0.08,100,0,0,-2.7,"#6A6A87",1);
+    objects[10]=new Thing(0.08,100,0,0,-2.7,"#6A6A87",1);
 }
 
 function realisticSystem()

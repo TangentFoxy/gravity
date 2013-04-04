@@ -1,3 +1,14 @@
+ToDo Next
+---------
+
+Stuff I want to work on as soon as possible.
+
+* Make it possible to add in an object with a certain orbit using v = sqrt(GM/r)
+  G=gravitational force of parent on new object, M=mass of parent object, r=radius of orbit
+* Change collisions to calculate forces of both objects, then apply those to a new velocity for this using a new mass based on adding both masses, this is also move to a location right in the center between objects[j] and this?
+* Collider checks the radius of the larger object outwards from that object and can break apart objects entering within this radius? (Roche limit lazily implemented)
+* Controllable object (with playerId).
+
 General ToDo
 ------------
 
@@ -9,16 +20,13 @@ This is stuff I want to do sooner rather than later.
 * Graph for playerId relative distance and velocity to another Thing.
 * Image rendering (objects can be defined as an image).
 * Support for rotation of objects (after adding images).
-* Support for rotation of reference frame.
-* Make it possible to add in an object with a certain orbit using v = sqrt(GM/r)
-  G=gravitational force of parent on new object, M=mass of parent object, r=radius of orbit
-* Controllable object (with playerId).
 * timeFactor can be scaled to smallest distance between two objects for higher accuracy with faster simulation when further out
+* Proper pathing, ie. the paths fade after a certain amount of time (and are drawn as lines instead of just points again and again?)
 
 Optimizing
 ----------
 
 These will not happen for a long time basically.
 
-* Implement collision detection inside gravity function (but not what happens during a collision).
+* Implement collision detection inside gravity function (but not what happens during a collision)?
 * Take as many config things as possible and just choose one option.
