@@ -142,13 +142,14 @@ function Thing(m,x,y,Vx,Vy,color,radius)
             if (d < this.rad+objects[j].rad) //if within both objects' radius', collided
             {
                 //if (!this.collides) continue;
-                //console.log("Collision between "+this+" and "+objects[j]+".");
+                console.log("Collision between "+this.id()+" and "+objects[j].id()+".");
                 var Vx=this.Vx-objects[j].Vx; //get relative velocity
                 var Vy=this.Vy-objects[j].Vy;
                 var Fx=Vx*objects[j].m; // get force of objects[j]
                 var Fy=Vy*objects[j].m;
                 this.Vx-=Fx/this.m; //apply force from objects[j]
                 this.Vy-=Fy/this.m;
+                if (objects[j].m > this.m) this.fill=objects[j].fill; //if objects[j] more massive, we gain its color
                 this.m+=objects[j].m; //add mass
                 if (objects[j].rad > 1) this.rad=this.rad+Math.sqrt(objects[j].rad/4);
                 if (renderId == j) renderId=objects.indexOf(this); // fix renderId if needed
@@ -156,6 +157,11 @@ function Thing(m,x,y,Vx,Vy,color,radius)
                 objects.splice(j, 1); //delete objects[j]
             }
         }
+    }
+    
+    this.id = function()
+    {
+        return objects.indexOf(this);
     }
     
     this.getVelocity = function()
@@ -255,7 +261,7 @@ function unstableSystem()
     objects[7]=new Thing(0.005,-180,0,0,-2.32,"#6A6A87",1);
     objects[8]=new Thing(0.009,-170,10,0,-2,"#6A6A87",1);
     objects[9]=new Thing(0.001,-300,40,0.4,-1.5,"#6A6A87",1);
-    objects[10]=new Thing(0.08,100,0,0,-2.7,"#6A6A87",1);
+    //objects[10]=new Thing(0.08,100,0,0,-2.7,"#6A6A87",1);
 }
 
 //objects[i]=new Thing(mass,x,y,Vx,Vy,color,radius);
