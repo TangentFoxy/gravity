@@ -35,7 +35,7 @@ var runSpeed=20; // how many milliseconds between each iteration
 var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
 var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag, freezing, crashing.
 var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at regular runSpeed (aka slower)
-var scaleFactor=0.1; //multiplied by data in rendering to adjust zoom level
+var scaleFactor=0.8; //multiplied by data in rendering to adjust zoom level
 var timeFactor=0.8; // multipled by velocity/movement to change how fast/"accurate" the simulation is
 var renderRadius=1; // minimum render radius for an object
 var path=true;  // draw path?
@@ -43,14 +43,16 @@ var path=true;  // draw path?
 var playerId=1; // ID of Thing that is the player
 var renderId=0; // ID of Thing to put at center of frame
 
+var G=10; // Gravitational Constant
+
 initialize();
 
 function initialize()
 {
     //stableySystem(); // two planets, moon and asteroid that get kicked out of system
-    scaledSystem();  // same as above, but scaled up 10x, set scaleFactor to 0.1 to see better
+    //scaledSystem();  // same as above, but scaled up 10x, set scaleFactor to 0.1 to see better
     //collidingSystem(); // for testing collisions (use this to see what is wrong with the collider)
-    //unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
+    unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
     //unstableScale(); // scaled up by 100x (for testing screwing with timeFactor)
     //realisticSystem(); // "realistic" my ass
     if (hyperWarp)
@@ -71,7 +73,8 @@ function initialize()
 
 function loop()
 {
-    for (var i = 0; i < objects.length; i++) objects[i].gravity();
+    //for (var i = 0; i < objects.length; i++) objects[i].gravity();
+    for (var i = 0; i < objects.length-1; i++) for (var j = i+1; j < objects.length; j++) gravity(i,j);
     for (var i = 0; i < objects.length; i++) objects[i].update();
     if (hyperRender) {
         redraw();
@@ -183,6 +186,51 @@ function Thing(m,x,y,Vx,Vy,color,radius)
     this.dataOut = function()
     {
         return "<tr><td>Mass: "+this.m.toString()+"</td><td>Radius: "+this.rad.toFixed(2)+"</td><td>X: "+this.x.toFixed(2)+"</td><td>Y: "+this.y.toFixed(2)+"</td><td>Velocity X: "+this.Vx.toFixed(2)+"</td><td>Velocity Y: "+this.Vy.toFixed(2)+"</td><td>Fill color: "+this.fill+"</td><td>Fixed? "+this.fixed.toString()+"</td></tr>";
+    }
+}
+
+function gravity(i,j)
+{
+    var Nx=false;
+    var Ny=false;
+    var Dx=objects[i].x-objects[j].x; //get relative distances
+    var Dy=objects[i].y-objects[j].y;
+    var Ds=Dx*Dx+Dy*Dy;
+    //try adding some sort of collision detection that checks and appends collisions to a list/array/whatever to be handled after gravity finishes
+    if (Dx < 0)
+    {
+        Nx=true;                      //fix negative distance (for calculations)
+        Dx=-Dx;
+    }
+    if (Dy < 0)
+    {
+        Ny=true;
+        Dy=-Dy;
+    }
+    //(Dx*Dx+Dy*Dy)
+    if (!objects[i].fixed)
+    {
+        var g=G*objects[j].m/Ds; //calculate gravitational acceleration
+        var Ax=Dx*g/(Dx+Dy); //solve for acceleration x
+        var Ay=g-Ax;         //      for              y
+        if (Nx) Ax=-Ax; //fix negative values
+        if (Ny) Ay=-Ay;
+        //Ax=-Ax;         //fix antigravity
+        //Ay=-Ay;
+        objects[i].Vx+=Ax*timeFactor;  //apply change of velocity
+        objects[i].Vy+=Ay*timeFactor;
+    }
+    if (!objects[j].fixed)
+    {
+        var g=G*objects[i].m/Ds; //calculate gravitational acceleration
+        var Ax=Dx*g/(Dx+Dy); //solve for acceleration x
+        var Ay=g-Ax;         //      for              y
+        if (Nx) Ax=-Ax; //fix negative values
+        if (Ny) Ay=-Ay;
+        //Ax=-Ax;         //fix anitgravity
+        //Ay=-Ay;
+        objects[j].Vx+=Ax*timeFactor;  //apply change of velocity
+        objects[j].Vy+=Ay*timeFactor;
     }
 }
 
