@@ -9,10 +9,12 @@ body {
 }
 canvas {
     border: 3px #FFFFFF solid;
+    border-radius:10px;
 }
 table {
     border: 1px #FFFFFF solid;
     width: 100%;
+    margin:6px;
 }
 </style>
 </head>
@@ -20,7 +22,8 @@ table {
 <center>
 <h1>Gravity</h1>
 <div id="playerStats"></div>
-<canvas id="canvas" width="960" height="540"></canvas>
+<canvas id="canvas" width="620" height="440">If you can see this, something went wrong.</canvas>
+<!--<canvas id="canvas" width="960" height="540"></canvas>-->
 <div id="debug"></div>
 </center>
 <script>
@@ -31,14 +34,14 @@ var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
 var objects=new Array();
 
-var runSpeed=20; // how many milliseconds between each iteration
+var runSpeed=60; // how many milliseconds between each iteration
 var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
 var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag, freezing, crashing.
-var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at regular runSpeed (aka slower)
+var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed (aka slower)
 var scaleFactor=0.8; //multiplied by data in rendering to adjust zoom level
-var timeFactor=0.8; // multipled by velocity/movement to change how fast/"accurate" the simulation is
+var timeStep=0.8; // multipled by velocity/movement to change accuracy/speed of the simulation (lower is more accurate, but slower)
 var renderRadius=1; // minimum render radius for an object
-var path=true;  // draw path?
+var path=false;  // draw path? [Don't clear canvas between draws.]
 
 var playerId=1; // ID of Thing that is the player
 var renderId=4; // ID of Thing to put at center of frame
@@ -53,7 +56,7 @@ function initialize()
     //scaledSystem();  // same as above, but scaled up 10x, set scaleFactor to 0.1 to see better
     //collidingSystem(); // for testing collisions (use this to see what is wrong with the collider)
     unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
-    //unstableScale(); // scaled up by 100x (for testing screwing with timeFactor)
+    //unstableScale(); // scaled up by 100x (for testing screwing with timeStep)
     //realisticSystem(); // "realistic" my ass
     if (hyperWarp)
     {
@@ -126,8 +129,8 @@ function Thing(m,x,y,Vx,Vy,color,radius)
                 if (Ny) Ay=-Ay;
                 Ax=-Ax;         //fix antigravity
                 Ay=-Ay;
-                this.Vx+=Ax*timeFactor;  //apply change of velocity
-                this.Vy+=Ay*timeFactor;
+                this.Vx+=Ax*timeStep;  //apply change of velocity
+                this.Vy+=Ay*timeStep;
             }
         }
     }
@@ -137,8 +140,8 @@ function Thing(m,x,y,Vx,Vy,color,radius)
         //Movement:
         if (!this.fixed)
         {
-            this.x+=this.Vx*timeFactor; //apply acceleration
-            this.y+=this.Vy*timeFactor;
+            this.x+=this.Vx*timeStep; //apply acceleration
+            this.y+=this.Vy*timeStep;
         }
         // Collider:
         for (var j = objects.length-1; j > 0; j--)
@@ -217,8 +220,8 @@ function gravity(i,j)
         if (Ny) Ay=-Ay;
         //Ax=-Ax;         //fix antigravity
         //Ay=-Ay;
-        objects[i].Vx+=Ax*timeFactor;  //apply change of velocity
-        objects[i].Vy+=Ay*timeFactor;
+        objects[i].Vx+=Ax*timeStep;  //apply change of velocity
+        objects[i].Vy+=Ay*timeStep;
     }
     if (!objects[j].fixed)
     {
@@ -229,8 +232,8 @@ function gravity(i,j)
         if (Ny) Ay=-Ay;
         //Ax=-Ax;         //fix anitgravity
         //Ay=-Ay;
-        objects[j].Vx+=Ax*timeFactor;  //apply change of velocity
-        objects[j].Vy+=Ay*timeFactor;
+        objects[j].Vx+=Ax*timeStep;  //apply change of velocity
+        objects[j].Vy+=Ay*timeStep;
     }
 }
 
@@ -250,7 +253,7 @@ function redraw()
 
 function playerOut()
 {
-    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='3'>Total velocity: "+objects[playerId].getVelocity()+"</td><td colspan='5'>Distance from origin: "+objects[playerId].getOriginDistance()+"</td></tr></table>";
+    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='4'>Total velocity: "+objects[playerId].getVelocity()+"</td><td colspan='4'>Distance from origin: "+objects[playerId].getOriginDistance()+"</td></tr></table>";
     document.getElementById("playerStats").innerHTML = out;
 }
 
@@ -314,7 +317,7 @@ function unstableSystem()
     objects[7]=new Thing(0.005,-180,0,0,-2.32,"#6A6A87",1);
     objects[8]=new Thing(0.009,-170,10,0,-2,"#6A6A87",1);
     objects[9]=new Thing(0.001,-300,40,0.4,-1.5,"#6A6A87",1);
-    //objects[10]=new Thing(0.08,100,0,0,-2.7,"#6A6A87",1); //don't add this in until the collision between 9 and 5 is fixed (at timeFactor 0.8 they collide and make a sharp right turn almost into the sun)
+    //objects[10]=new Thing(0.08,100,0,0,-2.7,"#6A6A87",1); //don't add this in until the collision between 9 and 5 is fixed (at timeStep 0.8 they collide and make a sharp right turn almost into the sun)
 }
 
 function unstableScale()

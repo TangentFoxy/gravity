@@ -9,8 +9,7 @@ Stuff I want to work on as soon as possible.
 * Change collisions to somehow mitigate extreme inaccuracy in certain collisions' velocity changes (check against radius to keep objects from going too far in? reverse gravity one step for that object?)
 * Collider checks the radius of the larger object outwards from that object and can break apart objects entering within this radius? (Roche limit lazily implemented)
 * Collider needs to make sure collisions with fixed objects keep the fixed object in its place and fixed in place
-* Controllable object (with playerId).
-* Rename timeFactor to timeStep
+* Controllable object (with playerId)
 
 General ToDo
 ------------
