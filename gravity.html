@@ -41,10 +41,10 @@ var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyp
 var scaleFactor=0.8; //multiplied by data in rendering to adjust zoom level
 var timeStep=0.8; // multipled by velocity/movement to change accuracy/speed of the simulation (lower is more accurate, but slower)
 var renderRadius=1; // minimum render radius for an object
-var path=false;  // draw path? [Don't clear canvas between draws.]
+var path=true;  // draw path? [Don't clear canvas between draws.]
 
 var playerId=1; // ID of Thing that is the player
-var renderId=4; // ID of Thing to put at center of frame
+var renderId=0; // ID of Thing to put at center of frame
 
 var G=10; // Gravitational Constant
 
@@ -96,6 +96,8 @@ function Thing(m,x,y,Vx,Vy,color,radius)
     this.y=y;
     this.Vx=Vx; //velocity
     this.Vy=Vy;
+    this.Ax=0; // last-step acceleration
+    this.Ay=0;
     //this.rot=0; //rotation
     !color ? this.fill="#FFFFFF" : this.fill=color; //fill color
     this.fixed=false;
@@ -122,7 +124,7 @@ function Thing(m,x,y,Vx,Vy,color,radius)
                     Ny=true;
                     Dy=-Dy;
                 }
-                var g=10*objects[i].m/(Dx*Dx+Dy*Dy); //calculate gravitational acceleration
+                var g=G*objects[i].m/(Dx*Dx+Dy*Dy); //calculate gravitational acceleration
                 var Ax=Dx*g/(Dx+Dy);  //solve for acceleration x
                 var Ay=g-Ax;          //      for              y
                 if (Nx) Ax=-Ax; //fix negative values
@@ -198,7 +200,7 @@ function gravity(i,j)
     var Ny=false;
     var Dx=objects[i].x-objects[j].x; //get relative distances
     var Dy=objects[i].y-objects[j].y;
-    var Ds=Dx*Dx+Dy*Dy;
+    var Ds=Dx*Dx+Dy*Dy; //note Ds is not Distance, but Distance^2
     //try adding some sort of collision detection that checks and appends collisions to a list/array/whatever to be handled after gravity finishes
     if (Dx < 0)
     {
@@ -210,7 +212,6 @@ function gravity(i,j)
         Ny=true;
         Dy=-Dy;
     }
-    //(Dx*Dx+Dy*Dy)
     if (!objects[i].fixed)
     {
         var g=G*objects[j].m/Ds; //calculate gravitational acceleration
@@ -334,11 +335,12 @@ function unstableScale()
     objects[7]=new Thing(0.5,-18000,0,0,-2.32,"#6A6A87");
     objects[8]=new Thing(0.9,-17000,1000,0,-2,"#6A6A87");
     objects[9]=new Thing(0.1,-30000,4000,0.4,-1.5,"#6A6A87");
-    objects[10]=new Thing(0.08,100,0,0,-2.7,"#6A6A87",1);
+    objects[10]=new Thing(8,10000,0,0,-2.7,"#6A6A87",1);
 }
 
 function realisticSystem()
 {
+    //G=6.67384e-11; //real gravitational constant (probably needs to be higher)
     objects[0]=new Thing(90000,0,0,0,0,"yellow");
     objects[0].fixed=true;
     objects[1]=new Thing(100,1000,0,0,-20,"red");
