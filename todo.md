@@ -1,34 +1,54 @@
-ToDo Next
+Immediate ToDo
+--------------
+
+These are things I should've done before pushing to github. If there is something here, I am a lazy fool, beat me with a large stick.
+
+* Check all for loops to make sure nothing is excluded.
+
+ToDo Soon
 ---------
 
 Stuff I want to work on as soon as possible.
 
 * Make it possible to add in an object with a certain orbit using v = sqrt(GM/r)
-  G=gravitational force of parent on new object, M=mass of parent object, r=radius of orbit
-* Change collisions to calculate forces of both objects, then apply those to a new velocity for this using a new mass based on adding both masses, this is also move to a location right in the center between objects[j] and this?
-* Change collisions to somehow mitigate extreme inaccuracy in certain collisions' velocity changes (check against radius to keep objects from going too far in? reverse gravity one step for that object?)
-* Collider checks the radius of the larger object outwards from that object and can break apart objects entering within this radius? (Roche limit lazily implemented)
-* Collider needs to make sure collisions with fixed objects keep the fixed object in its place and fixed in place
+  G=gravitational force of parent on new object, M=mass of parent object, r=radius of orbit.
+  Remember this will only give a relative orbital velocity, need to change this if the parent body
+  is moving.
+* Make an equation you can call to check how stable your orbit will be (check gravitational influence
+  of the major object(s) in the system against parent body influence, parent
+  needs to be > other influences)
+* Fix deep impact collisions (undo last gravity step between colliding objects)
+* Collider needs to move object after collision (before deleting j) to the center of mass between the
+  two objects
+* "Rocher" Collider checks the radius of the larger object outwards from that object and can break
+  apart objects entering within this radius? (Roche limit lazily implemented) half the radius again??
+* Collider needs to make sure collisions with fixed objects keep the fixed object in its place and
+  fixed in place (currently objects of a higher value that are fixed can lose this when
+  colliding..something like that, just add a check of j if j is fixed, i becomes fixed during collision)
 * Controllable object (with playerId)
+* Glancing collisions collider (idea=Large object loses fraction of mass, small object split in
+  half, things go flying off with similar velocity to impact)
 
 General ToDo
 ------------
 
 This is stuff I want to do sooner rather than later.
 
+* Elastic bounce collider (for screwing around??)
 * Saving and loading simulations.
 * Stats for average velocity between playerId and another Thing.
 * Stats for average distance between playerId and another Thing.
 * Graph for playerId relative distance and velocity to another Thing.
 * Image rendering (objects can be defined as an image).
 * Support for rotation of objects (after adding images).
-* timeFactor can be scaled to smallest distance between two objects for higher accuracy with faster simulation when further out
-* Proper pathing, ie. the paths fade after a certain amount of time (and are drawn as lines instead of just points again and again?)
+* timeFactor can be scaled to smallest distance between two objects for higher accuracy with
+  faster simulation when further out
+* Proper pathing, i.e. the paths fade after a certain amount of time (and are drawn as lines instead
+  of just points again and again?)
 
-Optimizing
-----------
+Long-Term
+---------
 
-These will not happen for a long time basically.
-
-* Implement collision detection inside gravity function (but not what happens during a collision)?
-* Take as many config things as possible and just choose one option.
+* Additional physics (such as the various effects of sunlight/radiation) that won't be done realistically at all.
+* Implement collision detection inside gravity function (but not what happens during a collision)??
+* Add heat/heat colors. Things colliding generate heat. Things cool down over time (except when over certain sizes, certain heat is maintained).
