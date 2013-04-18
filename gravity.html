@@ -195,12 +195,12 @@ function collisionCheck(i,j)
         console.log("Collision between "+i+" and "+j+".");
         var Fx=objects[i].Vx*objects[i].m+objects[j].Vx*objects[j].m;
         var Fy=objects[i].Vy*objects[i].m+objects[j].Vy*objects[j].m;
-        if (objects[j].fixed) objects[i].fixed=true; // we gain the fixed attribute if it exists
+        if (objects[j].fixed) objects[i].fixed=true; // we gain the fixed attribute if it exists, MODIFY TO KEEP POSITION, only gain mass/radius
         if (objects[j].m > objects[i].m) objects[i].fill=objects[j].fill; // the color of the more massive object is kept
         objects[i].m+=objects[j].m;    //add mass of j
         objects[i].Vx=Fx/objects[i].m; //apply combined force
         objects[i].Vy=Fx/objects[i].m;
-        objects[i].rad+=objects[j].rad; //replace with better radius calculation
+        objects[i].rad+=objects[j].rad; //replace with better radius calculation (use ACTUAL RADIUS CALC from Thing constructor=this.rad=Math.pow(m,1/3))
         //ADD HERE: calculate new location based on center of mass between objects [Actually, need to START this calc before changing i's mass]
         if (objects[j].fixed)
         {
@@ -220,7 +220,6 @@ function gravity(i,j) //here temporarily, needs to be added to collider (or rath
     var Dx=objects[i].x-objects[j].x; //get relative distances
     var Dy=objects[i].y-objects[j].y;
     var Ds=Dx*Dx+Dy*Dy; //note Ds is not Distance, but Distance^2
-    //try adding some sort of collision detection that checks and appends collisions to a list/array/whatever to be handled after gravity finishes?
     if (Dx < 0)
     {
         Nx=true;                      //fix negative distance (for calculations)
@@ -242,18 +241,6 @@ function gravity(i,j) //here temporarily, needs to be added to collider (or rath
         //Ay=-Ay;
         objects[i].Vx+=Ax*timeStep;  //apply change of velocity
         objects[i].Vy+=Ay*timeStep;
-    }
-    if (!objects[j].fixed)
-    {
-        var g=G*objects[i].m/Ds; //calculate gravitational acceleration
-        var Ax=Dx*g/(Dx+Dy); //solve for acceleration x
-        var Ay=g-Ax;         //      for              y
-        if (Nx) Ax=-Ax; //fix negative values
-        if (Ny) Ay=-Ay;
-        //Ax=-Ax;         //fix antigravity
-        //Ay=-Ay;
-        objects[j].Vx+=Ax*timeStep;  //apply change of velocity
-        objects[j].Vy+=Ay*timeStep;
     }
 }
     */
