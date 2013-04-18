@@ -10,6 +10,7 @@ These are things I should've done before pushing to github. If there is somethin
 * Fix other error with collider.
 * Add ability to change size of canvas.
 * Add ability to change renderId, clear the canvas.
+* Fix mass location!
 
 ToDo Soon
 ---------
