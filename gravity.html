@@ -168,14 +168,30 @@ function update(i)
 
 function collisionCheck(i,j)
 {
-    var Dx=objects[i].x-objects[j].x; //find distances
+    try
+    {
+        var Dx=objects[i].x-objects[j].x; //find distances
+    }
+    catch(err)
+    {
+        console.log("Error caught: "+err);
+        return;
+    }
     var Dy=objects[i].y-objects[j].y;
     var d=Math.sqrt(Dx*Dx+Dy*Dy);
     if (d < objects[i].rad+objects[j].rad) //if within both objects' radii, collided
     {
         //ADD HERE: undo gravity for last step between these two objects
-        //if (!objects[i].collides) continue; // DOES NOT WORK BECAUSE IS NOT
-        //if (!objects[j].collides) continue; // DIRECTLY INSIDE LOOP
+        if (!objects[i].collides) 
+        {
+            console.log("Ignored collision between "+i+" and "+j+".");
+            return;
+        }
+        if (!objects[j].collides)
+        {
+            console.log("Ignored collision between "+i+" and "+j+".");
+            return;
+        }
         console.log("Collision between "+i+" and "+j+".");
         var Fx=objects[i].Vx*objects[i].m+objects[j].Vx*objects[j].m;
         var Fy=objects[i].Vy*objects[i].m+objects[j].Vy*objects[j].m;
@@ -184,8 +200,14 @@ function collisionCheck(i,j)
         objects[i].m+=objects[j].m;    //add mass of j
         objects[i].Vx=Fx/objects[i].m; //apply combined force
         objects[i].Vy=Fx/objects[i].m;
-        //ADD HERE: recalc radius, if bigger, apply. [Note: makes low density things gain density until default, and large things lose density until default??]
+        objects[i].rad+=objects[j].rad; //replace with better radius calculation
         //ADD HERE: calculate new location based on center of mass between objects [Actually, need to START this calc before changing i's mass]
+        if (objects[j].fixed)
+        {
+            objects[i].x=objects[j].x; // fix in place if needed
+            objects[i].y=objects[j].y;
+            objects[i].fixed;
+        }
         if (renderId == j) renderId=i; // fix renderId if needed
         if (renderId > j) renderId-=1;
         objects.splice(j,1);           // delete j
