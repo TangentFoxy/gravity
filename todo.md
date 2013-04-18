@@ -18,7 +18,7 @@ Stuff I want to work on as soon as possible.
   of the major object(s) in the system against parent body influence, parent
   needs to be > other influences)
 * Fix deep impact collisions (undo last gravity step between colliding objects)
-* Collider needs to move object after collision (before deleting j) to the center of mass between the
+* Fix mass location, Collider needs to move object after collision (before deleting j) to the center of mass between the
   two objects
 * "Rocher" Collider checks the radius of the larger object outwards from that object and can break
   apart objects entering within this radius? (Roche limit lazily implemented) half the radius again??
@@ -35,6 +35,7 @@ General ToDo
 This is stuff I want to do sooner rather than later.
 
 * Elastic bounce collider (for screwing around??)
+* Antigravity objects (value for an object to make it repel other objects)
 * Saving and loading simulations.
 * Stats for average velocity between playerId and another Thing.
 * Stats for average distance between playerId and another Thing.

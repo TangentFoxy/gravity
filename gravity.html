@@ -34,11 +34,11 @@ var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
 var objects=new Array();
 
-var runSpeed=40; // how many milliseconds between each iteration
+var runSpeed=20; // how many milliseconds between each iteration
 var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
 var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag, freezing, crashing.
 var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed (aka slower)
-var scaleFactor=0.5; //multiplied by data in rendering to adjust zoom level
+var scaleFactor=0.6; //multiplied by data in rendering to adjust zoom level
 var timeStep=0.8; // multipled by velocity/movement to change accuracy/speed of the simulation (lower is more accurate, but slower)
 var renderRadius=1; // minimum render radius for an object
 var path=true;  // draw path? [Don't clear canvas between draws.]
@@ -76,7 +76,7 @@ function loop()
 {
     for (var i = 0; i < objects.length-1; i++) for (var j = i+1; j < objects.length; j++) gravity(i,j);
     for (var i = 0; i < objects.length; i++) update(i);
-    for (var i = objects.length-1; i > 0; i--) for (var j = i-1; j > -1; j--) collisionCheck(i,j);
+    //for (var i = objects.length-1; i > 0; i--) for (var j = i-1; j > -1; j--) collisionCheck(i,j); //currently broken, whoops
     if (hyperRender) {
         redraw();
         debugOut();
@@ -176,10 +176,11 @@ function collisionCheck(i,j)
         //ADD HERE: undo gravity for last step between these two objects
         //if (!objects[i].collides) continue; // DOES NOT WORK BECAUSE IS NOT
         //if (!objects[j].collides) continue; // DIRECTLY INSIDE LOOP
+        // the above two lines should work if you replace continue with return (also should probably log that)
         console.log("Collision between "+i+" and "+j+".");
         var Fx=objects[i].Vx*objects[i].m+objects[j].Vx*objects[j].m;
         var Fy=objects[i].Vy*objects[i].m+objects[j].Vy*objects[j].m;
-        if (objects[j].fixed) objects[i].fixed=true; // we gain the fixed attribute if it exists
+        if (objects[j].fixed) objects[i].fixed=true; // we gain the fixed attribute if it exists, MODIFY THIS to keep object fixed in place, with only a mass and radius gain
         if (objects[j].m > objects[i].m) objects[i].fill=objects[j].fill; // the color of the more massive object is kept
         objects[i].m+=objects[j].m;    //add mass of j
         objects[i].Vx=Fx/objects[i].m; //apply combined force
@@ -190,51 +191,6 @@ function collisionCheck(i,j)
         if (renderId > j) renderId-=1;
         objects.splice(j,1);           // delete j
     }
-    /*
-function gravity(i,j) //here temporarily, needs to be added to collider (or rather, the opposite of this)
-{
-    var Nx=false;
-    var Ny=false;
-    var Dx=objects[i].x-objects[j].x; //get relative distances
-    var Dy=objects[i].y-objects[j].y;
-    var Ds=Dx*Dx+Dy*Dy; //note Ds is not Distance, but Distance^2
-    //try adding some sort of collision detection that checks and appends collisions to a list/array/whatever to be handled after gravity finishes?
-    if (Dx < 0)
-    {
-        Nx=true;                      //fix negative distance (for calculations)
-        Dx=-Dx;
-    }
-    if (Dy < 0)
-    {
-        Ny=true;
-        Dy=-Dy;
-    }
-    if (!objects[i].fixed)
-    {
-        var g=G*objects[j].m/Ds; //calculate gravitational acceleration
-        var Ax=Dx*g/(Dx+Dy); //solve for acceleration x
-        var Ay=g-Ax;         //      for              y
-        if (Nx) Ax=-Ax; //fix negative values
-        if (Ny) Ay=-Ay;
-        //Ax=-Ax;         //fix antigravity
-        //Ay=-Ay;
-        objects[i].Vx+=Ax*timeStep;  //apply change of velocity
-        objects[i].Vy+=Ay*timeStep;
-    }
-    if (!objects[j].fixed)
-    {
-        var g=G*objects[i].m/Ds; //calculate gravitational acceleration
-        var Ax=Dx*g/(Dx+Dy); //solve for acceleration x
-        var Ay=g-Ax;         //      for              y
-        if (Nx) Ax=-Ax; //fix negative values
-        if (Ny) Ay=-Ay;
-        //Ax=-Ax;         //fix antigravity
-        //Ay=-Ay;
-        objects[j].Vx+=Ax*timeStep;  //apply change of velocity
-        objects[j].Vy+=Ay*timeStep;
-    }
-}
-    */
 }
 
 function redraw()
