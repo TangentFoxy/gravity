@@ -41,7 +41,7 @@ var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyp
 var scaleFactor=0.5; //multiplied by data in rendering to adjust zoom level
 var timeStep=0.8; // multipled by velocity/movement to change accuracy/speed of the simulation (lower is more accurate, but slower)
 var renderRadius=1; // minimum render radius for an object
-var path=true;  // draw path? [Don't clear canvas between draws.]
+var path=false;  // draw path? [Don't clear canvas between draws.]
 
 var playerId=1; // ID of Thing that is the player
 var renderId=0; // ID of Thing to put at center of frame
@@ -141,6 +141,11 @@ function gravity(i,j)
         if (Ny) Ay=-Ay;
         //Ax=-Ax;                    //fix antigravity
         //Ay=-Ay;                    //I NEED to know why this is no longer needed
+        if (i<j)
+        {
+            Ax=-Ax; //i shoulds ALWAYS be less than j
+            Ay=-Ay;
+        }
         objects[i].Vx+=Ax*timeStep;  //apply change of velocity
         objects[i].Vy+=Ay*timeStep;
     }
@@ -151,6 +156,11 @@ function gravity(i,j)
         var Ay=g-Ax;                 //      for              y
         if (Nx) Ax=-Ax;              //fix negative values
         if (Ny) Ay=-Ay;
+        if (j<i)
+        {
+            Ax=-Ax;    // j should NEVER be less than i
+            Ay=-Ay;
+        }
         objects[j].Vx+=Ax*timeStep;  //apply change of velocity
         objects[j].Vy+=Ay*timeStep;
     }
@@ -208,6 +218,8 @@ function collisionCheck(i,j)
             objects[i].m+=objects[j].m;                //add mass
             objects[i].x=objects[j].x;                 //move to correct position
             objects[i].y=objects[j].y;  //TMP NOTE: I MAY BE REMOVING THE "WRONG" OBJECT ALL ALONG, MAYBE IT WON'T BREAK IF I START REMOVING [I] INSTEAD??
+            objects[i].Vx=0;                           //correct the velocity
+            objects[i].Vy=0;
             objects[i].rad=Math.pow(objects[i].m,1/3); //radius recalculated
             objects[i].fixed=true;                     //become fixed
             objects.splice(j,1);                       //delete [j]
