@@ -41,7 +41,7 @@ var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyp
 var scaleFactor=0.5; //multiplied by data in rendering to adjust zoom level
 var timeStep=0.8; // multipled by velocity/movement to change accuracy/speed of the simulation (lower is more accurate, but slower)
 var renderRadius=1; // minimum render radius for an object
-var path=false;  // draw path? [Don't clear canvas between draws.]
+var path=true;  // draw path? [Don't clear canvas between draws.]
 
 var playerId=1; // ID of Thing that is the player
 var renderId=0; // ID of Thing to put at center of frame
@@ -140,12 +140,9 @@ function gravity(i,j)
         if (Nx) Ax=-Ax;              //fix negative values
         if (Ny) Ay=-Ay;
         //Ax=-Ax;                    //fix antigravity
-        //Ay=-Ay;                    //I NEED to know why this is no longer needed
-        if (i<j)
-        {
-            Ax=-Ax; //i shoulds ALWAYS be less than j
-            Ay=-Ay;
-        }
+        //Ay=-Ay;                    //I NEED to know why this is no longer needed (something to do with the new looping method)
+        Ax=-Ax; //i<j always, so needs gravity reversed
+        Ay=-Ay;
         objects[i].Vx+=Ax*timeStep;  //apply change of velocity
         objects[i].Vy+=Ay*timeStep;
     }
@@ -156,11 +153,6 @@ function gravity(i,j)
         var Ay=g-Ax;                 //      for              y
         if (Nx) Ax=-Ax;              //fix negative values
         if (Ny) Ay=-Ay;
-        if (j<i)
-        {
-            Ax=-Ax;    // j should NEVER be less than i
-            Ay=-Ay;
-        }
         objects[j].Vx+=Ax*timeStep;  //apply change of velocity
         objects[j].Vy+=Ay*timeStep;
     }
@@ -225,13 +217,13 @@ function collisionCheck(i,j)
             objects.splice(j,1);                       //delete [j]
             return;
         }
+        var Lx=objects[i].x*objects[i].m+objects[j].x*objects[j].m;   //weighting the mass vs location to find the CoM
+        var Ly=objects[i].y*objects[i].m+objects[j].y*objects[j].m;
         var Fx=objects[i].Vx*objects[i].m+objects[j].Vx*objects[j].m; //calculate force to apply to "new" object
         var Fy=objects[i].Vy*objects[i].m+objects[j].Vy*objects[j].m;
-        var Lx=objects[i].x*objects[i].m+objects[j].x*objects[j].m;   //weighting the mass vs location to find the CoM
-        var Ly=objects[i].y*objects[i].m+objects[j].x*objects[j].m;
         objects[i].m+=objects[j].m;                //add mass of [j]
         objects[i].Vx=Fx/objects[i].m;             //apply combined force
-        objects[i].Vy=Fx/objects[i].m;
+        objects[i].Vy=Fy/objects[i].m;
         objects[i].rad=Math.pow(objects[i].m,1/3); //recalculate radius based on new mass
         objects[i].x=Lx/objects[i].m;              //find center of mass, place [i] there
         objects[i].y=Ly/objects[i].m;
