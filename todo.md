@@ -3,7 +3,14 @@ Immediate ToDo
 
 These are things I should've done before pushing to github. If there is something here, I am a lazy fool, beat me with a large stick.
 
+* Why do some objects turn on antigravity when colliding??!
 * Check all for loops to make sure nothing is excluded.
+* Check all loops (think there are errors because looping while deleting).
+* Fix deep impact (undo last step of gravity during collision).
+* Fix other error with collider.
+* Add ability to change size of canvas.
+* Add ability to change renderId, clear the canvas.
+* Fix mass location!
 
 ToDo Soon
 ---------
