@@ -34,7 +34,7 @@ var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
 var objects=new Array();
 
-var runSpeed=20; // how many milliseconds between each iteration
+var runSpeed=40; // how many milliseconds between each iteration
 var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
 var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag, freezing, crashing.
 var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed (aka slower)
@@ -76,7 +76,7 @@ function loop()
 {
     for (var i = 0; i < objects.length-1; i++) for (var j = i+1; j < objects.length; j++) gravity(i,j);
     for (var i = 0; i < objects.length; i++) update(i);
-    //for (var i = objects.length-1; i > 0; i--) for (var j = i-1; j > -1; j--) collisionCheck(i,j); //currently broken, whoops
+    for (var i = objects.length-1; i > 0; i--) for (var j = i-1; j > -1; j--) collisionCheck(i,j);
     if (hyperRender) {
         redraw();
         debugOut();
@@ -139,9 +139,7 @@ function gravity(i,j)
         var Ay=g-Ax;                 //      for              y
         if (Nx) Ax=-Ax;              //fix negative values
         if (Ny) Ay=-Ay;
-        //Ax=-Ax;                    //fix antigravity
-        //Ay=-Ay;                    //I NEED to know why this is no longer needed (something to do with the new looping method)
-        Ax=-Ax; //i<j always, so needs gravity reversed
+        Ax=-Ax; //i<j always, so needs gravity reversed (for some reason)
         Ay=-Ay;
         objects[i].Vx+=Ax*timeStep;  //apply change of velocity
         objects[i].Vy+=Ay*timeStep;
@@ -183,16 +181,7 @@ function collisionCheck(i,j)
     var d=Math.sqrt(Dx*Dx+Dy*Dy);
     if (d < objects[i].rad+objects[j].rad)
     {
-        //ADD HERE: undo gravity for last step between these two objects
-<<<<<<< HEAD
-        //if (!objects[i].collides) continue; // DOES NOT WORK BECAUSE IS NOT
-        //if (!objects[j].collides) continue; // DIRECTLY INSIDE LOOP
-        // the above two lines should work if you replace continue with return (also should probably log that)
-        console.log("Collision between "+i+" and "+j+".");
-        var Fx=objects[i].Vx*objects[i].m+objects[j].Vx*objects[j].m;
-        var Fy=objects[i].Vy*objects[i].m+objects[j].Vy*objects[j].m;
-        if (objects[j].fixed) objects[i].fixed=true; // we gain the fixed attribute if it exists, MODIFY THIS to keep object fixed in place, with only a mass and radius gain
-=======
+        //ADD HERE: undo gravity for last step between these two objects (this may not be neccessary, do some testing with objects colliding into each other, the gravity between the two should cancel out now that force is applied properly)
         if (!objects[i].collides) 
         {
             console.log("Ignored collision between "+i+" and "+j+".");
@@ -204,7 +193,6 @@ function collisionCheck(i,j)
             return;
         }
         console.log("Collision between "+i+" and "+j+".");
->>>>>>> origin/broken
         if (objects[j].m > objects[i].m) objects[i].fill=objects[j].fill; // the color of the more massive object is kept
         if (renderId == j) renderId=i;                                    // fix renderId if needed
         if (renderId > j) renderId-=1;
@@ -219,7 +207,8 @@ function collisionCheck(i,j)
         {
             objects[i].m+=objects[j].m;                //add mass
             objects[i].x=objects[j].x;                 //move to correct position
-            objects[i].y=objects[j].y;  //TMP NOTE: I MAY BE REMOVING THE "WRONG" OBJECT ALL ALONG, MAYBE IT WON'T BREAK IF I START REMOVING [I] INSTEAD??
+            objects[i].y=objects[j].y;
+            //TMP NOTE: I MAY BE REMOVING THE "WRONG" OBJECT ALL ALONG, MAYBE IT WON'T BREAK IF I START REMOVING [I] INSTEAD?? <- this note is about the error we have to catch
             objects[i].Vx=0;                           //correct the velocity
             objects[i].Vy=0;
             objects[i].rad=Math.pow(objects[i].m,1/3); //radius recalculated
@@ -239,41 +228,6 @@ function collisionCheck(i,j)
         objects[i].y=Ly/objects[i].m;
         objects.splice(j,1);                       //delete [j]
     }
-<<<<<<< HEAD
-=======
-    /*
-function gravity(i,j) //here temporarily, needs to be added to collider (or rather, the opposite of this)
-{
-    var Nx=false;
-    var Ny=false;
-    var Dx=objects[i].x-objects[j].x; //get relative distances
-    var Dy=objects[i].y-objects[j].y;
-    var Ds=Dx*Dx+Dy*Dy; //note Ds is not Distance, but Distance^2
-    if (Dx < 0)
-    {
-        Nx=true;                      //fix negative distance (for calculations)
-        Dx=-Dx;
-    }
-    if (Dy < 0)
-    {
-        Ny=true;
-        Dy=-Dy;
-    }
-    if (!objects[i].fixed)
-    {
-        var g=G*objects[j].m/Ds; //calculate gravitational acceleration
-        var Ax=Dx*g/(Dx+Dy); //solve for acceleration x
-        var Ay=g-Ax;         //      for              y
-        if (Nx) Ax=-Ax; //fix negative values
-        if (Ny) Ay=-Ay;
-        //Ax=-Ax;         //fix antigravity
-        //Ay=-Ay;
-        objects[i].Vx+=Ax*timeStep;  //apply change of velocity
-        objects[i].Vy+=Ay*timeStep;
-    }
-}
-    */
->>>>>>> origin/broken
 }
 
 function redraw()
