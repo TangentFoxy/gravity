@@ -34,16 +34,16 @@ var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
 var objects=new Array();
 
-var runSpeed=40; // how many milliseconds between each iteration
+var runSpeed=2; // how many milliseconds between each iteration
 var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
 var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag, freezing, crashing.
 var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed (aka slower)
-var scaleFactor=0.6; //multiplied by data in rendering to adjust zoom level
-var timeStep=0.8; // multipled by velocity/movement to change accuracy/speed of the simulation (lower is more accurate, but slower)
+var scaleFactor=0.58; //multiplied by data in rendering to adjust zoom level
+var timeStep=0.68; // multipled by velocity/movement to change accuracy/speed of the simulation (lower is more accurate, but slower)
 var renderRadius=1; // minimum render radius for an object
 var path=true;  // draw path? [Don't clear canvas between draws.]
 
-var playerId=1; // ID of Thing that is the player
+var playerId=3; // ID of Thing that is the player
 var renderId=0; // ID of Thing to put at center of frame
 
 var G; // Gravitational Constant
@@ -54,7 +54,8 @@ function initialize()
 {
     //stableySystem(); // two planets, moon and asteroid that get kicked out of system
     //collidingSystem(); // for testing collisions (use this to see what is wrong with the collider)
-    unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
+    //unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
+    orbitalVelocityTest(); // testing the function to set velocities for circular orbits
     //realisticSystem(); // "realistic" my ass (also not finished in any way)
     if (hyperWarp)
     {
@@ -194,8 +195,10 @@ function collisionCheck(i,j)
         }
         console.log("Collision between "+i+" and "+j+".");
         if (objects[j].m > objects[i].m) objects[i].fill=objects[j].fill; // the color of the more massive object is kept
-        if (renderId == j) renderId=i;                                    // fix renderId if needed
+        if (renderId == j) renderId=i;                 // fix renderId if needed
         if (renderId > j) renderId-=1;
+        if (playerId == j) playerId=i;
+        if (playerId > j) playerId-=1;                 // fix playerId if needed
         if (objects[i].fixed)
         {
             objects[i].m+=objects[j].m;                //add mass
@@ -242,6 +245,13 @@ function redraw()
         context.fillStyle=objects[i].fill;
         context.fill();
     }
+}
+
+function setOrbitalVelocity(id,M,d)
+{
+    //id=parent body id, M=mass of parent,d=radius of orbit (distance)
+    //id currently not used, id should be used to find mass, mass should not be needed in call
+    return Math.sqrt(G*M/d);
 }
 
 function playerOut()
@@ -310,6 +320,22 @@ function unstableSystem()
     objects[15]=new Thing(0.01,-100,10,0.4,-2.14,"#6A6A87",1);
     objects[16]=new Thing(0.0001,-325,42,0.32,-1.55,"#6A6A87",1);
     objects[17]=new Thing(0.082,105,-50,0.1,-2.7,"#6A6A87",1);
+}
+
+function orbitalVelocityTest()
+{
+    G=10;
+    objects[0]=new Thing(100,0,0,0,0,"yellow",12);
+    objects[0].fixed=true;
+    objects[1]=new Thing(0.2,0,80,0,0,"red",0.7);
+    objects[1].Vx=-setOrbitalVelocity(0,100,80);
+    objects[2]=new Thing(2.58,0,200,0,0,"orange",2);
+    objects[2].Vx=-setOrbitalVelocity(0,100,200);
+    objects[3]=new Thing(2.32,0,360,0,0,"green",1.85);
+    objects[3].Vx=-setOrbitalVelocity(0,100,360);
+    objects[4]=new Thing(0.0001,0,380,0,0,"#6A6A87");
+    objects[4].Vx=objects[3].Vx;
+    objects[4].Vx=-setOrbitalVelocity(3,2.32,20);
 }
 
 function realisticSystem()
