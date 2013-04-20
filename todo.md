@@ -3,30 +3,23 @@ Immediate ToDo
 
 These are things I should've done before pushing to github. If there is something here, I am a lazy fool, beat me with a large stick.
 
-* Why do some objects turn on antigravity when colliding??!
 * Check all for loops to make sure nothing is excluded.
 * Check all loops (think there are errors because looping while deleting).
 * Fix deep impact (undo last step of gravity during collision).
-* Fix other error with collider.
 * Add ability to change size of canvas.
 * Add ability to change renderId, clear the canvas.
-* Fix mass location!
 
 ToDo Soon
 ---------
 
 Stuff I want to work on as soon as possible.
 
-* Make it possible to add in an object with a certain orbit using v = sqrt(GM/r)
-  G=gravitational force of parent on new object, M=mass of parent object, r=radius of orbit.
-  Remember this will only give a relative orbital velocity, need to change this if the parent body
-  is moving.
 * Make an equation you can call to check how stable your orbit will be (check gravitational influence
   of the major object(s) in the system against parent body influence, parent
   needs to be > other influences)
 * Fix deep impact collisions (undo last gravity step between colliding objects)
-* Fix mass location, Collider needs to move object after collision (before deleting j) to the center of mass between the
-  two objects
+* Fix mass location, Collider needs to move object after collision (before deleting j) to the center of
+  mass between the two objects
 * "Rocher" Collider checks the radius of the larger object outwards from that object and can break
   apart objects entering within this radius? (Roche limit lazily implemented) half the radius again??
 * Collider needs to make sure collisions with fixed objects keep the fixed object in its place and
@@ -57,6 +50,8 @@ This is stuff I want to do sooner rather than later.
 Long-Term
 ---------
 
-* Additional physics (such as the various effects of sunlight/radiation) that won't be done realistically at all.
+* Additional physics (such as the various effects of sunlight/radiation) that won't be done realistically
+  at all.
 * Implement collision detection inside gravity function (but not what happens during a collision)??
-* Add heat/heat colors. Things colliding generate heat. Things cool down over time (except when over certain sizes, certain heat is maintained).
+* Add heat/heat colors. Things colliding generate heat. Things cool down over time (except when over
+  certain sizes, certain heat is maintained).
