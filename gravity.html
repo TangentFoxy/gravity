@@ -107,8 +107,7 @@ function Thing(m,x,y,Vx,Vy,color,radius,name)
     
     this.getVelocity = function()
     {
-        return Math.abs(this.Vx)+Math.abs(this.Vy);
-        //this velocity is not technically correct?? (think diagonal lines on grid paper vs straight lines of the same X+Y)
+        return Math.sqrt(this.Vx*this.Vx+this.Vy*this.Vy);
     }
     
     this.getOriginDistance = function()
