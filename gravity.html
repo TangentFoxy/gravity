@@ -13,7 +13,7 @@ canvas {
 }
 table {
     border: 1px #FFFFFF solid;
-    width: 100%;
+    width: 95%;
     margin:6px;
 }
 </style>
@@ -23,28 +23,26 @@ table {
 <h1>Gravity</h1>
 <div id="playerStats"></div>
 <canvas id="canvas" width="620" height="440">If you can see this, something went wrong.</canvas>
-<!--<canvas id="canvas" width="960" height="540"></canvas>-->
 <div id="debug"></div>
 </center>
 <script>
-
-//window.performance.now() - apparently something you can use to run faster than 1000x per second, but only in Chrome
 
 var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
 var objects=new Array();
 
-var runSpeed=2; // how many milliseconds between each iteration
-var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
+var runSpeed=1; // how many milliseconds between each iteration
+var hyperWarp=true; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
 var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag, freezing, crashing.
 var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed (aka slower)
-var scaleFactor=0.58; //multiplied by data in rendering to adjust zoom level
-var timeStep=0.68; // multipled by velocity/movement to change accuracy/speed of the simulation (lower is more accurate, but slower)
+var scaleFactor=0.6; //multiplied by data in rendering to adjust zoom level
+var timeStep=0.5; // multipled by velocity/movement to change accuracy/speed of the simulation (lower is more accurate, but slower)
 var renderRadius=1; // minimum render radius for an object
 var path=true;  // draw path? [Don't clear canvas between draws.]
 
-var playerId=3; // ID of Thing that is the player
+var playerId=1; // ID of Thing that is the player
 var renderId=0; // ID of Thing to put at center of frame
+var parentId=0; // (not implemented) ID of Thing to use as parent body for rotating frame of reference
 
 var G; // Gravitational Constant
 
@@ -52,10 +50,11 @@ initialize();
 
 function initialize()
 {
+    verga(); // Final system to be used in the game.
     //stableySystem(); // two planets, moon and asteroid that get kicked out of system
     //collidingSystem(); // for testing collisions (use this to see what is wrong with the collider)
     //unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
-    orbitalVelocityTest(); // testing the function to set velocities for circular orbits
+    //orbitalVelocityTest(); // testing the function to set velocities for circular orbits
     //realisticSystem(); // "realistic" my ass (also not finished in any way)
     if (hyperWarp)
     {
@@ -85,15 +84,18 @@ function loop()
     }
 }
 
-function Thing(m,x,y,Vx,Vy,color,radius)
+function Thing(m,x,y,Vx,Vy,color,radius,name)
 {
+    !name ? this.name="unnamed" : this.name=name;
     this.m=m;                                             //mass
     !radius ? this.rad=Math.pow(m,1/3) : this.rad=radius;
     this.x=x;                                             //location
     this.y=y;
     this.Vx=Vx;                                           //velocity
     this.Vy=Vy;
-    //this.rot=0;                                         //rotation
+    // There is no point in implementing rotating things until images are added.
+    //this.rotspd=0;                                      //rotation speed
+    //this.rot=0;                                         //current rotation
     !color ? this.fill="#FFFFFF" : this.fill=color;       //fill color
     this.fixed=false;
     this.collides=true;
@@ -169,6 +171,7 @@ function update(i)
 
 function collisionCheck(i,j)
 {
+    // The try and catch really shouldn't be needed, check through looping for errors (maybe should be deleting j instead of i??).
     try
     {
         var Dx=objects[i].x-objects[j].x; //find distances
@@ -182,7 +185,6 @@ function collisionCheck(i,j)
     var d=Math.sqrt(Dx*Dx+Dy*Dy);
     if (d < objects[i].rad+objects[j].rad)
     {
-        //ADD HERE: undo gravity for last step between these two objects (this may not be neccessary, do some testing with objects colliding into each other, the gravity between the two should cancel out now that force is applied properly)
         if (!objects[i].collides) 
         {
             console.log("Ignored collision between "+i+" and "+j+".");
@@ -195,41 +197,43 @@ function collisionCheck(i,j)
         }
         console.log("Collision between "+i+" and "+j+".");
         if (objects[j].m > objects[i].m) objects[i].fill=objects[j].fill; // the color of the more massive object is kept
-        if (renderId == j) renderId=i;                 // fix renderId if needed
+        if (renderId == j) renderId=i;                    // fix renderId if needed
         if (renderId > j) renderId-=1;
         if (playerId == j) playerId=i;
-        if (playerId > j) playerId-=1;                 // fix playerId if needed
+        if (playerId > j) playerId-=1;                    // fix playerId if needed
         if (objects[i].fixed)
         {
-            objects[i].m+=objects[j].m;                //add mass
-            objects[i].rad=Math.pow(objects[i].m,1/3); //recalc radius
-            objects.splice(j,1);                       //delete [j]
+            objects[i].m+=objects[j].m;                   //add mass
+            var rad=Math.pow(objects[i].m,1/3);           //recalc radius
+            if (rad > objects[i].rad) objects[i].rad=rad;
+            objects.splice(j,1);                          //delete [j]
             return;
         }
         if (objects[j].fixed)
         {
-            objects[i].m+=objects[j].m;                //add mass
-            objects[i].x=objects[j].x;                 //move to correct position
+            objects[i].m+=objects[j].m;                   //add mass
+            objects[i].x=objects[j].x;                    //move to correct position
             objects[i].y=objects[j].y;
-            //TMP NOTE: I MAY BE REMOVING THE "WRONG" OBJECT ALL ALONG, MAYBE IT WON'T BREAK IF I START REMOVING [I] INSTEAD?? <- this note is about the error we have to catch
-            objects[i].Vx=0;                           //correct the velocity
+            objects[i].Vx=0;                              //correct the velocity
             objects[i].Vy=0;
-            objects[i].rad=Math.pow(objects[i].m,1/3); //radius recalculated
-            objects[i].fixed=true;                     //become fixed
-            objects.splice(j,1);                       //delete [j]
+            var rad=Math.pow(objects[i].m,1/3);           //radius recalculated
+            if (rad > objects[i].rad) objects[i].rad=rad;
+            objects[i].fixed=true;                        //become fixed
+            objects.splice(j,1);                          //delete [j]
             return;
         }
         var Lx=objects[i].x*objects[i].m+objects[j].x*objects[j].m;   //weighting the mass vs location to find the CoM
         var Ly=objects[i].y*objects[i].m+objects[j].y*objects[j].m;
         var Fx=objects[i].Vx*objects[i].m+objects[j].Vx*objects[j].m; //calculate force to apply to "new" object
         var Fy=objects[i].Vy*objects[i].m+objects[j].Vy*objects[j].m;
-        objects[i].m+=objects[j].m;                //add mass of [j]
-        objects[i].Vx=Fx/objects[i].m;             //apply combined force
+        objects[i].m+=objects[j].m;                       //add mass of [j]
+        objects[i].Vx=Fx/objects[i].m;                    //apply combined force
         objects[i].Vy=Fy/objects[i].m;
-        objects[i].rad=Math.pow(objects[i].m,1/3); //recalculate radius based on new mass
-        objects[i].x=Lx/objects[i].m;              //find center of mass, place [i] there
+        var rad=Math.pow(objects[i].m,1/3);               //recalculate radius based on new mass
+        if (rad > objects[i].rad) objects[i].rad=rad;
+        objects[i].x=Lx/objects[i].m;                     //find center of mass, place [i] there
         objects[i].y=Ly/objects[i].m;
-        objects.splice(j,1);                       //delete [j]
+        objects.splice(j,1);                              //delete [j]
     }
 }
 
@@ -247,11 +251,12 @@ function redraw()
     }
 }
 
-function setOrbitalVelocity(id,M,d)
+function setOrbitalVelocity(id,d)
 {
-    //id=parent body id, M=mass of parent,d=radius of orbit (distance)
-    //id currently not used, id should be used to find mass, mass should not be needed in call
-    return Math.sqrt(G*M/d);
+    //id=parent body id, d=radius of orbit (distance)
+    //change to set this value relative to the parent body, applying any accelerations to the parent to the child
+    console.log("Calculated velocity: "+Math.sqrt(G*objects[id].m/(d*1.25)));
+    return Math.sqrt(G*objects[id].m/(d*1.25));
 }
 
 function playerOut()
@@ -268,6 +273,28 @@ function debugOut()
         var out=out+objects[i].dataOut();
     }
     document.getElementById("debug").innerHTML = out+"</table>";
+}
+
+function verga()
+{
+    // This will be the final system used in the game.
+    G=1;
+    timeStep=0.5;
+    scaleFactor=0.08;
+    objects[0]=new Thing(120000,0,0,0,0,"yellow",false,"Verga");
+    objects[1]=new Thing(24,140,0,0,0,"red",false,"Gelshc");
+    objects[1].Vy=-setOrbitalVelocity(0,140);
+    objects[2]=new Thing(120,575,0,0,0,"orange",false,"Oschi");
+    objects[2].Vy=-setOrbitalVelocity(0,575);
+    objects[3]=new Thing(100,960,0,0,0,"green",false,"Terra");
+    objects[3].Vy=-setOrbitalVelocity(0,960);
+    objects[4]=new Thing(46,1400,0,0,0,"red",false,"Ast");
+    objects[4].Vy=-setOrbitalVelocity(0,1380);
+    objects[5]=new Thing(1200,3600,0,0,0,"yellow",false,"Asgur");
+    objects[5].Vy=-setOrbitalVelocity(0,3400);
+    objects[6]=new Thing(80,3700,0,0,0,"blue",false,"Uriel");
+    objects[6].Vy=objects[5].Vy-setOrbitalVelocity(5,100);
+    //objects[1].Vy=objects[1].Vy*0.99;
 }
 
 function stableySystem()
@@ -328,14 +355,14 @@ function orbitalVelocityTest()
     objects[0]=new Thing(100,0,0,0,0,"yellow",12);
     objects[0].fixed=true;
     objects[1]=new Thing(0.2,0,80,0,0,"red",0.7);
-    objects[1].Vx=-setOrbitalVelocity(0,100,80);
+    objects[1].Vx=-setOrbitalVelocity(0,80);
     objects[2]=new Thing(2.58,0,200,0,0,"orange",2);
-    objects[2].Vx=-setOrbitalVelocity(0,100,200);
+    objects[2].Vx=-setOrbitalVelocity(0,200);
     objects[3]=new Thing(2.32,0,360,0,0,"green",1.85);
-    objects[3].Vx=-setOrbitalVelocity(0,100,360);
+    objects[3].Vx=-setOrbitalVelocity(0,360);
     objects[4]=new Thing(0.0001,0,380,0,0,"#6A6A87");
     objects[4].Vx=objects[3].Vx;
-    objects[4].Vx=-setOrbitalVelocity(3,2.32,20);
+    objects[4].Vx=-setOrbitalVelocity(3,20);
 }
 
 function realisticSystem()

@@ -24,7 +24,7 @@ Features
 --------
 
 * n-body, 2D, as accurate as you tell it to be (timeStep controls accuracy)
-* an almost-finished collider that randomly applies antigravity (needs major fixing)
+* a finished basic collider (WIP: more advanced/varied/collider options)
 * cheat-y pathing by "forgetting" to clear the canvas
-* scale in and out, change the frame of reference
-* colors :P
+* scale in and out, change the frame of reference (WIP: rotate frame of reference)
+* colors :P (WIP: images for things instead of just colors)

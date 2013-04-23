@@ -5,7 +5,9 @@ These are things I should've done before pushing to github. If there is somethin
 
 * Check all for loops to make sure nothing is excluded.
 * Check all loops (think there are errors because looping while deleting).
-* Fix deep impact (undo last step of gravity during collision).
+* Add ability to rotate reference frame.
+* Add ability for objects to be images.
+* Add ability to have rotation on objects. (Ties in with images as objects.)
 * Add ability to change size of canvas.
 * Add ability to change renderId, clear the canvas.
 
@@ -35,7 +37,6 @@ General ToDo
 This is stuff I want to do sooner rather than later.
 
 * Elastic bounce collider (for screwing around??)
-* Antigravity objects (value for an object to make it repel other objects)
 * Saving and loading simulations.
 * Stats for average velocity between playerId and another Thing.
 * Stats for average distance between playerId and another Thing.
@@ -55,3 +56,4 @@ Long-Term
 * Implement collision detection inside gravity function (but not what happens during a collision)??
 * Add heat/heat colors. Things colliding generate heat. Things cool down over time (except when over
   certain sizes, certain heat is maintained).
+* window.performance.now() - something you can use to run faster than 1000x per second(?), only in Chrome
