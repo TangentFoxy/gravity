@@ -45,7 +45,8 @@ var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyp
 var scaleFactor=0.6; //multiplied by data in rendering to adjust zoom level
 var renderRadius=1; // minimum render radius for an object
 var renderId=0; // ID of Thing to put at center of frame
-var parentId=0; // (not implemented) ID of Thing to use as parent body for rotating frame of reference
+var parentId=0; // ID of Thing to use as parent body for rotating frame of reference
+var parentRotation=false; // whether to rotate based on angle between parentId and renderId (true), or using the rotation of renderId (false)
 var renderType="3D"; // "side" shows a sideview (yes, a line), anything else goes to default
 var path=true;  // draw path? [Don't clear canvas between draws.]
 
@@ -98,9 +99,8 @@ function Thing(m,x,y,Vx,Vy,color,radius,name)
     this.y=y;
     this.Vx=Vx;                                           //velocity
     this.Vy=Vy;
-    // There is no point in implementing rotating things until images are added.
-    //this.rotspd=0;                                      //rotation speed
-    //this.rot=0;                                         //current rotation
+    this.rot=0;                                           //current rotation
+    this.rotspd=0;                                        //rotation speed
     !color ? this.fill="#FFFFFF" : this.fill=color;       //fill color
     this.fixed=false;
     this.collides=true;
@@ -243,6 +243,17 @@ function collisionCheck(i,j)
 
 function redraw()
 {
+    //scaleFactor+=0.00001; //just messing around zooming in slowly over time
+    if (!parentRotation)
+    {
+        var rot=objects[renderId].rot;
+    } else {
+        //calculate between renderId and parentId
+        var a=objects[renderId].x-objects[parentId].x;
+        var o=objects[renderId].y-objects[parentId].y;
+        //inverse tangent O/A (Y/X) = angle
+        var rot=Math.abs(Math.atan2(o,a));
+    }
     if (!path) context.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
     for (var i = 0; i < objects.length; i++)
     {
@@ -256,8 +267,8 @@ function redraw()
             var x=((objects[i].x-objects[renderId].x)*Math.cos(30)-(objects[i].y-objects[renderId].y)*Math.sin(30))*scaleFactor+canvas.clientWidth/2;
             var y=((objects[i].y-objects[renderId].y)*Math.sin(30)+(objects[i].x-objects[renderId].x)*Math.cos(30))*scaleFactor+canvas.clientHeight/2;
         } else {
-            var x=((objects[i].x-objects[renderId].x)*Math.cos(30)-(objects[i].y-objects[renderId].y)*Math.sin(30))*scaleFactor+canvas.clientWidth/2;
-            var y=((objects[i].x-objects[renderId].x)*Math.sin(30)+(objects[i].y-objects[renderId].y)*Math.cos(30))*scaleFactor+canvas.clientHeight/2;
+            var x=((objects[i].x-objects[renderId].x)*Math.cos(rot)-(objects[i].y-objects[renderId].y)*Math.sin(rot))*scaleFactor+canvas.clientWidth/2;
+            var y=((objects[i].x-objects[renderId].x)*Math.sin(rot)+(objects[i].y-objects[renderId].y)*Math.cos(rot))*scaleFactor+canvas.clientHeight/2;
         }
         var radius=objects[i].rad*scaleFactor;
         if (radius < renderRadius) radius=renderRadius;

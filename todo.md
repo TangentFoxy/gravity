@@ -5,9 +5,9 @@ These are things I should've done before pushing to github. If there is somethin
 
 * Check all for loops to make sure nothing is excluded.
 * Check all loops (think there are errors because looping while deleting).
-* Add ability to rotate reference frame.
 * Add ability for objects to be images.
-* Add ability to have rotation on objects. (Ties in with images as objects.)
+* Add ability to have rotation on objects. (Ties in with images as objects.) The variable is there, but
+  does not do anything currently.
 * Add ability to change size of canvas.
 * Add ability to change renderId, clear the canvas.
 
