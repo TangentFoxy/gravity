@@ -46,7 +46,7 @@ var scaleFactor=0.6; //multiplied by data in rendering to adjust zoom level
 var renderRadius=1; // minimum render radius for an object
 var renderId=0; // ID of Thing to put at center of frame
 var parentId=0; // (not implemented) ID of Thing to use as parent body for rotating frame of reference
-var renderType="side"; // "side" shows a sideview (yes, a line), anything else goes to default
+var renderType="3D"; // "side" shows a sideview (yes, a line), anything else goes to default
 var path=true;  // draw path? [Don't clear canvas between draws.]
 
 var G; // Gravitational Constant
@@ -247,26 +247,24 @@ function redraw()
     if (!path) context.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
     for (var i = 0; i < objects.length; i++)
     {
+        context.beginPath();
         if (renderType=="side")
         {
-            context.beginPath();
             var x=(objects[i].x-objects[renderId].x)*scaleFactor+canvas.clientWidth/2;
             var y=(objects[i].x-objects[renderId].x)*scaleFactor+canvas.clientHeight/2;
-            var radius=objects[i].rad*scaleFactor;
-            if (radius < renderRadius) radius=renderRadius;
-            context.arc(x,y,radius,0,2*Math.PI);
-            context.fillStyle=objects[i].fill;
-            context.fill();
+        } else if (renderType=="3D")
+        {
+            var x=((objects[i].x-objects[renderId].x)*Math.cos(30)-(objects[i].y-objects[renderId].y)*Math.sin(30))*scaleFactor+canvas.clientWidth/2;
+            var y=((objects[i].y-objects[renderId].y)*Math.sin(30)+(objects[i].x-objects[renderId].x)*Math.cos(30))*scaleFactor+canvas.clientHeight/2;
         } else {
-            context.beginPath();
-            var x=(objects[i].x-objects[renderId].x)*scaleFactor+canvas.clientWidth/2;
-            var y=(objects[i].y-objects[renderId].y)*scaleFactor+canvas.clientHeight/2;
-            var radius=objects[i].rad*scaleFactor;
-            if (radius < renderRadius) radius=renderRadius;
-            context.arc(x,y,radius,0,2*Math.PI);
-            context.fillStyle=objects[i].fill;
-            context.fill();
+            var x=((objects[i].x-objects[renderId].x)*Math.cos(30)-(objects[i].y-objects[renderId].y)*Math.sin(30))*scaleFactor+canvas.clientWidth/2;
+            var y=((objects[i].x-objects[renderId].x)*Math.sin(30)+(objects[i].y-objects[renderId].y)*Math.cos(30))*scaleFactor+canvas.clientHeight/2;
         }
+        var radius=objects[i].rad*scaleFactor;
+        if (radius < renderRadius) radius=renderRadius;
+        context.arc(x,y,radius,0,2*Math.PI);
+        context.fillStyle=objects[i].fill;
+        context.fill();
     }
 }
 
@@ -310,7 +308,7 @@ function verga()
     objects[4]=new Thing(46,1400,0,0,0,"red",false,"Ast");
     objects[4].Vy=-setOrbitalVelocity(0,1380);
     objects[5]=new Thing(1200,3600,0,0,0,"yellow",false,"Asgur");
-    objects[5].Vy=-setOrbitalVelocity(0,3400);
+    objects[5].Vy=-setOrbitalVelocity(0,3500);
     objects[6]=new Thing(80,3700,0,0,0,"blue",false,"Uriel");
     objects[6].Vy=objects[5].Vy-setOrbitalVelocity(5,100);
     //objects[1].Vy=objects[1].Vy*0.99;
