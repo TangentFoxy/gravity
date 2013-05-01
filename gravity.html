@@ -16,13 +16,22 @@ table {
     width: 95%;
     margin:6px;
 }
+#out {
+    font-family: "Lucida Console";
+    width:540px; /*really just want it to be to the width of the canvas if possible*/
+}
+#in {
+    /*font-family: "Lucida Console";*/ /*Can't change font of textareas?? *sadface**/
+    width:540px;
+}
 </style>
 </head>
 <body>
 <center>
-<h1>Gravity</h1>
+<h1 id="title">Gravity</h1>
 <div id="playerStats"></div>
-<canvas id="canvas" width="960" height="540">If you can see this, something went wrong.</canvas>
+<canvas id="canvas" width="540" height="440">If you can see this, something went wrong.</canvas>
+<div id="out">Console.</div><input name="text" type="textarea" id="in" onkeyup="consoleInput(event);" />
 <div id="debug"></div>
 </center>
 <script>
@@ -64,6 +73,7 @@ initialize();
 
 function initialize()
 {
+    document.getElementById("title").innerHTML+=" "+version;
     verga(); // Final system to be used in the game.
     //stableySystem(); // two planets, moon and asteroid that get kicked out of system
     //collidingSystem(); // for testing collisions
@@ -408,6 +418,26 @@ function orbitalVelocityTest()
 
 //objects[i]=new Thing(mass,x,y,Vx,Vy,color,radius,name,rotation);
 // rotation in degrees per (what...use timeStep to "fix" this)
+
+function consoleInput(e)
+{
+    var key=e.keyCode? e.keyCode : e.charCode // I can't believe I'm adding support for IE...
+    if (key!=13) return;                                 // if not hitting Enter, return
+    var input=document.getElementById("in").value;
+    console.log("Console input: "+input);
+    var args=input.split(" ");                           // split input into arguments
+    try {
+        if (args[0]=="function") {
+            setTimeout(args[1],0); // "function name();" to call functions
+            document.getElementById("out").innerHTML="Function <span style='color:#00BFFF;'>"+args[1]+"</span> called.";
+        }
+        // add more abilities here
+    }
+    catch(err) {
+        console.log("Failed console command: "+err);
+    }
+    document.getElementById("in").value=null;            // reset value of textarea
+}
 
 </script>
 </body>

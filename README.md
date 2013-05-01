@@ -28,3 +28,4 @@ Features
 * cheat-y pathing by "forgetting" to clear the canvas
 * scale in and out, change the frame of reference (including rotation!)
 * colors :P (WIP: images for things instead of just colors)
+* a console for screwing with stuff..still needs lots of improvement! :D
