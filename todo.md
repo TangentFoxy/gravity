@@ -3,6 +3,10 @@ Immediate ToDo
 
 These are things I should've done before pushing to github. If there is something here, I am a lazy fool, beat me with a large stick.
 
+* SoI should not be calculated inside loop, should be once in a while thing
+* SoI should not need global variables for itself
+* should objects have an SoI variable??
+
 * Check all for loops to make sure nothing is excluded.
 * Check all loops (think there are errors because looping while deleting).
 * Add ability for objects to be images.
@@ -19,9 +23,6 @@ Stuff I want to work on as soon as possible.
 * Make an equation you can call to check how stable your orbit will be (check gravitational influence
   of the major object(s) in the system against parent body influence, parent
   needs to be > other influences)
-* Fix deep impact collisions (undo last gravity step between colliding objects)
-* Fix mass location, Collider needs to move object after collision (before deleting j) to the center of
-  mass between the two objects
 * "Rocher" Collider checks the radius of the larger object outwards from that object and can break
   apart objects entering within this radius? (Roche limit lazily implemented) half the radius again??
 * Collider needs to make sure collisions with fixed objects keep the fixed object in its place and
@@ -30,6 +31,7 @@ Stuff I want to work on as soon as possible.
 * Controllable object (with playerId)
 * Glancing collisions collider (idea=Large object loses fraction of mass, small object split in
   half, things go flying off with similar velocity to impact)
+* Make a system with lots of objects (or a way to randomly generate objects) to test it running with more calculations and thus, more lag :)
 
 General ToDo
 ------------
@@ -41,8 +43,6 @@ This is stuff I want to do sooner rather than later.
 * Stats for average velocity between playerId and another Thing.
 * Stats for average distance between playerId and another Thing.
 * Graph for playerId relative distance and velocity to another Thing.
-* Image rendering (objects can be defined as an image).
-* Support for rotation of objects (after adding images).
 * timeFactor can be scaled to smallest distance between two objects for higher accuracy with
   faster simulation when further out
 * Proper pathing, i.e. the paths fade after a certain amount of time (and are drawn as lines instead

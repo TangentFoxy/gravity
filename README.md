@@ -3,11 +3,11 @@ What is Gravity?
 
 I know, it needs a better name.
 
-It's a simple little 2D n-body gravitation simulation using only basic algebra because I do not know of any higher maths.
+It's a simple little 2D n-body gravitation simulation using mostly basic algebra because I do not know of any higher maths. Okay, that's not strictly true anymore. I am learning better maths, and they will be applied as I continue to learn.
 
-A better question might be, what is it to become? Well, a game. I want to make a game with somewhat realistic physics, ships you can build and customize and launch from a planet and go to orbit and land and do science-y stuff and mine the heck out of planets and basically do all this really cool stuff.
+A better question might be, what is it to become? Well, a game. I want to make a game with somewhat realistic physics (though this could be thrown out for fun at any time, in which case I will fork this into a more simulator version vs game version), ships you can build and customize and launch from a planet and go to orbit and land and do science-y stuff and mine the heck out of planets and basically do all this really cool stuff.
 
-However, this is the first project I've ever done. Do not expect it to be all that good at anything. Or ever be finished.
+However, this is the first project I've ever done. Do not expect it to be all that good at anything. Or ever be finished. No, do expect it to be finished, and please poke me muchly to make me continue working on it.
 
 Who am I?
 ---------
@@ -26,5 +26,5 @@ Features
 * n-body, 2D, as accurate as you tell it to be (timeStep controls accuracy)
 * a finished basic collider (WIP: more advanced/varied/collider options)
 * cheat-y pathing by "forgetting" to clear the canvas
-* scale in and out, change the frame of reference (WIP: rotate frame of reference)
+* scale in and out, change the frame of reference (including rotation!)
 * colors :P (WIP: images for things instead of just colors)

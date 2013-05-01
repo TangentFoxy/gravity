@@ -4,15 +4,15 @@
 <title>Gravity</title>
 <style>
 body {
-    background: #000000;
-    color: #FFFFFF;
+    background: #000;
+    color: #FFF;
 }
 canvas {
-    border: 3px #FFFFFF solid;
+    border: 3px #FFF solid;
     border-radius:10px;
 }
 table {
-    border: 1px #FFFFFF solid;
+    border: 1px #FFF solid;
     width: 95%;
     margin:6px;
 }
@@ -22,7 +22,7 @@ table {
 <center>
 <h1>Gravity</h1>
 <div id="playerStats"></div>
-<canvas id="canvas" width="620" height="440">If you can see this, something went wrong.</canvas>
+<canvas id="canvas" width="960" height="540">If you can see this, something went wrong.</canvas>
 <div id="debug"></div>
 </center>
 <script>
@@ -33,24 +33,32 @@ var objects=new Array();
 
 // RUNNING SPEED VARIABLES
 var runSpeed=1; // how many milliseconds between each iteration
-var hyperWarp=true; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
+var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
 var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag, freezing, crashing.
 var timeStep=0.5; // multipled by velocity/movement to change accuracy/speed of the simulation (lower is more accurate, but slower)
 
 // PLAYER RELATED VARIABLES
-var playerId=1; // ID of Thing that is the player
+var playerId=3; // ID of Thing that is the player
 
 // RENDER RELATED VARIABLES
 var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed (aka slower)
 var scaleFactor=0.6; //multiplied by data in rendering to adjust zoom level
 var renderRadius=1; // minimum render radius for an object
-var renderId=0; // ID of Thing to put at center of frame
+var renderId=3; // ID of Thing to put at center of frame
 var parentId=0; // ID of Thing to use as parent body for rotating frame of reference
-var parentRotation=false; // whether to rotate based on angle between parentId and renderId (true), or using the rotation of renderId (false)
-var renderType="3D"; // "side" shows a sideview (yes, a line), anything else goes to default
-var path=true;  // draw path? [Don't clear canvas between draws.]
+var parentRotation=true; // whether to rotate based on angle between parentId and renderId (true), or using the rotation of renderId (false)
+var renderType="norm"; // "side" shows a sideview (yes, a line), "3D" shows a pseudo-3D view, anything else goes to default
+var path=false;  // draw path? [Don't clear canvas between draws.]
+var zoom=false; // Zoom in slowly? (just for the hell of it)
+var zoomFactor=0.00001; //how much to increase scaleFactor each frame when zoom is on
 
-var G; // Gravitational Constant
+// CONSTANTS
+var version="0.1.0" //Yes, there is a version number now. Don't know why.
+var G;              //Gravitational Constant
+
+// note : SoI calculations should not happen every frame
+var iLastVelocity=0; //used to find SoI
+var jLastVelocity=0;
 
 initialize();
 
@@ -58,10 +66,9 @@ function initialize()
 {
     verga(); // Final system to be used in the game.
     //stableySystem(); // two planets, moon and asteroid that get kicked out of system
-    //collidingSystem(); // for testing collisions (use this to see what is wrong with the collider)
+    //collidingSystem(); // for testing collisions
     //unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
     //orbitalVelocityTest(); // testing the function to set velocities for circular orbits
-    //realisticSystem(); // "realistic" my ass (also not finished in any way)
     if (hyperWarp)
     {
         setInterval(function()
@@ -90,20 +97,21 @@ function loop()
     }
 }
 
-function Thing(m,x,y,Vx,Vy,color,radius,name)
+function Thing(m,x,y,Vx,Vy,color,radius,name,rotation)
 {
     !name ? this.name="unnamed" : this.name=name;
-    this.m=m;                                             //mass
+    this.m=m;                                                     //mass
     !radius ? this.rad=Math.pow(m,1/3) : this.rad=radius;
-    this.x=x;                                             //location
+    this.x=x;                                                     //location
     this.y=y;
-    this.Vx=Vx;                                           //velocity
+    this.Vx=Vx;                                                   //velocity
     this.Vy=Vy;
-    this.rot=0;                                           //current rotation
-    this.rotspd=0;                                        //rotation speed
-    !color ? this.fill="#FFFFFF" : this.fill=color;       //fill color
+    this.rot=0;                                                   //current rotation
+    !rotation ? this.rotspd=0 : this.rotspd=rotation*Math.PI/180; //rotation speed
+    !color ? this.fill="#FFFFFF" : this.fill=color;               //fill color
     this.fixed=false;
     this.collides=true;
+    this.SoI;                                                     //ID of Thing in the SoI of
     
     this.getVelocity = function()
     {
@@ -150,6 +158,10 @@ function gravity(i,j)
         Ay=-Ay;
         objects[i].Vx+=Ax*timeStep;  //apply change of velocity
         objects[i].Vy+=Ay*timeStep;
+        //SoI stuff
+        var tmp=Math.sqrt(Ax*Ax+Ay*Ay);
+        if (tmp > iLastVelocity) objects[i].SoI=j;
+        iLastVelocity=tmp;
     }
     if (!objects[j].fixed)
     {
@@ -160,12 +172,16 @@ function gravity(i,j)
         if (Ny) Ay=-Ay;
         objects[j].Vx+=Ax*timeStep;  //apply change of velocity
         objects[j].Vy+=Ay*timeStep;
+        //SoI stuff
+        var tmp=Math.sqrt(Ax*Ax+Ay*Ay);
+        if (tmp > jLastVelocity) objects[j].SoI=i;
+        jLastVelocity=tmp;
     }
 }
 
 function update(i)
 {
-    //needs to handle things like rotation here in the future??
+    objects[i].rot+=objects[i].rotspd;        //apply rotation
     if (!objects[i].fixed)
     {
         objects[i].x+=objects[i].Vx*timeStep; //apply acceleration
@@ -243,16 +259,14 @@ function collisionCheck(i,j)
 
 function redraw()
 {
-    //scaleFactor+=0.00001; //just messing around zooming in slowly over time
+    if (zoom) scaleFactor+=zoomFactor; // just messing around zooming in slowly over time
     if (!parentRotation)
     {
         var rot=objects[renderId].rot;
     } else {
-        //calculate between renderId and parentId
         var a=objects[renderId].x-objects[parentId].x;
         var o=objects[renderId].y-objects[parentId].y;
-        //inverse tangent O/A (Y/X) = angle
-        var rot=Math.abs(Math.atan2(o,a));
+        var rot=Math.atan2(a,o)-Math.PI/2;
     }
     if (!path) context.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
     for (var i = 0; i < objects.length; i++)
@@ -272,7 +286,7 @@ function redraw()
         }
         var radius=objects[i].rad*scaleFactor;
         if (radius < renderRadius) radius=renderRadius;
-        context.arc(x,y,radius,0,2*Math.PI);
+        context.arc(x,y,radius,0,2*Math.PI); //Technically should render from objects[i].rot TO 2*Math.PI+objects[i].rot ?? Doesn't really matter when we're circles...
         context.fillStyle=objects[i].fill;
         context.fill();
     }
@@ -282,7 +296,7 @@ function setOrbitalVelocity(id,d)
 {
     //id=parent body id, d=radius of orbit (distance)
     //change to set this value relative to the parent body, applying any accelerations to the parent to the child
-    console.log("Calculated velocity: "+Math.sqrt(G*objects[id].m/(d*1.25)));
+    console.log("Calculated orbital velocity: "+Math.sqrt(G*objects[id].m/(d*1.25)));
     return Math.sqrt(G*objects[id].m/(d*1.25));
 }
 
@@ -392,15 +406,8 @@ function orbitalVelocityTest()
     objects[4].Vx=-setOrbitalVelocity(3,20);
 }
 
-function realisticSystem()
-{
-    G=6.67384e-11; //real gravitational constant (probably needs to be higher, because I am using much smaller numbers)
-    objects[0]=new Thing(90000,0,0,0,0,"yellow");
-    objects[0].fixed=true;
-    objects[1]=new Thing(100,1000,0,0,-20,"red");
-}
-
-//objects[i]=new Thing(mass,x,y,Vx,Vy,color,radius);
+//objects[i]=new Thing(mass,x,y,Vx,Vy,color,radius,name,rotation);
+// rotation in degrees per (what...use timeStep to "fix" this)
 
 </script>
 </body>
