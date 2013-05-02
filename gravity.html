@@ -430,6 +430,16 @@ function consoleInput(e)
         if (args[0]=="function") {
             setTimeout(args[1],0); // "function name();" to call functions
             document.getElementById("out").innerHTML="Function <span style='color:#00BFFF;'>"+args[1]+"</span> called.";
+        } else if (args[0]=="set") {
+            //variable named in args[1] needs to be set to value in args[2]
+            //var variable[args[1].this]=args[2];
+            //console.log(args[1]);
+            //console.log(varname);
+            //args[1].this=args[2];
+            //var window.val=args.slice(1);
+            //var =args[2];
+            //window.push(args[1]); // should make gloabl variable named by args[1]
+            //console.log("Global? "+window.args[1]);
         }
         // add more abilities here
     }
