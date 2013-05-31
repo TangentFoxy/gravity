@@ -52,6 +52,10 @@ This is stuff I want to do sooner rather than later.
   faster simulation when further out
 * Proper pathing, i.e. the paths fade after a certain amount of time (and are drawn as lines instead
   of just points again and again?)
+* if an object is on the surface of another, its speed should be the same (note gravity calculations need to be tweaked),
+  and its 'rotation' (the kind of rotation used in the render code) should be applied as the rotation of the parent object,
+  so it stays on the same spot on the surface, basically, use the render code for parentRotation as movement code instead
+  of just display code
 
 Long-Term
 ---------

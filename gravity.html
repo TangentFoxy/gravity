@@ -54,22 +54,22 @@ var objects=new Array();
 var runSpeed=1; // how many milliseconds between each iteration
 var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
 var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag, freezing, crashing.
-var timeStep=0.5; // multipled by velocity/movement to change accuracy/speed of the simulation (lower is more accurate, but slower)
+var timeStep=1; // multipled by velocity/movement to change accuracy/speed of the simulation (lower is more accurate, but slower)
 
 // PLAYER RELATED VARIABLES
 var playerId=3; // ID of Thing that is the player
 
 // RENDER RELATED VARIABLES
 var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed (aka slower)
-var scaleFactor=0.6; //multiplied by data in rendering to adjust zoom level
+var scaleFactor=1; //multiplied by data in rendering to adjust zoom level
 var renderRadius=1; // minimum render radius for an object
 var renderId=3; // ID of Thing to put at center of frame
 var parentId=0; // ID of Thing to use as parent body for rotating frame of reference
 var parentRotation=true; // whether to rotate based on angle between parentId and renderId (true), or using the rotation of renderId (false)
 var renderType="norm"; // "side" shows a sideview (yes, a line), "3D" shows a pseudo-3D view, anything else goes to default
 var path=true;  // draw path? [Don't clear canvas between draws.]
-var zoom=false; // Zoom in slowly? (just for the hell of it)
-var zoomFactor=0.00001; //how much to increase scaleFactor each frame when zoom is on
+var zoom=true; // Zoom in slowly? (just for the hell of it)
+var zoomFactor=1; //how much to increase scaleFactor each frame when zoom is on
 
 // CONSTANTS
 var version="0.1.0" //Yes, there is a version number now. Don't know why.
@@ -164,6 +164,74 @@ function Thing(m,x,y,Vx,Vy,color,radius,name,rotation)
     {
         return "<tr><td>Mass: "+this.m.toFixed(3)+"</td><td>Radius: "+this.rad.toFixed(2)+"</td><td>X: "+this.x.toFixed(2)+"</td><td>Y: "+this.y.toFixed(2)+"</td><td>Velocity X: "+this.Vx.toFixed(2)+"</td><td>Velocity Y: "+this.Vy.toFixed(2)+"</td><td>Fill color: "+this.fill+"</td><td>Fixed? "+this.fixed.toString()+"</td></tr>";
     }
+}
+
+function runningEnvironment(cmd,arg,rSpeed,hWarp,hSpeed,tStep,plId,hRender,sFactor,rRadius,rId,paId,pRotation,rType,p,z,zFactor)
+{
+    // later replace this with all global variables being an object called environment, and then rewrite this for that, should be much easier?
+try {
+    switch(cmd)
+    {
+        case "set":
+        runSpeed=rSpeed;
+        hyperWarp=hWarp;
+        hyperSpeed=hSpeed;
+        timeStep=tStep;
+        playerId=plId;
+        hyperRender=hRender;
+        scaleFactor=sFactor;
+        renderRadius=rRadius;
+        renderId=rId;
+        parentId=paId;
+        parentRotation=pRotation;
+        renderType=rType;
+        path=p;
+        zoom=z;
+        zoomFactor=zFactor;
+        break;
+        case "save":
+        eval(arg+"[0]="+rSpeed+";");
+        eval(arg+"[1]="+hWarp+";");
+        eval(arg+"[2]="+hSpeed+";");
+        eval(arg+"[3]="+tStep+";");
+        eval(arg+"[4]="+plId+";");
+        eval(arg+"[5]="+hRender+";");
+        eval(arg+"[6]="+sFactor+";");
+        eval(arg+"[7]="+rRadius+";");
+        eval(arg+"[8]="+rId+";");
+        eval(arg+"[9]="+paId+";");
+        eval(arg+"[10]="+pRotation+";");
+        eval(arg+"[11]="+rType+";"); // will it be surrounded by quotes??
+        eval(arg+"[12]="+p+";");
+        eval(arg+"[13]="+z+";");
+        eval(arg+"[14]="+zFactor+";");
+        break;
+        case "load":
+        // 'arg' needs to be the array
+        runSpeed=arg[0];
+        hyperWarp=arg[1];
+        hyperSpeed=arg[2];
+        timeStep=arg[3];
+        playerId=arg[4];
+        hyperRender=arg[5];
+        scaleFactor=arg[6];
+        renderRadius=arg[7];
+        renderId=arg[8];
+        parentId=arg[9];
+        parentRotation=arg[10];
+        renderType=arg[11];
+        path=arg[12];
+        zoom=arg[13];
+        zoomFactor=arg[14];
+        break;
+        default:
+        throw "invalid runningEnvironment() command";
+    }
+}
+catch(err) {
+    document.getElementById("out").innerHTML="Error with runningEnvironment: <span class='grey'>"+err+"</span>.";
+    console.log("runningEnvironment error: "+err);
+}
 }
 
 // Calculations
@@ -408,12 +476,12 @@ function consoleInput(e)
             document.getElementById("out").innerHTML="<span class='var'>scaleFactor</span>=<span class='data'>"+scaleFactor+"</span>";
             break;
             case "hyperRender":
-            if (args[1]!==undefined) hyperRender=!hyperRender;
-            document.getElementById("out").innerHTML="<span class='var'>hyperRender</span>=<span class='data'>"+hyperRender+"</span>";
+            hyperRender=!hyperRender;
+            document.getElementById("out").innerHTML="<span class='var'>hyperRender</span>=<span class='data'>"+hyperRender+"</span>.";
             break;
             case "parentRotation":
-            if (args[1]!==undefined) parentRotation=!parentRotation;
-            document.getElementById("out").innerHTML="<span class='var'>parentRotation</span>=<span class='data'>"+parentRotation+"</span>";
+            parentRotation=!parentRotation;
+            document.getElementById("out").innerHTML="<span class='var'>parentRotation</span>=<span class='data'>"+parentRotation+"</span>.";
             break;
             case "renderType":
             if (args[1]!==undefined) renderType=args[1];
@@ -476,9 +544,11 @@ function consoleInput(e)
 function verga()
 {
     // This will be the final system used in the game.
+    vergaEnvironment=[33,false,20,0.2,3,true,0.08,1,0,3,false,"norm",true,false,0.00001];
+    runningEnvironment("load",vergaEnvironment);
     G=1;
-    timeStep=0.5;
-    scaleFactor=0.08;
+    //timeStep=0.5;
+    //scaleFactor=0.08;
     objects[0]=new Thing(120000,0,0,0,0,"yellow",false,"Verga");
     objects[1]=new Thing(24,140,0,0,0,"red",false,"Gelshc");
     objects[1].Vy=-setOrbitalVelocity(0,140);
