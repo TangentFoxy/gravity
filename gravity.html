@@ -23,13 +23,11 @@ p {
     margin:2px;
     padding:2px;
 }
-#out {
-    font-family: "Lucida Console";
-    width:540px; /*really just want it to be to the width of the canvas if possible*/
-}
 #in {
     /*font-family: "Lucida Console";*/ /*Can't change font of textareas?? *sadface**/
     width:540px;
+    margin-top: 4px;
+    margin-bottom: -2px;
 }
 #logdiv {
     font-family: "Lucida Console";
@@ -39,7 +37,7 @@ p {
     overflow:auto;
     margin:auto;
     border: 1px #FFF solid;
-    border-radius: 6px;
+    border-radius: 2px;
 }
 .var {
     color:#00BFFF;
@@ -56,9 +54,8 @@ p {
 <body>
 <center>
 <h1 id="title">Gravity</h1>
-<canvas id="canvas" width="540" height="440">If you can see this, something went wrong.</canvas>
-<div id="logdiv"><p id="log"></p></div>
-<div id="out">Console.</div>
+<canvas id="canvas" width="560" height="440">If you can see this, something went wrong.</canvas>
+<div id="logdiv"><p id="out"></p></div>
 <input name="text" type="textarea" id="in" onkeyup="consoleInput(event);" />
 <div id="playerStats"></div>
 <div id="debug"></div>
@@ -70,7 +67,7 @@ var context=canvas.getContext("2d");
 var objects=new Array();
 
 // For console div:
-var log = document.getElementById("logdiv");
+var logdiv = document.getElementById("logdiv");
 
 // RUNNING SPEED VARIABLES
 var runSpeed=1; // how many milliseconds between each iteration
@@ -150,10 +147,9 @@ function setOrbitalVelocity(id,d)
 {
     //id=parent body id, d=radius of orbit (distance)
     //change to set this value relative to the parent body, applying any accelerations to the parent to the child
-    console.log("Calculated orbital velocity: "+Math.sqrt(G*objects[id].m/(d*1.25)));
-    document.getElementById("log").innerHTML+="Calculated orbital velocity: "+Math.sqrt(G*objects[id].m/(d*1.25))+"<br />";
-    log.scrollTop = log.scrollHeight;
-    return Math.sqrt(G*objects[id].m/(d*1.25));
+    var result=Math.sqrt(G*objects[id].m/(d*1.25));
+    consoleOutput("Calculated orbital velocity: "+result,"Calculated orbital velocity: "+result);
+    return result;
 }
 
 // Constructors (& Similar)
@@ -339,21 +335,15 @@ function collisionCheck(i,j)
     {
         if (!objects[i].collides) 
         {
-            console.log("Ignored collision between "+i+" and "+j+".");
-            document.getElementById("log").innerHTML+="Ignored collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.<br />";
-            log.scrollTop = log.scrollHeight;
+            consoleOutput("Ignored collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.","Ignored collision between "+i+" and "+j+".");
             return;
         }
         if (!objects[j].collides)
         {
-            console.log("Ignored collision between "+i+" and "+j+".");
-            document.getElementById("log").innerHTML+="Ignored collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.<br />";
-            log.scrollTop = log.scrollHeight;
+            consoleOutput("Ignored collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.","Ignored collision between "+i+" and "+j+".");
             return;
         }
-        console.log("Collision between "+i+" and "+j+".");
-        document.getElementById("log").innerHTML+="Collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.<br />";
-        log.scrollTop = log.scrollHeight;
+        consoleOutput("Collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.","Collision between "+i+" and "+j+".");
         if (objects[j].m > objects[i].m) objects[i].fill=objects[j].fill; // the color of the more massive object is kept
         if (renderId == j) renderId=i;                    // fix renderId if needed
         if (renderId > j) renderId-=1;
@@ -408,7 +398,7 @@ function redraw()
         var o=objects[renderId].y-objects[parentId].y;
         var rot=Math.atan2(a,o)-Math.PI/2;
     }
-    if (!path) context.clearRect(0,0,canvas.clientWidth,canvas.clientHeight); //replace this with drawing a black rect with alpha channel set to have a dim path
+    if (!path) canvasClear();
     for (var i = 0; i < objects.length; i++)
     {
         context.beginPath();
@@ -430,6 +420,26 @@ function redraw()
         context.fillStyle=objects[i].fill;
         context.fill();
     }
+}
+
+function canvasClear()
+{
+    context.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
+    //replace this with drawing a black rect with alpha channel set to have a dim path
+    /*
+    context.beginPath();
+    context.rect(0,0,canvas.clientWidth,canvas.clientHeight);
+    context.fillStyle='black';
+    context.fill-opacity=0.1;
+    context.fill();
+    */
+    /*
+      context.fill-opacity=0.1;
+      context.beginPath();
+      context.rect(188, 50, 200, 100);
+      context.fillStyle = 'yellow';
+      context.fill();
+    */
 }
 
 // Debug
@@ -463,21 +473,21 @@ function consoleInput(e)
             case "function":
             if (args[1]==undefined) throw "no function"
             eval(args[1]);                                   // "function name();" to call functions
-            document.getElementById("out").innerHTML="Function <span class='var'>"+args[1]+"</span> called.";
+            consoleOutput("Function <span class='var'>"+args[1]+"</span> called.");
             break;
             case "set":
             if (args[1]==undefined || args[2]==undefined) throw "invalid set";
             eval(args[1]+"="+args[2]+";");                   // 'set var x' (remember it is called like 'var=x;' so if x is string, surround with quotes)
-            document.getElementById("out").innerHTML="<span class='var'>"+args[1]+"</span> set to: <span class='data'>"+eval(args[1])+"</span>.";
+            consoleOutput("<span class='var'>"+args[1]+"</span> set to: <span class='data'>"+eval(args[1])+"</span>.");
             break;
             case "speed":
             if (args[1]==undefined) {
-                document.getElementById("out").innerHTML="<span class='var'>runSpeed</span>=<span class='data'>"+runSpeed+"</span>, <span class='var'>hyperWarp</span>=<span class='data'>"+hyperWarp+"</span>, <span class='var'>hyperSpeed</span>=<span class='data'>"+hyperSpeed+"</span>";
+                consoleOutput("<span class='var'>runSpeed</span>=<span class='data'>"+runSpeed+"</span>, <span class='var'>hyperWarp</span>=<span class='data'>"+hyperWarp+"</span>, <span class='var'>hyperSpeed</span>=<span class='data'>"+hyperSpeed+"</span>");
             } else {
                 runSpeed=args[1];                            // 'speed x warp y' (warp is boolean)
                 if (args[2]!==undefined) hyperWarp=args[2];
                 if (args[3]!==undefined) hyperSpeed=args[3];
-                document.getElementById("out").innerHTML="Running every <span class='data'>"+runSpeed+"</span> milliseconds. <span class='var'>hyperWarp</span>: <span class='data'>"+hyperWarp+"</span> (<span class='var'>hyperSpeed</span>: <span class='data'>"+hyperSpeed+"</span>).";
+                consoleOutput("Running every <span class='data'>"+runSpeed+"</span> milliseconds. <span class='var'>hyperWarp</span>: <span class='data'>"+hyperWarp+"</span> (<span class='var'>hyperSpeed</span>: <span class='data'>"+hyperSpeed+"</span>).");
                 clearInterval(interval);
                 start();
             }
@@ -485,45 +495,45 @@ function consoleInput(e)
             case "accuracy":
             case "timeStep":
             if (args[1]==undefined) {
-                document.getElementById("out").innerHTML="<span class='var'>timeStep</span>=<span class='data'>"+timeStep+"</span>";
+                consoleOutput("<span class='var'>timeStep</span>=<span class='data'>"+timeStep+"</span>");
             } else {
                 timeStep=args[1];
-                document.getElementById("out").innerHTML="Time step <span class='data'>"+timeStep+"</span>, lower is more accurate.";
+                consoleOutput("Time step <span class='data'>"+timeStep+"</span>, lower is more accurate.");
             }
             break;
             case "id":
             if (args[1]==undefined) {
-                document.getElementById("out").innerHTML="<span class='var'>playerId</span>=<span class='data'>"+playerId+"</span>, <span class='var'>renderId</span>=<span class='data'>"+renderId+"</span>, <span class='var'>parentId</span>=<span class='data'>"+parentId+"</span>";
+                consoleOutput("<span class='var'>playerId</span>=<span class='data'>"+playerId+"</span>, <span class='var'>renderId</span>=<span class='data'>"+renderId+"</span>, <span class='var'>parentId</span>=<span class='data'>"+parentId+"</span>");
             } else {
                 playerId=args[1];                            // 'id 0 1 2' = player, render, parent body
                 if (args[2]!==undefined) renderId=args[2];
                 if (args[3]!==undefined) parentId=args[3];
-                document.getElementById("out").innerHTML="<span class='var'>playerId</span>=<span class='data'>"+playerId+"</span>. <span class='var'>renderId</span>=<span class='data'>"+renderId+"</span>. <span class='var'>parentId</span>=<span class='data'>"+parentId+"</span>.";
+                consoleOutput("<span class='var'>playerId</span>=<span class='data'>"+playerId+"</span>. <span class='var'>renderId</span>=<span class='data'>"+renderId+"</span>. <span class='var'>parentId</span>=<span class='data'>"+parentId+"</span>.");
             }
             break;
             case "scale":
             if (args[1]!==undefined) scaleFactor=args[1];
-            document.getElementById("out").innerHTML="<span class='var'>scaleFactor</span>=<span class='data'>"+scaleFactor+"</span>";
+            consoleOutput("<span class='var'>scaleFactor</span>=<span class='data'>"+scaleFactor+"</span>");
             break;
             case "hyperRender":
             hyperRender=!hyperRender;
-            document.getElementById("out").innerHTML="<span class='var'>hyperRender</span>=<span class='data'>"+hyperRender+"</span>.";
+            consoleOutput("<span class='var'>hyperRender</span>=<span class='data'>"+hyperRender+"</span>.");
             break;
             case "parentRotation":
             parentRotation=!parentRotation;
-            document.getElementById("out").innerHTML="<span class='var'>parentRotation</span>=<span class='data'>"+parentRotation+"</span>.";
+            consoleOutput("<span class='var'>parentRotation</span>=<span class='data'>"+parentRotation+"</span>.");
             break;
             case "renderType":
             if (args[1]!==undefined) renderType=args[1];
-            document.getElementById("out").innerHTML="<span class='var'>renderType</span>=<span class='data'>"+renderType+"</span>";
+            consoleOutput("<span class='var'>renderType</span>=<span class='data'>"+renderType+"</span>");
             break;
             case "path":
             path=!path;
-            document.getElementById("out").innerHTML="Pathing toggled to <span class='data'>"+path+"</span>.";
+            consoleOutput("Pathing toggled to <span class='data'>"+path+"</span>.");
             break;
             case "zoom":
             if (args[1]=="state") {
-                document.getElementById("out").innerHTML="<span class='var'>zoom</span>=<span class='data'>"+zoom+"</span>, <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>";
+                consoleOutput("<span class='var'>zoom</span>=<span class='data'>"+zoom+"</span>, <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>");
                 break;
             }
             // if zoom=on, if adjusting zoom, adjust zoom, else zoom=off
@@ -531,18 +541,35 @@ function consoleInput(e)
             if (zoom) {
                 if (args[1]!==undefined) {
                     zoomFactor=args[1];
-                    document.getElementById("out").innerHTML="Zoom adjusted. <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>.";
+                    consoleOutput("Zoom adjusted. <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>.");
                 } else {
                     zoom=false;
-                    document.getElementById("out").innerHTML="Zoom turned off.";
+                    consoleOutput("Zoom turned off.");
                 }
             } else {
                 zoom=true;
                 if (args[1]!==undefined) zoomFactor=args[1];
-                document.getElementById("out").innerHTML="Zoom turned on. Current <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>.";
+                consoleOutput("Zoom turned on. Current <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>.");
             }
             clearInterval(interval);
             start();
+            break;
+            case "clear":
+            switch(args[1])
+            {
+                case "canvas":
+                canvasClear();
+                consoleOutput("Canvas cleared.");
+                break;
+                case "console":
+                document.getElementById("out").innerHTML="";
+                consoleOutput("Console cleared.");
+                break;
+                default:
+                canvasClear();
+                document.getElementById("out").innerHTML="";
+                consoleOutput("Canvas and console cleared.");
+            }
             break;
             default:
             throw "unknown command";
@@ -552,21 +579,26 @@ function consoleInput(e)
         switch(err)
         {
             case "unknown command":
-            document.getElementById("out").innerHTML="Command '<span class='grey'>"+document.getElementById("in").value+"</span>' not recognised.";
-            console.log("Failed console command: "+err);
+            consoleOutput("Command '<span class='grey'>"+document.getElementById("in").value+"</span>' not recognised.","Failed console command: "+err);
             break;
             case "no function":
-            document.getElementById("out").innerHTML="Function not specfied.";
+            consoleOutput("Function not specfied.");
             break;
             case "invalid set":
-            document.getElementById("out").innerHTML="No variable or no data to be set. Use '<span class='grey'>set var x</span>' to set data.";
+            consoleOutput("No variable or no data to be set. Use '<span class='grey'>set var x</span>' to set data.");
             break;
             default:
-            document.getElementById("out").innerHTML="Unknown error: <span class='grey'>"+err+"</span>";
-            console.log("Unknown error: "+err);
+            consoleOutput("Unknown error: <span class='grey'>"+err+"</span>","Unknown error: "+err);
         }
     }
     document.getElementById("in").value=null;            // reset value of textarea
+}
+
+function consoleOutput(out,con)
+{
+    document.getElementById("out").innerHTML+=out+"<br />";
+    if (con!==undefined) console.log(con);
+    logdiv.scrollTop = logdiv.scrollHeight;
 }
 
 // Systems

@@ -45,11 +45,12 @@ zoom x
 - Optional "x" sets the zoomFactor.
 - If 'x'=='state' instead returns current state of zoom.
 
+clear x
+- Clears the canvas and console.
+- Optional "x" can specify 'canvas' or 'console' to clear one without the other.
+
 Not Implemented
 ---------------
-
-clear
-- Clears the canvas.
 
 random type
 - Makes a random Thing in a random orbit of "type"
