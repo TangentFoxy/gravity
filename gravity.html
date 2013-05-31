@@ -16,6 +16,13 @@ table {
     width: 95%;
     margin:6px;
 }
+td {
+    width:16%;
+}
+p {
+    margin:2px;
+    padding:2px;
+}
 #out {
     font-family: "Lucida Console";
     width:540px; /*really just want it to be to the width of the canvas if possible*/
@@ -23,6 +30,16 @@ table {
 #in {
     /*font-family: "Lucida Console";*/ /*Can't change font of textareas?? *sadface**/
     width:540px;
+}
+#logdiv {
+    font-family: "Lucida Console";
+    text-align: left;
+    width: 95%;
+    height:120px;
+    overflow:auto;
+    margin:auto;
+    border: 1px #FFF solid;
+    border-radius: 6px;
 }
 .var {
     color:#00BFFF;
@@ -39,9 +56,11 @@ table {
 <body>
 <center>
 <h1 id="title">Gravity</h1>
-<div id="playerStats"></div>
 <canvas id="canvas" width="540" height="440">If you can see this, something went wrong.</canvas>
-<div id="out">Console.</div><input name="text" type="textarea" id="in" onkeyup="consoleInput(event);" />
+<div id="logdiv"><p id="log"></p></div>
+<div id="out">Console.</div>
+<input name="text" type="textarea" id="in" onkeyup="consoleInput(event);" />
+<div id="playerStats"></div>
 <div id="debug"></div>
 </center>
 <script>
@@ -49,6 +68,9 @@ table {
 var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
 var objects=new Array();
+
+// For console div:
+var log = document.getElementById("logdiv");
 
 // RUNNING SPEED VARIABLES
 var runSpeed=1; // how many milliseconds between each iteration
@@ -129,6 +151,8 @@ function setOrbitalVelocity(id,d)
     //id=parent body id, d=radius of orbit (distance)
     //change to set this value relative to the parent body, applying any accelerations to the parent to the child
     console.log("Calculated orbital velocity: "+Math.sqrt(G*objects[id].m/(d*1.25)));
+    document.getElementById("log").innerHTML+="Calculated orbital velocity: "+Math.sqrt(G*objects[id].m/(d*1.25))+"<br />";
+    log.scrollTop = log.scrollHeight;
     return Math.sqrt(G*objects[id].m/(d*1.25));
 }
 
@@ -162,7 +186,7 @@ function Thing(m,x,y,Vx,Vy,color,radius,name,rotation)
     
     this.dataOut = function()
     {
-        return "<tr><td>Mass: "+this.m.toFixed(3)+"</td><td>Radius: "+this.rad.toFixed(2)+"</td><td>X: "+this.x.toFixed(2)+"</td><td>Y: "+this.y.toFixed(2)+"</td><td>Velocity X: "+this.Vx.toFixed(2)+"</td><td>Velocity Y: "+this.Vy.toFixed(2)+"</td><td>Fill color: "+this.fill+"</td><td>Fixed? "+this.fixed.toString()+"</td></tr>";
+        return "<tr><td>Mass:<br />"+this.m.toFixed(3)+"</td><td>Radius:<br />"+this.rad.toFixed(3)+"</td><td>X: "+this.x.toFixed(2)+"<br />Y: "+this.y.toFixed(2)+"</td><td>Velocity X/Y:<br />"+this.Vx.toFixed(2)+" / "+this.Vy.toFixed(2)+"</td><td>Fill color:<br />"+this.fill+"</td><td>Fixed? "+this.fixed.toString()+"</td></tr>";
     }
 }
 
@@ -316,14 +340,20 @@ function collisionCheck(i,j)
         if (!objects[i].collides) 
         {
             console.log("Ignored collision between "+i+" and "+j+".");
+            document.getElementById("log").innerHTML+="Ignored collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.<br />";
+            log.scrollTop = log.scrollHeight;
             return;
         }
         if (!objects[j].collides)
         {
             console.log("Ignored collision between "+i+" and "+j+".");
+            document.getElementById("log").innerHTML+="Ignored collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.<br />";
+            log.scrollTop = log.scrollHeight;
             return;
         }
         console.log("Collision between "+i+" and "+j+".");
+        document.getElementById("log").innerHTML+="Collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.<br />";
+        log.scrollTop = log.scrollHeight;
         if (objects[j].m > objects[i].m) objects[i].fill=objects[j].fill; // the color of the more massive object is kept
         if (renderId == j) renderId=i;                    // fix renderId if needed
         if (renderId > j) renderId-=1;
@@ -406,7 +436,7 @@ function redraw()
 
 function playerOut()
 {
-    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='4'>Total velocity: "+objects[playerId].getVelocity()+"</td><td colspan='4'>Distance from origin: "+objects[playerId].getOriginDistance()+"</td></tr></table>";
+    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='2'>Total velocity:<br />"+objects[playerId].getVelocity()+"</td><td colspan='2'>Distance from origin:<br />"+objects[playerId].getOriginDistance()+"</td></tr></table>";
     document.getElementById("playerStats").innerHTML = out;
 }
 
@@ -489,7 +519,7 @@ function consoleInput(e)
             break;
             case "path":
             path=!path;
-            document.getElementById("out").innerHTML="Pathing toggled: <span class='data'>"+path+"</span>.";
+            document.getElementById("out").innerHTML="Pathing toggled to <span class='data'>"+path+"</span>.";
             break;
             case "zoom":
             if (args[1]=="state") {
@@ -544,11 +574,9 @@ function consoleInput(e)
 function verga()
 {
     // This will be the final system used in the game.
+    G=1;
     vergaEnvironment=[33,false,20,0.2,3,true,0.08,1,0,3,false,"norm",true,false,0.00001];
     runningEnvironment("load",vergaEnvironment);
-    G=1;
-    //timeStep=0.5;
-    //scaleFactor=0.08;
     objects[0]=new Thing(120000,0,0,0,0,"yellow",false,"Verga");
     objects[1]=new Thing(24,140,0,0,0,"red",false,"Gelshc");
     objects[1].Vy=-setOrbitalVelocity(0,140);
@@ -568,7 +596,8 @@ function verga()
 function stableySystem()
 {
     G=10;
-    //(0.6 scaleFactor minimum for full view)
+    stableleyEnvironment=[33,false,20,0.5,1,true,0.6,1,0,1,false,"norm",true,false,0.001];
+    runningEnvironment("load",stableleyEnvironment);
     objects[0]=new Thing(100,0,0,0,0,"yellow");
     objects[0].fixed=true;
     objects[1]=new Thing(10,50,0,0,-4,"green");
@@ -595,7 +624,8 @@ function collidingSystem()
 function unstableSystem()
 {
     G=10;
-    //(0.6 scaleFactor minimum for full view)
+    stableleyEnvironment=[33,false,20,0.5,1,true,0.6,1,0,1,false,"norm",true,false,0.001];
+    runningEnvironment("load",stableleyEnvironment);
     objects[0]=new Thing(100,0,0,0,0,"yellow");
     objects[0].fixed=true;
     objects[1]=new Thing(10,50,0,0,-4,"green");
