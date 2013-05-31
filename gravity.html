@@ -57,7 +57,7 @@ var renderId=3; // ID of Thing to put at center of frame
 var parentId=0; // ID of Thing to use as parent body for rotating frame of reference
 var parentRotation=true; // whether to rotate based on angle between parentId and renderId (true), or using the rotation of renderId (false)
 var renderType="norm"; // "side" shows a sideview (yes, a line), "3D" shows a pseudo-3D view, anything else goes to default
-var path=false;  // draw path? [Don't clear canvas between draws.]
+var path=true;  // draw path? [Don't clear canvas between draws.]
 var zoom=false; // Zoom in slowly? (just for the hell of it)
 var zoomFactor=0.00001; //how much to increase scaleFactor each frame when zoom is on
 
@@ -65,7 +65,7 @@ var zoomFactor=0.00001; //how much to increase scaleFactor each frame when zoom 
 var version="0.1.0" //Yes, there is a version number now. Don't know why.
 var G;              //Gravitational Constant
 
-// note : SoI calculations should not happen every frame
+// note : SoI calculations should not happen every frame?
 var iLastVelocity=0; //used to find SoI
 var jLastVelocity=0;
 
@@ -149,7 +149,7 @@ function gravity(i,j)
     //try adding some sort of collision detection that checks and appends collisions to a list/array/whatever to be handled after gravity finishes?
     if (Dx < 0)
     {
-        Nx=true;                      //fix negative distance (for calculations)
+        Nx=true;                     //fix negative distance (for calculations)
         Dx=-Dx;
     }
     if (Dy < 0)
@@ -192,6 +192,7 @@ function gravity(i,j)
 function update(i)
 {
     objects[i].rot+=objects[i].rotspd;        //apply rotation
+    if (objects[i].rot > 2*Math.PI) objects[i].rot-=2*Math.PI;
     if (!objects[i].fixed)
     {
         objects[i].x+=objects[i].Vx*timeStep; //apply acceleration
@@ -278,7 +279,7 @@ function redraw()
         var o=objects[renderId].y-objects[parentId].y;
         var rot=Math.atan2(a,o)-Math.PI/2;
     }
-    if (!path) context.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
+    if (!path) context.clearRect(0,0,canvas.clientWidth,canvas.clientHeight); //replace this with drawing a black rect with alpha channel set to have a dim path
     for (var i = 0; i < objects.length; i++)
     {
         context.beginPath();
@@ -440,8 +441,46 @@ function consoleInput(e)
             //var =args[2];
             //window.push(args[1]); // should make gloabl variable named by args[1]
             //console.log("Global? "+window.args[1]);
+            document.getElementById("out").innerHTML='"set var x" function not implemented just yet.';
+            //use eval() to set a variable
+        } else if (args[0]=="speed") {
+            runSpeed=Number(args[1]);
+            if (args[2]!==undefined) hyperWarp=Number(args[2]);
+            if (args[3]!==undefined) hyperSpeed=Number(args[3]);
+            document.getElementById("out").innerHTML="Running every <span style='color:#B40404;'>"+runSpeed+"</span> milliseconds. <span style='color:#00BFFF'>hyperWarp</span>: <span style='color:#B40404'>"+hyperWarp+"</span> (<span style='color:#00BFFF'>hyperSpeed</span>: <span style='color:#B40404'>"+hyperSpeed+"</span>).";
+        } else if (args[0]=="accuracy") {
+            timeStep=Number(args[1]);
+            document.getElementById("out").innerHTML="Time step <span style='color:#B40404'>"+timeStep+"</span>, lower is more accurate."
+        } else if (args[0]=="id") {
+            playerId=Number(args[1]);
+            if (args[2]!==undefined) renderId=Number(args[2]);
+            if (args[3]!==undefined) parentId=Number(args[3]);
+            document.getElementById("out").innerHTML="<span style='color:#00BFFF'>playerId</span>=<span style='color:#B40404'>"+playerId+"</span>. <span style='color:#00BFFF'>renderId</span>=<span style='color:#B40404'>"+renderId+"</span>. <span style='color:#00BFFF'>parentId</span>=<span style='color:#B40404'>"+parentId+"</span>.";
+        } else if (args[0]=="scale") {
+            scaleFactor=Number(args[1]);
+        } else if (args[0]=="hyperRender") {
+            hyperRender=!hyperRender;
+        } else if (args[0]=="parentRotation") {
+            parentRotation=!parentRotation;
+        } else if (args[0]=="renderType") {
+            renderType=args[1];
+        } else if (args[0]=="path") {
+            path=!path;
+        } else if (args[0]=="zoom") {
+            if (zoom) {
+                if (args[1]!==undefined) {
+                    zoomFactor=Number(args[1]);
+                } else {
+                    zoom=false;
+                }
+            } else {
+                zoom=true;
+                if (args[1]!==undefined) zoomFactor=Number(args[1]);
+            }
+        } else {
+            document.getElementById("out").innerHTML="Command '"+document.getElementById("in").value+"' not recognised.";
+            throw "unknown command";
         }
-        // add more abilities here
     }
     catch(err) {
         console.log("Failed console command: "+err);

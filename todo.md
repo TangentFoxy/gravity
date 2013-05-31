@@ -3,7 +3,6 @@ Immediate ToDo
 
 These are things I should've done before pushing to github. If there is something here, I am a lazy fool, beat me with a large stick.
 
-* Implement console command ideas!
 * Make a random system maker. (Or at least a random distribution of mass maker.)
 
 * SoI should not be calculated inside loop, should be once in a while thing
