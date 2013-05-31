@@ -4,32 +4,36 @@ Immediate ToDo
 These are things I should've done before pushing to github. If there is something here, I am a lazy fool, beat me with a large stick.
 
 * Make a random system maker. (Or at least a random distribution of mass maker.)
-
-* SoI should not be calculated inside loop, should be once in a while thing
-* SoI should not need global variables for itself
-* should objects have an SoI variable??
+* 'set var x' needs to be implemented, learn how to use eval().
+* Add clear command.
+* Add command to change size of canvas.
+* Make calling a command with no arguments print the current values.
+* Make quick command reference built-in.
+* Pathing that overlays previous paths with a black screen with an alpha channel to make the current objects' locations stand out
 
 * Check all for loops to make sure nothing is excluded.
 * Check all loops (think there are errors because looping while deleting).
-* Add ability for objects to be images.
-* Add ability to have rotation on objects. (Ties in with images as objects.) The variable is there, but
-  does not do anything currently.
-* Add ability to change size of canvas.
-* Add ability to change renderId, clear the canvas.
+
+Known Bugs
+----------
+
+That I haven't figured out how to fix.
+
+* hyperRender may be having an issue along with changing zoom, but these have most likely been fixed (remember hyperRender=false with
+  hyperWarp=false will break the rendering until one of them is set true)
 
 ToDo Soon
 ---------
 
 Stuff I want to work on as soon as possible.
 
+* Add image support, along with rotation support.
 * Make an equation you can call to check how stable your orbit will be (check gravitational influence
   of the major object(s) in the system against parent body influence, parent
-  needs to be > other influences)
+  needs to be > other influences (like the current SoI system, maybe just a check if the SoI ever changes,
+  which would mean an unstable orbit))
 * "Rocher" Collider checks the radius of the larger object outwards from that object and can break
-  apart objects entering within this radius? (Roche limit lazily implemented) half the radius again??
-* Collider needs to make sure collisions with fixed objects keep the fixed object in its place and
-  fixed in place (currently objects of a higher value that are fixed can lose this when
-  colliding..something like that, just add a check of j if j is fixed, i becomes fixed during collision)
+  apart objects entering within this radius? (Roche limit lazily implemented)
 * Controllable object (with playerId)
 * Glancing collisions collider (idea=Large object loses fraction of mass, small object split in
   half, things go flying off with similar velocity to impact)
@@ -53,9 +57,10 @@ This is stuff I want to do sooner rather than later.
 Long-Term
 ---------
 
-* Additional physics (such as the various effects of sunlight/radiation) that won't be done realistically
-  at all.
 * Implement collision detection inside gravity function (but not what happens during a collision)??
 * Add heat/heat colors. Things colliding generate heat. Things cool down over time (except when over
-  certain sizes, certain heat is maintained).
+  certain sizes, certain heat is maintained (thus large planets have some small heat and stars have much heat)).
+* Additional physics (such as the various effects of sunlight/radiation) that won't be done realistically
+  at all.
 * window.performance.now() - something you can use to run faster than 1000x per second(?), only in Chrome
+* SoI can be taken out of gravity function to make it faster (and should not require global variables?)
