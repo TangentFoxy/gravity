@@ -79,9 +79,14 @@ function initialize()
     //collidingSystem(); // for testing collisions
     //unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
     //orbitalVelocityTest(); // testing the function to set velocities for circular orbits
+    start();
+}
+
+function start()
+{
     if (hyperWarp)
     {
-        setInterval(function()
+        interval=setInterval(function()
         {
             for (var i = 0; i < hyperSpeed; i++) loop();
             if (!hyperRender) {
@@ -91,7 +96,7 @@ function initialize()
             }
         },runSpeed);
     } else {
-        setInterval("loop()",runSpeed);
+        interval=setInterval("loop();",runSpeed);
     }
 }
 
@@ -448,6 +453,8 @@ function consoleInput(e)
             if (args[2]!==undefined) hyperWarp=Number(args[2]);
             if (args[3]!==undefined) hyperSpeed=Number(args[3]);
             document.getElementById("out").innerHTML="Running every <span style='color:#B40404;'>"+runSpeed+"</span> milliseconds. <span style='color:#00BFFF'>hyperWarp</span>: <span style='color:#B40404'>"+hyperWarp+"</span> (<span style='color:#00BFFF'>hyperSpeed</span>: <span style='color:#B40404'>"+hyperSpeed+"</span>).";
+            clearInterval(interval);
+            start();
         } else if (args[0]=="accuracy") {
             timeStep=Number(args[1]);
             document.getElementById("out").innerHTML="Time step <span style='color:#B40404'>"+timeStep+"</span>, lower is more accurate."
