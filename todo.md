@@ -4,15 +4,14 @@ Immediate ToDo
 These are things I should've done before pushing to github. If there is something here, I am a lazy fool, beat me with a large stick.
 
 * Make a random system maker. (Or at least a random distribution of mass maker.)
-* 'set var x' needs to be implemented, learn how to use eval().
-* Add clear command.
 * Add command to change size of canvas.
-* Make calling a command with no arguments print the current values.
 * Make quick command reference built-in.
 * Pathing that overlays previous paths with a black screen with an alpha channel to make the current objects' locations stand out
 
 * Check all for loops to make sure nothing is excluded.
 * Check all loops (think there are errors because looping while deleting).
+
+* Make 'norm' an actual display type and error if an invalid type is selected.
 
 Known Bugs
 ----------

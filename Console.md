@@ -1,9 +1,14 @@
 Console Commands!
 -----------------
 
+Any command that changes variables when called without a parameter will display the current value of that variable.
+Anything else will error. Unless something is said below about it.
+
 function name();
 - Calls the function "name();"
-- Does not support spaces in the call.
+
+set var x
+- Sets the variable "var" to the value "x"
 
 speed x warp y
 - Sets runSpeed (milliseconds delay between iterations) to "x"
@@ -11,19 +16,19 @@ speed x warp y
 - Optional "y" will set hyperSpeed (how many times per runSpeed time to run).
 
 accuracy x
+timeStep x
 - Sets timeStep (which controls accuracy) to "x"
 
 id x y z
 - Sets playerId to "x"
 - Optional sets renderId to "y"
 - Optional sets parentId to "z"
-- Clears canvas when switching renderId and/or parentId.
 
 scale x
 - Sets scaleFactor to "x"
 
 hyperRender
-- Toggles hyperRender on/off. (Note: If not using hyperWarp, things will disappear.)
+- Toggles hyperRender on/off. (Note: If not using hyperWarp, things will disappear or appear to stop moving.)
 
 parentRotation
 - Toggles parentRotation (rendering based on angle between renderId/parentId) on/off.
@@ -38,12 +43,13 @@ path
 zoom x
 - Toggles auto-zoom on/off.
 - Optional "x" sets the zoomFactor.
+- If 'x'=='state' instead returns current state of zoom.
 
 Not Implemented
 ---------------
 
-set var x
-- Sets the variable "var" to the value "x"
+clear
+- Clears the canvas.
 
 random type
 - Makes a random Thing in a random orbit of "type"

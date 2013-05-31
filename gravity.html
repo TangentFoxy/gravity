@@ -81,6 +81,8 @@ var jLastVelocity=0;
 
 initialize();
 
+// Initializing
+
 function initialize()
 {
     document.getElementById("title").innerHTML+=" "+version;
@@ -122,6 +124,16 @@ function loop()
     }
 }
 
+function setOrbitalVelocity(id,d)
+{
+    //id=parent body id, d=radius of orbit (distance)
+    //change to set this value relative to the parent body, applying any accelerations to the parent to the child
+    console.log("Calculated orbital velocity: "+Math.sqrt(G*objects[id].m/(d*1.25)));
+    return Math.sqrt(G*objects[id].m/(d*1.25));
+}
+
+// Constructors (& Similar)
+
 function Thing(m,x,y,Vx,Vy,color,radius,name,rotation)
 {
     !name ? this.name="unnamed" : this.name=name;
@@ -153,6 +165,8 @@ function Thing(m,x,y,Vx,Vy,color,radius,name,rotation)
         return "<tr><td>Mass: "+this.m.toFixed(3)+"</td><td>Radius: "+this.rad.toFixed(2)+"</td><td>X: "+this.x.toFixed(2)+"</td><td>Y: "+this.y.toFixed(2)+"</td><td>Velocity X: "+this.Vx.toFixed(2)+"</td><td>Velocity Y: "+this.Vy.toFixed(2)+"</td><td>Fill color: "+this.fill+"</td><td>Fixed? "+this.fixed.toString()+"</td></tr>";
     }
 }
+
+// Calculations
 
 function gravity(i,j)
 {
@@ -283,6 +297,8 @@ function collisionCheck(i,j)
     }
 }
 
+// Rendering
+
 function redraw()
 {
     if (zoom) scaleFactor+=zoomFactor; // just messing around zooming in slowly over time
@@ -318,13 +334,7 @@ function redraw()
     }
 }
 
-function setOrbitalVelocity(id,d)
-{
-    //id=parent body id, d=radius of orbit (distance)
-    //change to set this value relative to the parent body, applying any accelerations to the parent to the child
-    console.log("Calculated orbital velocity: "+Math.sqrt(G*objects[id].m/(d*1.25)));
-    return Math.sqrt(G*objects[id].m/(d*1.25));
-}
+// Debug
 
 function playerOut()
 {
@@ -341,6 +351,127 @@ function debugOut()
     }
     document.getElementById("debug").innerHTML = out+"</table>";
 }
+
+function consoleInput(e)
+{
+    var key=e.keyCode? e.keyCode : e.charCode      // I can't believe I'm adding support for IE...
+    if (key!=13) return;                           // if not hitting Enter, return
+    var input=document.getElementById("in").value;
+    console.log("Console input: "+input);
+    var args=input.split(" ");                     // split input into arguments
+    try {
+        switch(args[0])
+        {
+            case "function":
+            if (args[1]==undefined) throw "no function"
+            eval(args[1]);                                   // "function name();" to call functions
+            document.getElementById("out").innerHTML="Function <span class='var'>"+args[1]+"</span> called.";
+            break;
+            case "set":
+            if (args[1]==undefined || args[2]==undefined) throw "invalid set";
+            eval(args[1]+"="+args[2]+";");                   // 'set var x' (remember it is called like 'var=x;' so if x is string, surround with quotes)
+            document.getElementById("out").innerHTML="<span class='var'>"+args[1]+"</span> set to: <span class='data'>"+eval(args[1])+"</span>.";
+            break;
+            case "speed":
+            if (args[1]==undefined) {
+                document.getElementById("out").innerHTML="<span class='var'>runSpeed</span>=<span class='data'>"+runSpeed+"</span>, <span class='var'>hyperWarp</span>=<span class='data'>"+hyperWarp+"</span>, <span class='var'>hyperSpeed</span>=<span class='data'>"+hyperSpeed+"</span>";
+            } else {
+                runSpeed=args[1];                            // 'speed x warp y' (warp is boolean)
+                if (args[2]!==undefined) hyperWarp=args[2];
+                if (args[3]!==undefined) hyperSpeed=args[3];
+                document.getElementById("out").innerHTML="Running every <span class='data'>"+runSpeed+"</span> milliseconds. <span class='var'>hyperWarp</span>: <span class='data'>"+hyperWarp+"</span> (<span class='var'>hyperSpeed</span>: <span class='data'>"+hyperSpeed+"</span>).";
+                clearInterval(interval);
+                start();
+            }
+            break;
+            case "accuracy":
+            case "timeStep":
+            if (args[1]==undefined) {
+                document.getElementById("out").innerHTML="<span class='var'>timeStep</span>=<span class='data'>"+timeStep+"</span>";
+            } else {
+                timeStep=args[1];
+                document.getElementById("out").innerHTML="Time step <span class='data'>"+timeStep+"</span>, lower is more accurate.";
+            }
+            break;
+            case "id":
+            if (args[1]==undefined) {
+                document.getElementById("out").innerHTML="<span class='var'>playerId</span>=<span class='data'>"+playerId+"</span>, <span class='var'>renderId</span>=<span class='data'>"+renderId+"</span>, <span class='var'>parentId</span>=<span class='data'>"+parentId+"</span>";
+            } else {
+                playerId=args[1];                            // 'id 0 1 2' = player, render, parent body
+                if (args[2]!==undefined) renderId=args[2];
+                if (args[3]!==undefined) parentId=args[3];
+                document.getElementById("out").innerHTML="<span class='var'>playerId</span>=<span class='data'>"+playerId+"</span>. <span class='var'>renderId</span>=<span class='data'>"+renderId+"</span>. <span class='var'>parentId</span>=<span class='data'>"+parentId+"</span>.";
+            }
+            break;
+            case "scale":
+            if (args[1]!==undefined) scaleFactor=args[1];
+            document.getElementById("out").innerHTML="<span class='var'>scaleFactor</span>=<span class='data'>"+scaleFactor+"</span>";
+            break;
+            case "hyperRender":
+            if (args[1]!==undefined) hyperRender=!hyperRender;
+            document.getElementById("out").innerHTML="<span class='var'>hyperRender</span>=<span class='data'>"+hyperRender+"</span>";
+            break;
+            case "parentRotation":
+            if (args[1]!==undefined) parentRotation=!parentRotation;
+            document.getElementById("out").innerHTML="<span class='var'>parentRotation</span>=<span class='data'>"+parentRotation+"</span>";
+            break;
+            case "renderType":
+            if (args[1]!==undefined) renderType=args[1];
+            document.getElementById("out").innerHTML="<span class='var'>renderType</span>=<span class='data'>"+renderType+"</span>";
+            break;
+            case "path":
+            path=!path;
+            document.getElementById("out").innerHTML="Pathing toggled: <span class='data'>"+path+"</span>.";
+            break;
+            case "zoom":
+            if (args[1]=="state") {
+                document.getElementById("out").innerHTML="<span class='var'>zoom</span>=<span class='data'>"+zoom+"</span>, <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>";
+                break;
+            }
+            // if zoom=on, if adjusting zoom, adjust zoom, else zoom=off
+            // if zoom=off, zoom true, if adjusting, adjust
+            if (zoom) {
+                if (args[1]!==undefined) {
+                    zoomFactor=args[1];
+                    document.getElementById("out").innerHTML="Zoom adjusted. <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>.";
+                } else {
+                    zoom=false;
+                    document.getElementById("out").innerHTML="Zoom turned off.";
+                }
+            } else {
+                zoom=true;
+                if (args[1]!==undefined) zoomFactor=args[1];
+                document.getElementById("out").innerHTML="Zoom turned on. Current <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>.";
+            }
+            clearInterval(interval);
+            start();
+            break;
+            default:
+            throw "unknown command";
+        }
+    }
+    catch(err) {
+        switch(err)
+        {
+            case "unknown command":
+            document.getElementById("out").innerHTML="Command '<span class='grey'>"+document.getElementById("in").value+"</span>' not recognised.";
+            console.log("Failed console command: "+err);
+            break;
+            case "no function":
+            document.getElementById("out").innerHTML="Function not specfied.";
+            break;
+            case "invalid set":
+            document.getElementById("out").innerHTML="No variable or no data to be set. Use '<span class='grey'>set var x</span>' to set data.";
+            break;
+            default:
+            document.getElementById("out").innerHTML="Unknown error: <span class='grey'>"+err+"</span>";
+            console.log("Unknown error: "+err);
+        }
+    }
+    document.getElementById("in").value=null;            // reset value of textarea
+}
+
+// Systems
 
 function verga()
 {
@@ -434,114 +565,6 @@ function orbitalVelocityTest()
 
 //objects[i]=new Thing(mass,x,y,Vx,Vy,color,radius,name,rotation);
 // rotation in degrees per (what...use timeStep to "fix" this)
-
-function consoleInput(e)
-{
-    var key=e.keyCode? e.keyCode : e.charCode      // I can't believe I'm adding support for IE...
-    if (key!=13) return;                           // if not hitting Enter, return
-    var input=document.getElementById("in").value;
-    console.log("Console input: "+input);
-    var args=input.split(" ");                     // split input into arguments
-    try {
-        switch(args[0])
-        {
-            case "function":
-            // couldn't I use eval for this??
-            setTimeout(args[1],0);                       // "function name();" to call functions
-            document.getElementById("out").innerHTML="Function <span class='var'>"+args[1]+"</span> called.";
-            break;
-            case "set":
-            //SET VAR X NEEDS TO BE IMPLEMENTED
-            document.getElementById("out").innerHTML="'<span class='grey'>set var x</span>' function not implemented just yet.";
-            break;
-            case "speed":
-            runSpeed=args[1];                            // 'speed x warp y' (warp is boolean)
-            if (args[2]!==undefined) hyperWarp=args[2];
-            if (args[3]!==undefined) hyperSpeed=args[3];
-            document.getElementById("out").innerHTML="Running every <span class='data'>"+runSpeed+"</span> milliseconds. <span class='var'>hyperWarp</span>: <span class='data'>"+hyperWarp+"</span> (<span class='var'>hyperSpeed</span>: <span class='data'>"+hyperSpeed+"</span>).";
-            clearInterval(interval);
-            start();
-            break;
-            case "accuracy":
-            timeStep=args[1];
-            document.getElementById("out").innerHTML="Time step <span class='data'>"+timeStep+"</span>, lower is more accurate.";
-            break;
-            case "id":
-            playerId=args[1];                            // player, render, parent body
-            if (args[2]!==undefined) renderId=args[2];
-            if (args[3]!==undefined) parentId=args[3];
-            document.getElementById("out").innerHTML="<span class='var'>playerId</span>=<span class='data'>"+playerId+"</span>. <span class='var'>renderId</span>=<span class='data'>"+renderId+"</span>. <span class='var'>parentId</span>=<span class='data'>"+parentId+"</span>.";
-            break;
-            case "scale":
-            scaleFactor=args[1];
-            document.getElementById("out").innerHTML="<span class='var'>scaleFactor</span>=<span class='data'>"+scaleFactor+"</span>.";
-            break;
-            case "hyperRender":
-            hyperRender=!hyperRender;
-            document.getElementById("out").innerHTML="<span class='var'>hyperRender</span>=<span class='data'>"+hyperRender+"</span>.";
-            break;
-            case "parentRotation":
-            parentRotation=!parentRotation;
-            document.getElementById("out").innerHTML="<span class='var'>parentRotation</span>=<span class='data'>"+parentRotation+"</span>.";
-            break;
-            case "renderType":
-            renderType=args[1];
-            document.getElementById("out").innerHTML="<span class='var'>renderType</span>=<span class='data'>"+renderType+"</span>.";
-            break;
-            case "path":
-            path=!path;
-            document.getElementById("out").innerHTML="Pathing toggled: <span class='data'>"+path+"</span>.";
-            break;
-            case "zoom":
-            // if zoom=on, if adjusting zoom, adjust zoom, else zoom=off
-            // if zoom=off, zoom true, if adjusting, adjust
-            if (zoom) {
-                if (args[1]!==undefined) {
-                    zoomFactor=args[1];
-                    document.getElementById("out").innerHTML="Zoom adjusted. <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>.";
-                } else {
-                    zoom=false;
-                    document.getElementById("out").innerHTML="Zoom turned off.";
-                }
-            } else {
-                zoom=true;
-                if (args[1]!==undefined) zoomFactor=args[1];
-                document.getElementById("out").innerHTML="Zoom turned on. Current <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>.";
-            }
-            clearInterval(interval);
-            start();
-            break;
-            default:
-            throw "unknown command";
-        }
-            /*variable named in args[1] needs to be set to value in args[2]
-            //var variable[args[1].this]=args[2];
-            //console.log(args[1]);
-            //console.log(varname);
-            //args[1].this=args[2];
-            //var window.val=args.slice(1);
-            //var =args[2];
-            //window.push(args[1]); // should make gloabl variable named by args[1]
-            //console.log("Global? "+window.args[1]);
-            document.getElementById("out").innerHTML='"set var x" function not implemented just yet.';
-            //use eval() to set a variable
-            //eval(args[1]+"="+args[2]);
-            //document.getElementById("out").innerHTML=args[1]+" set to: "+eval(args[2]);*/
-    }
-    catch(err) {
-        switch(err)
-        {
-            case "unknown command":
-            document.getElementById("out").innerHTML="Command '<span class='grey'>"+document.getElementById("in").value+"</span>' not recognised.";
-            console.log("Failed console command: "+err);
-            break;
-            default:
-            document.getElementById("out").innerHTML="Unknown error: <span class='grey'>"+err+"</span>";
-            console.log("Unknown error: "+err);
-        }
-    }
-    document.getElementById("in").value=null;            // reset value of textarea
-}
 
 </script>
 </body>
