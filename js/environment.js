@@ -119,7 +119,7 @@ function Environments()
         zoomFactor:0.001
     };
     orbitalVelocityTestEnvironment = {
-        g=10,
+        g:10,
         runSpeed:1,
         hyperWarp:true,
         hyperSpeed:2,
