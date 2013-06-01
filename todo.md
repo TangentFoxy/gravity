@@ -3,8 +3,7 @@ Immediate ToDo
 
 These are things I should've done before pushing to github. If there is something here, I am a lazy fool, beat me with a large stick.
 
-* Separate into multiple source files.
-* What happens if there is only one object?
+* What happens if there is only one object? (Add a fix for this, I assume it will break.)
 * Collider is lowering radius, it is not supposed to be able to.
 * Try changing collider to delete i and keep j instead? What happens to objects falling through
   the cracks so-to-speak?

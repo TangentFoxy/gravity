@@ -1,0 +1,46 @@
+body {
+    background: #000;
+    color: #FFF;
+}
+canvas {
+    border: 3px #FFF solid;
+    border-radius:10px;
+}
+table {
+    border: 1px #FFF solid;
+    width: 95%;
+    margin:6px;
+}
+td {
+    width:16%;
+}
+p {
+    margin:2px;
+    padding:2px;
+}
+#in {
+    /*font-family: "Lucida Console";*/ /*Can't change font of textareas?? *sadface**/
+    width:540px;
+    margin-top: 4px;
+    margin-bottom: -2px;
+}
+#logdiv {
+    font-family: "Lucida Console";
+    text-align: left;
+    width: 95%;
+    height:120px;
+    overflow:auto;
+    margin:auto;
+    border: 1px #FFF solid;
+    border-radius: 2px;
+}
+.var {
+    color:#00BFFF;
+}
+.data {
+    color:#B40404;
+}
+.grey {
+    color:#DDD;
+    font-weight:bold;
+}

@@ -2,54 +2,12 @@
 <html>
 <head>
 <title>Gravity</title>
-<style>
-body {
-    background: #000;
-    color: #FFF;
-}
-canvas {
-    border: 3px #FFF solid;
-    border-radius:10px;
-}
-table {
-    border: 1px #FFF solid;
-    width: 95%;
-    margin:6px;
-}
-td {
-    width:16%;
-}
-p {
-    margin:2px;
-    padding:2px;
-}
-#in {
-    /*font-family: "Lucida Console";*/ /*Can't change font of textareas?? *sadface**/
-    width:540px;
-    margin-top: 4px;
-    margin-bottom: -2px;
-}
-#logdiv {
-    font-family: "Lucida Console";
-    text-align: left;
-    width: 95%;
-    height:120px;
-    overflow:auto;
-    margin:auto;
-    border: 1px #FFF solid;
-    border-radius: 2px;
-}
-.var {
-    color:#00BFFF;
-}
-.data {
-    color:#B40404;
-}
-.grey {
-    color:#DDD;
-    font-weight:bold;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<script type="text/javascript" src="js/colliders.js"></script>
+<script type="text/javascript" src="js/debug.js"></script>
+<script type="text/javascript" src="js/environment.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/rendering.js"></script>
 </head>
 <body>
 <center>
@@ -70,81 +28,53 @@ var objects=new Array();
 var logdiv = document.getElementById("logdiv");
 
 // RUNNING SPEED VARIABLES
-var runSpeed=1; // how many milliseconds between each iteration
-var hyperWarp=false; // simulation is run multiple times per iteration     WARNING: Messing with this can freeze or crash your browser.
-var hyperSpeed=20; // how many times to run simulation per iteration       WARNING: High values lead to lag, freezing, crashing.
-var timeStep=1; // multipled by velocity/movement to change accuracy/speed of the simulation (lower is more accurate, but slower)
+var runSpeed=10;     // how many milliseconds between each iteration
+var hyperWarp=false; // simulation is run multiple times per iteration
+                     // WARNING: Messing with this can freeze or crash your browser.
+var hyperSpeed=20;   // how many times to run simulation per iteration
+                     // WARNING: High values lead to lag, freezing, crashing.
+var timeStep=0.5;    // multipled by velocity/movement to change accuracy/speed of the simulation
+                     // (lower is more accurate, but slower)
 
 // PLAYER RELATED VARIABLES
-var playerId=3; // ID of Thing that is the player
+var playerId=0;      // ID of Thing that is the player
 
 // RENDER RELATED VARIABLES
-var hyperRender=true; // True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed (aka slower)
-var scaleFactor=1; //multiplied by data in rendering to adjust zoom level
+var hyperRender=true; //True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed
+var scaleFactor=1;  // multiplied by data in rendering to adjust zoom level
 var renderRadius=1; // minimum render radius for an object
-var renderId=3; // ID of Thing to put at center of frame
-var parentId=0; // ID of Thing to use as parent body for rotating frame of reference
-var parentRotation=true; // whether to rotate based on angle between parentId and renderId (true), or using the rotation of renderId (false)
-var renderType="norm"; // "side" shows a sideview (yes, a line), "3D" shows a pseudo-3D view, anything else goes to default
-var path=true;  // draw path? [Don't clear canvas between draws.]
-var pathFade=true; // path fades away over time?
+var renderId=0;     // ID of Thing to put at center of frame
+var parentId=0;     // ID of Thing to use as parent body (for rotating frame of reference)
+var parentRotation=true; // whether to rotate based on angle between parentId and renderId (true),
+                        // or using the rotation of renderId (false)
+var renderType="norm"; // "norm" shows top-down, "side" shows a sideview (1D), "3D" shows fake-3D
+var path=true;      // draw path? [by not clearing canvas]
+var pathFade=true;  // path fades away over time?
 var fadeAlpha=0.05; // how much fade per iteration
-var zoom=true; // Zoom in slowly? (just for the hell of it)
-var zoomFactor=1; //how much to increase scaleFactor each frame when zoom is on
+var zoom=false;     // zoom in slowly? (just for the hell of it)
+var zoomFactor=1;   // how much to increase scaleFactor each frame when zoom is on
 
 // CONSTANTS
-var version="0.1.0" //Yes, there is a version number now. Don't know why.
-var G;              //Gravitational Constant
-
-// note : SoI calculations should not happen every frame?
+var version="0.1.0"  //Yes, there is a version number now. Don't know why.
+var G;               //Gravitational Constant
 var iLastVelocity=0; //used to find SoI
 var jLastVelocity=0;
 
-initialize();
+
+
 //Math.Tau=2*Math.PI;
+document.getElementById("title").innerHTML+=" "+version;
+Environments();
+verga(); // Final system to be used in the game.
+//stableySystem(); // two planets, moon and asteroid that get kicked out of system
+//collidingSystem(); // for testing collisions
+//unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
+//orbitalVelocityTest(); // testing the function to set velocities for circular orbits
+start();
 
-// Initializing
 
-function initialize()
-{
-    document.getElementById("title").innerHTML+=" "+version;
-    verga(); // Final system to be used in the game.
-    //stableySystem(); // two planets, moon and asteroid that get kicked out of system
-    //collidingSystem(); // for testing collisions
-    //unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
-    //orbitalVelocityTest(); // testing the function to set velocities for circular orbits
-    start();
-}
 
-function start()
-{
-    if (hyperWarp)
-    {
-        interval=setInterval(function()
-        {
-            for (var i = 0; i < hyperSpeed; i++) loop();
-            if (!hyperRender) {
-                redraw();
-                debugOut();
-                playerOut();
-            }
-        },runSpeed);
-    } else {
-        interval=setInterval("loop();",runSpeed);
-    }
-}
-
-function loop()
-{
-    for (var i = 0; i < objects.length-1; i++) for (var j = i+1; j < objects.length; j++) gravity(i,j);
-    for (var i = 0; i < objects.length; i++) update(i);
-    for (var i = objects.length-1; i > 0; i--) for (var j = i-1; j > -1; j--) collisionCheck(i,j);
-    if (hyperRender) {
-        redraw();
-        debugOut();
-        playerOut();
-    }
-}
+// These two functions need to be moved into a different file somehow.
 
 function setOrbitalVelocity(id,d)
 {
@@ -154,8 +84,6 @@ function setOrbitalVelocity(id,d)
     consoleOutput("Calculated orbital velocity: "+result,"Calculated orbital velocity: "+result);
     return result;
 }
-
-// Constructors (& Similar)
 
 function Thing(m,x,y,Vx,Vy,color,radius,name,rotation)
 {
@@ -188,542 +116,6 @@ function Thing(m,x,y,Vx,Vy,color,radius,name,rotation)
         return "<tr><td>Mass:<br />"+this.m.toFixed(3)+"</td><td>Radius:<br />"+this.rad.toFixed(3)+"</td><td>X: "+this.x.toFixed(2)+"<br />Y: "+this.y.toFixed(2)+"</td><td>Velocity X/Y:<br />"+this.Vx.toFixed(2)+" / "+this.Vy.toFixed(2)+"</td><td>Fill color:<br />"+this.fill+"</td><td>Fixed? "+this.fixed.toString()+"</td></tr>";
     }
 }
-
-function runningEnvironment(cmd,arg,rSpeed,hWarp,hSpeed,tStep,plId,hRender,sFactor,rRadius,rId,paId,pRotation,rType,p,z,zFactor)
-{
-    // later replace this with all global variables being an object called environment, and then rewrite this for that, should be much easier?
-try {
-    switch(cmd)
-    {
-        case "set":
-        runSpeed=rSpeed;
-        hyperWarp=hWarp;
-        hyperSpeed=hSpeed;
-        timeStep=tStep;
-        playerId=plId;
-        hyperRender=hRender;
-        scaleFactor=sFactor;
-        renderRadius=rRadius;
-        renderId=rId;
-        parentId=paId;
-        parentRotation=pRotation;
-        renderType=rType;
-        path=p;
-        //var pathFade=true; // path fades away over time?
-        //var fadeAlpha=0.05; // how much fade per iteration
-        zoom=z;
-        zoomFactor=zFactor;
-        break;
-        case "save":
-        eval(arg+"[0]="+rSpeed+";");
-        eval(arg+"[1]="+hWarp+";");
-        eval(arg+"[2]="+hSpeed+";");
-        eval(arg+"[3]="+tStep+";");
-        eval(arg+"[4]="+plId+";");
-        eval(arg+"[5]="+hRender+";");
-        eval(arg+"[6]="+sFactor+";");
-        eval(arg+"[7]="+rRadius+";");
-        eval(arg+"[8]="+rId+";");
-        eval(arg+"[9]="+paId+";");
-        eval(arg+"[10]="+pRotation+";");
-        eval(arg+"[11]="+rType+";"); // will it be surrounded by quotes??
-        eval(arg+"[12]="+p+";");
-        //var pathFade=true; // path fades away over time?
-        //var fadeAlpha=0.05; // how much fade per iteration
-        eval(arg+"[13]="+z+";");
-        eval(arg+"[14]="+zFactor+";");
-        break;
-        case "load":
-        // 'arg' needs to be the array
-        runSpeed=arg[0];
-        hyperWarp=arg[1];
-        hyperSpeed=arg[2];
-        timeStep=arg[3];
-        playerId=arg[4];
-        hyperRender=arg[5];
-        scaleFactor=arg[6];
-        renderRadius=arg[7];
-        renderId=arg[8];
-        parentId=arg[9];
-        parentRotation=arg[10];
-        renderType=arg[11];
-        path=arg[12];
-        //var pathFade=true; // path fades away over time?
-        //var fadeAlpha=0.05; // how much fade per iteration
-        zoom=arg[13];
-        zoomFactor=arg[14];
-        break;
-        default:
-        throw "invalid runningEnvironment() command";
-    }
-}
-catch(err) {
-    document.getElementById("out").innerHTML="Error with runningEnvironment: <span class='grey'>"+err+"</span>.";
-    console.log("runningEnvironment error: "+err);
-}
-}
-
-// Calculations
-
-function gravity(i,j)
-{
-    var Nx=false;
-    var Ny=false;
-    var Dx=objects[i].x-objects[j].x; //get relative distances
-    var Dy=objects[i].y-objects[j].y;
-    var Ds=Dx*Dx+Dy*Dy;               //note Ds is not Distance, but Distance^2
-    //try adding some sort of collision detection that checks and appends collisions to a list/array/whatever to be handled after gravity finishes?
-    if (Dx < 0)
-    {
-        Nx=true;                     //fix negative distance (for calculations)
-        Dx=-Dx;
-    }
-    if (Dy < 0)
-    {
-        Ny=true;
-        Dy=-Dy;
-    }
-    if (!objects[i].fixed)
-    {
-        var g=G*objects[j].m/Ds;     //calculate gravitational acceleration
-        var Ax=Dx*g/(Dx+Dy);         //solve for acceleration x
-        var Ay=g-Ax;                 //      for              y
-        if (Nx) Ax=-Ax;              //fix negative values
-        if (Ny) Ay=-Ay;
-        Ax=-Ax; //i<j always, so needs gravity reversed (for some reason)
-        Ay=-Ay;
-        objects[i].Vx+=Ax*timeStep;  //apply change of velocity
-        objects[i].Vy+=Ay*timeStep;
-        //SoI stuff
-        var tmp=Math.sqrt(Ax*Ax+Ay*Ay);
-        if (tmp > iLastVelocity) objects[i].SoI=j;
-        iLastVelocity=tmp;
-    }
-    if (!objects[j].fixed)
-    {
-        var g=G*objects[i].m/Ds;     //calculate gravitational acceleration
-        var Ax=Dx*g/(Dx+Dy);         //solve for acceleration x
-        var Ay=g-Ax;                 //      for              y
-        if (Nx) Ax=-Ax;              //fix negative values
-        if (Ny) Ay=-Ay;
-        objects[j].Vx+=Ax*timeStep;  //apply change of velocity
-        objects[j].Vy+=Ay*timeStep;
-        //SoI stuff
-        var tmp=Math.sqrt(Ax*Ax+Ay*Ay);
-        if (tmp > jLastVelocity) objects[j].SoI=i;
-        jLastVelocity=tmp;
-    }
-}
-
-function update(i)
-{
-    objects[i].rot+=objects[i].rotspd;        //apply rotation
-    if (objects[i].rot > 2*Math.PI) objects[i].rot-=2*Math.PI;
-    if (!objects[i].fixed)
-    {
-        objects[i].x+=objects[i].Vx*timeStep; //apply acceleration
-        objects[i].y+=objects[i].Vy*timeStep;
-    }
-}
-
-function collisionCheck(i,j)
-{
-    // The try and catch really shouldn't be needed, check through looping for errors (maybe should be deleting j instead of i??).
-    try
-    {
-        var Dx=objects[i].x-objects[j].x; //find distances
-    }
-    catch(err)
-    {
-        console.log("Error caught: "+err);
-        return;
-    }
-    var Dy=objects[i].y-objects[j].y;
-    var d=Math.sqrt(Dx*Dx+Dy*Dy);
-    if (d < objects[i].rad+objects[j].rad)
-    {
-        if (!objects[i].collides) 
-        {
-            consoleOutput("Ignored collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.","Ignored collision between "+i+" and "+j+".");
-            return;
-        }
-        if (!objects[j].collides)
-        {
-            consoleOutput("Ignored collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.","Ignored collision between "+i+" and "+j+".");
-            return;
-        }
-        consoleOutput("Collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.","Collision between "+i+" and "+j+".");
-        if (objects[j].m > objects[i].m) objects[i].fill=objects[j].fill; // the color of the more massive object is kept
-        if (renderId == j) renderId=i;                    // fix renderId if needed
-        if (renderId > j) renderId-=1;
-        if (playerId == j) playerId=i;
-        if (playerId > j) playerId-=1;                    // fix playerId if needed
-        if (objects[i].fixed)
-        {
-            objects[i].m+=objects[j].m;                   //add mass
-            var rad=Math.pow(objects[i].m,1/3);           //recalc radius
-            if (rad > objects[i].rad) objects[i].rad=rad;
-            objects.splice(j,1);                          //delete [j]
-            return;
-        }
-        if (objects[j].fixed)
-        {
-            objects[i].m+=objects[j].m;                   //add mass
-            objects[i].x=objects[j].x;                    //move to correct position
-            objects[i].y=objects[j].y;
-            objects[i].Vx=0;                              //correct the velocity
-            objects[i].Vy=0;
-            var rad=Math.pow(objects[i].m,1/3);           //radius recalculated
-            if (rad > objects[i].rad) objects[i].rad=rad;
-            objects[i].fixed=true;                        //become fixed
-            objects.splice(j,1);                          //delete [j]
-            return;
-        }
-        var Lx=objects[i].x*objects[i].m+objects[j].x*objects[j].m;   //weighting the mass vs location to find the CoM
-        var Ly=objects[i].y*objects[i].m+objects[j].y*objects[j].m;
-        var Fx=objects[i].Vx*objects[i].m+objects[j].Vx*objects[j].m; //calculate force to apply to "new" object
-        var Fy=objects[i].Vy*objects[i].m+objects[j].Vy*objects[j].m;
-        objects[i].m+=objects[j].m;                       //add mass of [j]
-        objects[i].Vx=Fx/objects[i].m;                    //apply combined force
-        objects[i].Vy=Fy/objects[i].m;
-        var rad=Math.pow(objects[i].m,1/3);               //recalculate radius based on new mass
-        if (rad > objects[i].rad) objects[i].rad=rad;
-        objects[i].x=Lx/objects[i].m;                     //find center of mass, place [i] there
-        objects[i].y=Ly/objects[i].m;
-        objects.splice(j,1);                              //delete [j]
-    }
-}
-
-// Rendering
-
-function redraw()
-{
-    if (zoom) scaleFactor+=zoomFactor; // just messing around zooming in slowly over time
-    if (!parentRotation)
-    {
-        var rot=objects[renderId].rot;
-    } else {
-        var a=objects[renderId].x-objects[parentId].x;
-        var o=objects[renderId].y-objects[parentId].y;
-        var rot=Math.atan2(a,o)-Math.PI/2;
-    }
-    path ? canvasPath() : canvasClear();
-    for (var i = 0; i < objects.length; i++)
-    {
-        context.beginPath();
-        if (renderType=="side")
-        {
-            var x=(objects[i].x-objects[renderId].x)*scaleFactor+canvas.clientWidth/2;
-            var y=(objects[i].x-objects[renderId].x)*scaleFactor+canvas.clientHeight/2;
-        } else if (renderType=="3D")
-        {
-            var x=((objects[i].x-objects[renderId].x)*Math.cos(30)-(objects[i].y-objects[renderId].y)*Math.sin(30))*scaleFactor+canvas.clientWidth/2;
-            var y=((objects[i].y-objects[renderId].y)*Math.sin(30)+(objects[i].x-objects[renderId].x)*Math.cos(30))*scaleFactor+canvas.clientHeight/2;
-        } else {
-            var x=((objects[i].x-objects[renderId].x)*Math.cos(rot)-(objects[i].y-objects[renderId].y)*Math.sin(rot))*scaleFactor+canvas.clientWidth/2;
-            var y=((objects[i].x-objects[renderId].x)*Math.sin(rot)+(objects[i].y-objects[renderId].y)*Math.cos(rot))*scaleFactor+canvas.clientHeight/2;
-        }
-        var radius=objects[i].rad*scaleFactor;
-        if (radius < renderRadius) radius=renderRadius;
-        context.arc(x,y,radius,0,2*Math.PI); //Technically should render from objects[i].rot TO 2*Math.PI+objects[i].rot ?? Doesn't really matter when we're circles...
-        context.fillStyle=objects[i].fill;
-        context.fill();
-    }
-}
-
-function canvasPath()
-{
-    if (pathFade) {
-        //replace this with the solid background version
-        context.beginPath();
-        context.rect(0,0,canvas.clientWidth,canvas.clientHeight);
-        context.fillStyle="rgba(0,0,0,"+fadeAlpha+")";
-        context.fill();
-    }
-    //if ()
-}
-function canvasClear()
-{
-    context.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
-}
-
-// Debug
-
-function playerOut()
-{
-    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='2'>Total velocity:<br />"+objects[playerId].getVelocity()+"</td><td colspan='2'>Distance from origin:<br />"+objects[playerId].getOriginDistance()+"</td></tr></table>";
-    document.getElementById("playerStats").innerHTML = out;
-}
-
-function debugOut()
-{
-    var out="<table>"
-    for (var i = 0; i < objects.length; i++)
-    {
-        var out=out+objects[i].dataOut();
-    }
-    document.getElementById("debug").innerHTML = out+"</table>";
-}
-
-function consoleInput(e)
-{
-    var key=e.keyCode? e.keyCode : e.charCode      // I can't believe I'm adding support for IE...
-    if (key!=13) return;                           // if not hitting Enter, return
-    var input=document.getElementById("in").value;
-    console.log("Console input: "+input);
-    var args=input.split(" ");                     // split input into arguments
-    try {
-        switch(args[0])
-        {
-            case "function":
-            if (args[1]==undefined) throw "no function"
-            eval(args[1]);                                   // "function name();" to call functions
-            consoleOutput("Function <span class='var'>"+args[1]+"</span> called.");
-            break;
-            case "set":
-            if (args[1]==undefined || args[2]==undefined) throw "invalid set";
-            eval(args[1]+"="+args[2]+";");                   // 'set var x' (remember it is called like 'var=x;' so if x is string, surround with quotes)
-            consoleOutput("<span class='var'>"+args[1]+"</span> set to: <span class='data'>"+eval(args[1])+"</span>.");
-            break;
-            case "speed":
-            if (args[1]==undefined) {
-                consoleOutput("<span class='var'>runSpeed</span>=<span class='data'>"+runSpeed+"</span>, <span class='var'>hyperWarp</span>=<span class='data'>"+hyperWarp+"</span>, <span class='var'>hyperSpeed</span>=<span class='data'>"+hyperSpeed+"</span>");
-            } else {
-                runSpeed=args[1];                            // 'speed x warp y' (warp is boolean)
-                if (args[2]!==undefined) hyperWarp=args[2];
-                if (args[3]!==undefined) hyperSpeed=args[3];
-                consoleOutput("Running every <span class='data'>"+runSpeed+"</span> milliseconds. <span class='var'>hyperWarp</span>: <span class='data'>"+hyperWarp+"</span> (<span class='var'>hyperSpeed</span>: <span class='data'>"+hyperSpeed+"</span>).");
-                clearInterval(interval);
-                start();
-            }
-            break;
-            case "accuracy":
-            case "timeStep":
-            if (args[1]==undefined) {
-                consoleOutput("<span class='var'>timeStep</span>=<span class='data'>"+timeStep+"</span>");
-            } else {
-                timeStep=args[1];
-                consoleOutput("Time step <span class='data'>"+timeStep+"</span>, lower is more accurate.");
-            }
-            break;
-            case "id":
-            if (args[1]==undefined) {
-                consoleOutput("<span class='var'>playerId</span>=<span class='data'>"+playerId+"</span>, <span class='var'>renderId</span>=<span class='data'>"+renderId+"</span>, <span class='var'>parentId</span>=<span class='data'>"+parentId+"</span>");
-            } else {
-                playerId=args[1];                            // 'id 0 1 2' = player, render, parent body
-                if (args[2]!==undefined) renderId=args[2];
-                if (args[3]!==undefined) parentId=args[3];
-                consoleOutput("<span class='var'>playerId</span>=<span class='data'>"+playerId+"</span>. <span class='var'>renderId</span>=<span class='data'>"+renderId+"</span>. <span class='var'>parentId</span>=<span class='data'>"+parentId+"</span>.");
-            }
-            break;
-            case "scale":
-            if (args[1]!==undefined) scaleFactor=args[1];
-            consoleOutput("<span class='var'>scaleFactor</span>=<span class='data'>"+scaleFactor+"</span>");
-            break;
-            case "hyperRender":
-            hyperRender=!hyperRender;
-            consoleOutput("<span class='var'>hyperRender</span>=<span class='data'>"+hyperRender+"</span>.");
-            break;
-            case "parentRotation":
-            parentRotation=!parentRotation;
-            consoleOutput("<span class='var'>parentRotation</span>=<span class='data'>"+parentRotation+"</span>.");
-            break;
-            case "renderType":
-            if (args[1]!==undefined) renderType=args[1];
-            consoleOutput("<span class='var'>renderType</span>=<span class='data'>"+renderType+"</span>");
-            break;
-            case "path":
-            path=!path;
-            consoleOutput("Pathing toggled to <span class='data'>"+path+"</span>.");
-            break;
-            case "zoom":
-            if (args[1]=="state") {
-                consoleOutput("<span class='var'>zoom</span>=<span class='data'>"+zoom+"</span>, <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>");
-                break;
-            }
-            // if zoom=on, if adjusting zoom, adjust zoom, else zoom=off
-            // if zoom=off, zoom true, if adjusting, adjust
-            if (zoom) {
-                if (args[1]!==undefined) {
-                    zoomFactor=args[1];
-                    consoleOutput("Zoom adjusted. <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>.");
-                } else {
-                    zoom=false;
-                    consoleOutput("Zoom turned off.");
-                }
-            } else {
-                zoom=true;
-                if (args[1]!==undefined) zoomFactor=args[1];
-                consoleOutput("Zoom turned on. Current <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>.");
-            }
-            clearInterval(interval);
-            start();
-            break;
-            case "clear":
-            switch(args[1])
-            {
-                case "canvas":
-                canvasClear();
-                consoleOutput("Canvas cleared.");
-                break;
-                case "console":
-                document.getElementById("out").innerHTML="";
-                consoleOutput("Console cleared.");
-                break;
-                default:
-                canvasClear();
-                document.getElementById("out").innerHTML="";
-                consoleOutput("Canvas and console cleared.");
-            }
-            break;
-            default:
-            throw "unknown command";
-        }
-    }
-    catch(err) {
-        switch(err)
-        {
-            case "unknown command":
-            consoleOutput("Command '<span class='grey'>"+document.getElementById("in").value+"</span>' not recognised.","Failed console command: "+err);
-            break;
-            case "no function":
-            consoleOutput("Function not specfied.");
-            break;
-            case "invalid set":
-            consoleOutput("No variable or no data to be set. Use '<span class='grey'>set var x</span>' to set data.");
-            break;
-            default:
-            consoleOutput("Unknown error: <span class='grey'>"+err+"</span>","Unknown error: "+err);
-        }
-    }
-    document.getElementById("in").value=null;            // reset value of textarea
-}
-
-function consoleOutput(out,con)
-{
-    document.getElementById("out").innerHTML+=out+"<br />";
-    if (con!==undefined) console.log(con);
-    logdiv.scrollTop = logdiv.scrollHeight;
-}
-
-// Systems
-
-function verga()
-{
-    // This will be the final system used in the game.
-    //environment
-    canvasClear();
-    G=1;
-    vergaEnvironment=[33,false,20,0.2,3,true,0.08,1,0,3,false,"norm",true,false,0.00001];
-    runningEnvironment("load",vergaEnvironment);
-    //objects
-    objects[0]=new Thing(120000,0,0,0,0,"yellow",false,"Verga");
-    objects[1]=new Thing(24,140,0,0,0,"red",false,"Gelshc");
-    objects[1].Vy=-setOrbitalVelocity(0,140);
-    objects[2]=new Thing(120,575,0,0,0,"orange",false,"Oschi");
-    objects[2].Vy=-setOrbitalVelocity(0,575);
-    objects[3]=new Thing(100,960,0,0,0,"green",false,"Terra");
-    objects[3].Vy=-setOrbitalVelocity(0,960);
-    objects[4]=new Thing(46,1400,0,0,0,"red",false,"Ast");
-    objects[4].Vy=-setOrbitalVelocity(0,1380);
-    objects[5]=new Thing(1200,3600,0,0,0,"yellow",false,"Asgur");
-    objects[5].Vy=-setOrbitalVelocity(0,3500);
-    objects[6]=new Thing(80,3700,0,0,0,"blue",false,"Uriel");
-    objects[6].Vy=objects[5].Vy-setOrbitalVelocity(5,100);
-    //objects[1].Vy=objects[1].Vy*0.99;
-}
-
-function stableySystem()
-{
-    //environment
-    canvasClear();
-    G=10;
-    stableleyEnvironment=[33,false,20,0.5,1,true,0.6,1,0,1,false,"norm",true,false,0.001];
-    runningEnvironment("load",stableleyEnvironment);
-    //objects
-    objects[0]=new Thing(100,0,0,0,0,"yellow");
-    objects[0].fixed=true;
-    objects[1]=new Thing(10,50,0,0,-4,"green");
-    objects[2]=new Thing(0.005,180,0,0,2.32,"#6A6A87",1);
-    objects[3]=new Thing(26,400,0,0,-1.5,"red");
-    objects[4]=new Thing(0.01,420,0,0,-4,"blue",1);
-}
-
-function collidingSystem()
-{
-    //environment
-    canvasClear();
-    G=10;
-    stableleyEnvironment=[100,false,20,0.5,1,true,0.6,1,0,1,false,"norm",false,false,0.001];
-    runningEnvironment("load",stableleyEnvironment);
-    //objects
-    objects[0]=new Thing(100,0,0,0,0,"yellow",12);
-    objects[1]=new Thing(1,10,-70,0.2,0,"red",1);
-    objects[2]=new Thing(20,120,10,0.1,0.1,"blue");
-    objects[3]=new Thing(0.00001,-30,-30,0,0,false,0.5);
-    objects[3].fixed=true;
-    objects[3].collides=false;
-    objects[4]=new Thing(5,-120,-10,-0.2,0.1,"green",1.3);
-    objects[5]=new Thing(1,-40,-70,-0.1,0.1,"#676789",1);
-    objects[5]=new Thing(100,-200,-200,0,0,"yellow");
-    objects[6]=new Thing(30,400,0,0.01,0.2,"red");
-}
-
-function unstableSystem()
-{
-    //environment
-    canvasClear();
-    G=10;
-    stableleyEnvironment=[33,false,20,0.5,1,true,0.6,1,0,1,false,"norm",true,false,0.001];
-    runningEnvironment("load",stableleyEnvironment);
-    //objects
-    objects[0]=new Thing(100,0,0,0,0,"yellow");
-    objects[0].fixed=true;
-    objects[1]=new Thing(10,50,0,0,-4,"green");
-    objects[2]=new Thing(0.005,180,0,0,2.32,"#6A6A87",1);
-    objects[3]=new Thing(26,400,0,0,-1.5,"red");
-    objects[4]=new Thing(0.01,420,0,0,-4,"blue",1);
-    objects[5]=new Thing(0.005,200,0,0,2.3,"#6A6A87",1);
-    objects[6]=new Thing(0.005,160,0,0,2.51,"#6A6A87",1);
-    objects[7]=new Thing(0.005,-180,0,0,-2.32,"#6A6A87",1);
-    objects[8]=new Thing(0.009,-170,10,0,-2,"#6A6A87",1);
-    objects[9]=new Thing(0.001,-300,40,0.4,-1.5,"#6A6A87",1);
-    objects[10]=new Thing(0.08,100,0,0,-2.7,"#6A6A87",1);
-    objects[11]=new Thing(0.1,-400,10,0,1,"orange",2);
-    objects[12]=new Thing(0.004,170,0,0,2.7,"#6A6A87",1);
-    objects[13]=new Thing(0.006,140,16,0,2.51,"#6A6A87",1);
-    objects[14]=new Thing(0.0032,-185,32,0,-2.32,"#6A6A87",1);
-    objects[15]=new Thing(0.01,-100,10,0.4,-2.14,"#6A6A87",1);
-    objects[16]=new Thing(0.0001,-325,42,0.32,-1.55,"#6A6A87",1);
-    objects[17]=new Thing(0.082,105,-50,0.1,-2.7,"#6A6A87",1);
-}
-
-function orbitalVelocityTest()
-{
-    //environment
-    canvasClear();
-    G=10;
-    orbitalVelocityTestEnvironment=[1,true,2,0.5,1,true,0.4,1,0,1,false,"norm",true,false,0.001];
-    runningEnvironment("load",orbitalVelocityTestEnvironment);
-    //objects
-    objects[0]=new Thing(100,0,0,0,0,"yellow",12);
-    objects[0].fixed=true;
-    objects[1]=new Thing(0.2,0,80,0,0,"red",0.7);
-    objects[1].Vx=-setOrbitalVelocity(0,80);
-    objects[2]=new Thing(2.58,0,200,0,0,"orange",2);
-    objects[2].Vx=-setOrbitalVelocity(0,200);
-    objects[3]=new Thing(2.32,0,360,0,0,"green",1.85);
-    objects[3].Vx=-setOrbitalVelocity(0,360);
-    objects[4]=new Thing(0.0001,0,380,0,0,"#6A6A87");
-    objects[4].Vx=objects[3].Vx;
-    objects[4].Vx=-setOrbitalVelocity(3,20);
-}
-
-//separate the environments into their own function to set them
-//make environments object.property pairs to make it easier to retrieve/set
-
-//objects[i]=new Thing(mass,x,y,Vx,Vy,color,radius,name,rotation);
-// rotation in degrees per (what...use timeStep to "fix" this)
 
 </script>
 </body>
