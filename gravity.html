@@ -87,6 +87,8 @@ var parentId=0; // ID of Thing to use as parent body for rotating frame of refer
 var parentRotation=true; // whether to rotate based on angle between parentId and renderId (true), or using the rotation of renderId (false)
 var renderType="norm"; // "side" shows a sideview (yes, a line), "3D" shows a pseudo-3D view, anything else goes to default
 var path=true;  // draw path? [Don't clear canvas between draws.]
+var pathFade=true; // path fades away over time?
+var fadeAlpha=0.05; // how much fade per iteration
 var zoom=true; // Zoom in slowly? (just for the hell of it)
 var zoomFactor=1; //how much to increase scaleFactor each frame when zoom is on
 
@@ -99,6 +101,7 @@ var iLastVelocity=0; //used to find SoI
 var jLastVelocity=0;
 
 initialize();
+//Math.Tau=2*Math.PI;
 
 // Initializing
 
@@ -206,6 +209,8 @@ try {
         parentRotation=pRotation;
         renderType=rType;
         path=p;
+        //var pathFade=true; // path fades away over time?
+        //var fadeAlpha=0.05; // how much fade per iteration
         zoom=z;
         zoomFactor=zFactor;
         break;
@@ -223,6 +228,8 @@ try {
         eval(arg+"[10]="+pRotation+";");
         eval(arg+"[11]="+rType+";"); // will it be surrounded by quotes??
         eval(arg+"[12]="+p+";");
+        //var pathFade=true; // path fades away over time?
+        //var fadeAlpha=0.05; // how much fade per iteration
         eval(arg+"[13]="+z+";");
         eval(arg+"[14]="+zFactor+";");
         break;
@@ -241,6 +248,8 @@ try {
         parentRotation=arg[10];
         renderType=arg[11];
         path=arg[12];
+        //var pathFade=true; // path fades away over time?
+        //var fadeAlpha=0.05; // how much fade per iteration
         zoom=arg[13];
         zoomFactor=arg[14];
         break;
@@ -398,7 +407,7 @@ function redraw()
         var o=objects[renderId].y-objects[parentId].y;
         var rot=Math.atan2(a,o)-Math.PI/2;
     }
-    if (!path) canvasClear();
+    path ? canvasPath() : canvasClear();
     for (var i = 0; i < objects.length; i++)
     {
         context.beginPath();
@@ -422,24 +431,20 @@ function redraw()
     }
 }
 
+function canvasPath()
+{
+    if (pathFade) {
+        //replace this with the solid background version
+        context.beginPath();
+        context.rect(0,0,canvas.clientWidth,canvas.clientHeight);
+        context.fillStyle="rgba(0,0,0,"+fadeAlpha+")";
+        context.fill();
+    }
+    //if ()
+}
 function canvasClear()
 {
     context.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
-    //replace this with drawing a black rect with alpha channel set to have a dim path
-    /*
-    context.beginPath();
-    context.rect(0,0,canvas.clientWidth,canvas.clientHeight);
-    context.fillStyle='black';
-    context.fill-opacity=0.1;
-    context.fill();
-    */
-    /*
-      context.fill-opacity=0.1;
-      context.beginPath();
-      context.rect(188, 50, 200, 100);
-      context.fillStyle = 'yellow';
-      context.fill();
-    */
 }
 
 // Debug
@@ -606,9 +611,12 @@ function consoleOutput(out,con)
 function verga()
 {
     // This will be the final system used in the game.
+    //environment
+    canvasClear();
     G=1;
     vergaEnvironment=[33,false,20,0.2,3,true,0.08,1,0,3,false,"norm",true,false,0.00001];
     runningEnvironment("load",vergaEnvironment);
+    //objects
     objects[0]=new Thing(120000,0,0,0,0,"yellow",false,"Verga");
     objects[1]=new Thing(24,140,0,0,0,"red",false,"Gelshc");
     objects[1].Vy=-setOrbitalVelocity(0,140);
@@ -627,9 +635,12 @@ function verga()
 
 function stableySystem()
 {
+    //environment
+    canvasClear();
     G=10;
     stableleyEnvironment=[33,false,20,0.5,1,true,0.6,1,0,1,false,"norm",true,false,0.001];
     runningEnvironment("load",stableleyEnvironment);
+    //objects
     objects[0]=new Thing(100,0,0,0,0,"yellow");
     objects[0].fixed=true;
     objects[1]=new Thing(10,50,0,0,-4,"green");
@@ -640,7 +651,12 @@ function stableySystem()
 
 function collidingSystem()
 {
+    //environment
+    canvasClear();
     G=10;
+    stableleyEnvironment=[100,false,20,0.5,1,true,0.6,1,0,1,false,"norm",false,false,0.001];
+    runningEnvironment("load",stableleyEnvironment);
+    //objects
     objects[0]=new Thing(100,0,0,0,0,"yellow",12);
     objects[1]=new Thing(1,10,-70,0.2,0,"red",1);
     objects[2]=new Thing(20,120,10,0.1,0.1,"blue");
@@ -655,9 +671,12 @@ function collidingSystem()
 
 function unstableSystem()
 {
+    //environment
+    canvasClear();
     G=10;
     stableleyEnvironment=[33,false,20,0.5,1,true,0.6,1,0,1,false,"norm",true,false,0.001];
     runningEnvironment("load",stableleyEnvironment);
+    //objects
     objects[0]=new Thing(100,0,0,0,0,"yellow");
     objects[0].fixed=true;
     objects[1]=new Thing(10,50,0,0,-4,"green");
@@ -681,7 +700,12 @@ function unstableSystem()
 
 function orbitalVelocityTest()
 {
+    //environment
+    canvasClear();
     G=10;
+    orbitalVelocityTestEnvironment=[1,true,2,0.5,1,true,0.4,1,0,1,false,"norm",true,false,0.001];
+    runningEnvironment("load",orbitalVelocityTestEnvironment);
+    //objects
     objects[0]=new Thing(100,0,0,0,0,"yellow",12);
     objects[0].fixed=true;
     objects[1]=new Thing(0.2,0,80,0,0,"red",0.7);
@@ -694,6 +718,9 @@ function orbitalVelocityTest()
     objects[4].Vx=objects[3].Vx;
     objects[4].Vx=-setOrbitalVelocity(3,20);
 }
+
+//separate the environments into their own function to set them
+//make environments object.property pairs to make it easier to retrieve/set
 
 //objects[i]=new Thing(mass,x,y,Vx,Vy,color,radius,name,rotation);
 // rotation in degrees per (what...use timeStep to "fix" this)

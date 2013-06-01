@@ -3,6 +3,12 @@ Immediate ToDo
 
 These are things I should've done before pushing to github. If there is something here, I am a lazy fool, beat me with a large stick.
 
+* Separate into multiple source files.
+* What happens if there is only one object?
+* Collider is lowering radius, it is not supposed to be able to.
+* Try changing collider to delete i and keep j instead? What happens to objects falling through
+  the cracks so-to-speak?
+
 * Make a random system maker. (Or at least a random distribution of mass maker.)
 * Add command to change size of canvas.
 * Make quick command reference built-in.
@@ -56,6 +62,8 @@ This is stuff I want to do sooner rather than later.
   and its 'rotation' (the kind of rotation used in the render code) should be applied as the rotation of the parent object,
   so it stays on the same spot on the surface, basically, use the render code for parentRotation as movement code instead
   of just display code
+* 'Dark Matter' mode for generating random stuff, explodes outward, and a slowly more and more significant
+  invisible mass is created at 0,0
 
 Long-Term
 ---------
