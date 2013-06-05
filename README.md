@@ -1,3 +1,11 @@
+Quick-Start Stuff!
+==================
+
+[Click here to play with it] [1]. I also suggest opening up the [Console] [2] reference to see what you can do with it right now.
+
+[1]: http://htmlpreview.github.io/?=https://github.com/guard13007/gravity/blob/master/gravity.html "Click here to play with it"
+[2]: https://github.com/guard13007/gravity/blob/master/Console.md "Console"
+
 What is Gravity?
 ================
 

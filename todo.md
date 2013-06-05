@@ -7,6 +7,11 @@ These are things I should've done before pushing to github. If there is somethin
 * Collider is lowering radius, it is not supposed to be able to.
 * Try changing collider to delete i and keep j instead? What happens to objects falling through
   the cracks so-to-speak?
+* Add a pause button/pause function/pause command.
+* Add nameplates to planets moving around
+  (need to add second canvas element and do the fanciness with that for pathing from now on).
+* Make system for testing equal sized objects colliding from a stand-still.
+* Make system(s) for testing synchronous movements (should stay synced but won't).
 
 * Make a random system maker. (Or at least a random distribution of mass maker.)
 * Add command to change size of canvas.
