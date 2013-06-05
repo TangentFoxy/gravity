@@ -1,6 +1,8 @@
 Quick-Start Stuff!
 ==================
 
+Apparently github's HTML preview function is going a bit wonky, so the next link may not work at all. If that's the case, you'll have to download the archive of this and unzip it and open 'gravity.html' to make it work.
+
 [Click here to play with it] [2]. I also suggest opening up the [Console] [3] reference to see what you can do with it right now.
 
 What is Gravity?
@@ -34,5 +36,5 @@ Features
 * a console for screwing with stuff..still needs lots of improvement! :D
 
 [1]: http://youtube.com/user/Guard13007 "Guard13007"
-[2]: http://htmlpreview.github.io/?=https://github.com/guard13007/gravity/blob/master/gravity.html "Click here to play with it"
+[2]: http://htmlpreview.github.io/?=http://www.github.com/Guard13007/gravity/blob/master/gravity.html "Click here to play with it"
 [3]: https://github.com/guard13007/gravity/blob/master/Console.md "Console"
