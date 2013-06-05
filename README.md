@@ -1,10 +1,7 @@
 Quick-Start Stuff!
 ==================
 
-[Click here to play with it] [1]. I also suggest opening up the [Console] [2] reference to see what you can do with it right now.
-
-[1]: http://htmlpreview.github.io/?=https://github.com/guard13007/gravity/blob/master/gravity.html "Click here to play with it"
-[2]: https://github.com/guard13007/gravity/blob/master/Console.md "Console"
+[Click here to play with it] [2]. I also suggest opening up the [Console] [3] reference to see what you can do with it right now.
 
 What is Gravity?
 ================
@@ -26,8 +23,6 @@ Who am I? I am the Wolf of All Trades, Master of None. Why do I give myself this
 
 But hey, this idea is going well, I'll stick with it.
 
-[1]: http://youtube.com/user/Guard13007 "Guard13007"
-
 Features
 --------
 
@@ -37,3 +32,7 @@ Features
 * scale in and out, change the frame of reference (including rotation!)
 * colors :P (WIP: images for things instead of just colors)
 * a console for screwing with stuff..still needs lots of improvement! :D
+
+[1]: http://youtube.com/user/Guard13007 "Guard13007"
+[2]: http://htmlpreview.github.io/?=https://github.com/guard13007/gravity/blob/master/gravity.html "Click here to play with it"
+[3]: https://github.com/guard13007/gravity/blob/master/Console.md "Console"
