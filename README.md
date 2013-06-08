@@ -1,6 +1,8 @@
 Quick-Start Stuff!
 ==================
 
+(It seems not to work with the HTML preview anymore. The next link may or may not work. The way to be sure is to download the ZIP from above, extract everything, and double-click 'gravity.html' to start it.)
+
 [Click here to play with it] [2]. I also suggest opening up the [Console] [3] reference to see what you can do with it right now. Known bugs are listed in the [todo.md] [4] file, along with a scrawled list of my to-be-done's.
 
 What is Gravity?
