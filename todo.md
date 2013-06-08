@@ -3,7 +3,10 @@ Immediate ToDo
 
 These are things I should've done before pushing to github. If there is something here, I am a lazy fool, beat me with a large stick.
 
-* What happens if there is only one object? (Add a fix for this, I assume it will break.)
+* Something is wrong with changing speed on the fly, speeds don't appear to change until changing hyperRender to false, and then
+  they don't appear to change back..
+* Somehow the canvas clears when calling a new system, I can't find where I fixed this...
+
 * Collider is lowering radius, it is not supposed to be able to.
 * Try changing collider to delete i and keep j instead? What happens to objects falling through
   the cracks so-to-speak?
@@ -79,3 +82,7 @@ Long-Term
   at all.
 * window.performance.now() - something you can use to run faster than 1000x per second(?), only in Chrome
 * SoI can be taken out of gravity function to make it faster (and should not require global variables?)
+* Color mixing during collision: separate "#AABBCC" into AA BB CC and min(AA1,AA2) etc to mix colors, then recombine
+  Look at this for color codes to use when hitting a color name: http://www.w3schools.com/cssref/css_colornames.asp
+  Also check this because I want to take mass into account when mixing colors: http://www.w3schools.com/tags/ref_colormixer.asp
+  Also check if min(a1,a2) is the best way to combine colors or not

@@ -30,10 +30,15 @@ Features
 
 * n-body, 2D, as accurate as you tell it to be (timeStep controls accuracy)
 * a finished basic collider (WIP: more advanced/varied/collider options)
-* cheat-y pathing by "forgetting" to clear the canvas
+* pathing, including an optional fading path
 * scale in and out, change the frame of reference (including rotation!)
 * colors :P (WIP: images for things instead of just colors)
-* a console for screwing with stuff..still needs lots of improvement! :D
+* a slightly buggy console for screwing with stuff while it runs
+
+Known Bugs
+----------
+
+* If you have a single object, the thing throws errors like mad. (But I don't care because there should never only be one.)
 
 [1]: http://youtube.com/user/Guard13007 "Guard13007"
 [2]: http://htmlpreview.github.io/?=http://www.github.com/Guard13007/gravity/blob/master/gravity.html "Click here to play with it"

@@ -1,4 +1,4 @@
-function setEnvironment(cmd,obj,g,rSpeed,hWarp,hSpeed,tStep,plId,hRender,sFactor,rRadius,rId,paId,pRotation,rType,p,pFade,fAlpha,z,zFactor)
+function setEnvironment(cmd,obj,g,rSpeed,hWarp,hSpeed,tStep,plId,cType,hRender,sFactor,rRadius,rId,paId,pRotation,rType,p,pFade,fAlpha,z,zFactor)
 {
     // set , obj  = obj isn't used, just put whatever
     // save,"obj" = obj is string naming the object
@@ -13,6 +13,7 @@ function setEnvironment(cmd,obj,g,rSpeed,hWarp,hSpeed,tStep,plId,hRender,sFactor
             hyperSpeed=hSpeed;
             timeStep=tStep;
             playerId=plId;
+            colliderType=cType;
             hyperRender=hRender;
             scaleFactor=sFactor;
             renderRadius=rRadius;
@@ -33,6 +34,7 @@ function setEnvironment(cmd,obj,g,rSpeed,hWarp,hSpeed,tStep,plId,hRender,sFactor
             eval(obj+".hyperSpeed="+hSpeed+";");
             eval(obj+".timeStep="+tStep+";");
             eval(obj+".playerId="+plId+";");
+            eval(obj+".colliderType="+cType+";");
             eval(obj+".hyperRender="+hRender+";");
             eval(obj+".scaleFactor="+sFactor+";");
             eval(obj+".renderRadius="+rRadius+";");
@@ -53,6 +55,7 @@ function setEnvironment(cmd,obj,g,rSpeed,hWarp,hSpeed,tStep,plId,hRender,sFactor
             hyperSpeed=obj.hyperSpeed;
             timeStep=obj.timeStep;
             playerId=obj.playerId;
+            colliderType=obj.colliderType;
             hyperRender=obj.hyperRender;
             scaleFactor=obj.scaleFactor;
             renderRadius=obj.renderRadius;
@@ -85,6 +88,7 @@ function Environments()
         hyperSpeed:20,
         timeStep:0.2,
         playerId:3,
+        colliderType:"combine",
         hyperRender:true,
         scaleFactor:0.08,
         renderRadius:1,
@@ -105,6 +109,7 @@ function Environments()
         hyperSpeed:20,
         timeStep:0.5,
         playerId:1,
+        colliderType:"combine",
         hyperRender:true,
         scaleFactor:0.6,
         renderRadius:1,
@@ -125,6 +130,7 @@ function Environments()
         hyperSpeed:2,
         timeStep:0.5,
         playerId:1,
+        colliderType:"combine",
         hyperRender:true,
         scaleFactor:0.4,
         renderRadius:1,
@@ -143,6 +149,7 @@ function Environments()
 function verga()
 {
     // This will be the final system used in the game.
+    objects.splice(0,objects.length);
     setEnvironment("load",vergaEnvironment);
     //objects
     objects[0]=new Thing(120000,0,0,0,0,"yellow",false,"Verga");
@@ -162,6 +169,7 @@ function verga()
 
 function stableySystem()
 {
+    objects.splice(0,objects.length);
     setEnvironment("load",stableyEnvironment);
     //objects
     objects[0]=new Thing(100,0,0,0,0,"yellow");
@@ -174,6 +182,7 @@ function stableySystem()
 
 function unstableSystem()
 {
+    objects.splice(0,objects.length);
     setEnvironment("load",stableyEnvironment);
     //objects
     objects[0]=new Thing(100,0,0,0,0,"yellow");
@@ -199,6 +208,7 @@ function unstableSystem()
 
 function collidingSystem()
 {
+    objects.splice(0,objects.length);
     setEnvironment("load",stableyEnvironment);
     //objects
     objects[0]=new Thing(100,0,0,0,0,"yellow",12);
@@ -215,6 +225,7 @@ function collidingSystem()
 
 function orbitalVelocityTest()
 {
+    objects.splice(0,objects.length);
     setEnvironment("load",orbitalVelocityTestEnvironment);
     //objects
     objects[0]=new Thing(100,0,0,0,0,"yellow",12);
