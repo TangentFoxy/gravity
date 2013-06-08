@@ -24,6 +24,7 @@ function setEnvironment(cmd,obj,g,rSpeed,hWarp,hSpeed,tStep,plId,cType,hRender,s
             path=p;
             pathFade=pFade;
             fadeAlpha=fAlpha;
+            drawNames=dNames;
             zoom=z;
             zoomFactor=zFactor;
             break;
@@ -45,6 +46,7 @@ function setEnvironment(cmd,obj,g,rSpeed,hWarp,hSpeed,tStep,plId,cType,hRender,s
             eval(obj+".path="+p+";");
             eval(obj+".pathFade="+pFade+";");
             eval(obj+".fadeAlpha="+fAlpha+";");
+            eval(obj+".drawNames="+dNames+";");
             eval(obj+".zoom="+z+";");
             eval(obj+".zoomFactor"+zFactor+";");
             break;
@@ -66,6 +68,7 @@ function setEnvironment(cmd,obj,g,rSpeed,hWarp,hSpeed,tStep,plId,cType,hRender,s
             path=obj.path;
             pathFade=obj.pathFade;
             fadeAlpha=obj.fadeAlpha;
+            drawNames=obj.drawNames;
             zoom=obj.zoom;
             zoomFactor=obj.zoomFactor;
             canvasClear();
@@ -99,6 +102,7 @@ function Environments()
         path:true,
         pathFade:true,
         fadeAlpha:0.05,
+        drawNames:true,
         zoom:false,
         zoomFactor:0.00001
     };
@@ -120,6 +124,7 @@ function Environments()
         path:true,
         pathFade:true,
         fadeAlpha:0.05,
+        drawNames:false,
         zoom:false,
         zoomFactor:0.001
     };
@@ -141,6 +146,7 @@ function Environments()
         path:true,
         pathFade:true,
         fadeAlpha:0.05,
+        drawNames:false,
         zoom:false,
         zoomFactor:1
     };

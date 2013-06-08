@@ -138,6 +138,12 @@ function consoleOutput(out,con)
     if (con!==undefined) console.log(con);
     logdiv.scrollTop = logdiv.scrollHeight;
 }
+function consoleOut(out,con)
+{
+    document.getElementById("out").innerHTML+=out+"<br />";
+    if (con!==undefined) console.log(con);
+    logdiv.scrollTop = logdiv.scrollHeight;
+}
 
 function playerOut()
 {

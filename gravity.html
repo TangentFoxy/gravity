@@ -9,73 +9,36 @@
 <script type="text/javascript" src="js/functions.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 <script type="text/javascript" src="js/rendering.js"></script>
+<script type="text/javascript" src="js/variables.js"></script>
 </head>
 <body>
 <center>
 <h1 id="title">Gravity</h1>
-<canvas id="canvas" width="560" height="440">If you can see this, something went wrong.</canvas>
+<canvas id="frontend" width="560" height="440">If you can see this, something went wrong.</canvas>
+<canvas id="backend" width="560" height="440"></canvas>
 <div id="logdiv"><p id="out"></p></div>
 <input name="text" type="textarea" id="in" onkeyup="consoleInput(event);" />
 <div id="playerStats"></div>
 <div id="debug"></div>
 </center>
 <script>
+var frontend=document.getElementById("frontend");
+var frontctx=frontend.getContext("2d");
+var backend=document.getElementById("backend");
+var backctx=backend.getContext("2d");
 
-var canvas=document.getElementById("canvas");
-var context=canvas.getContext("2d");
-var objects=new Array();
-
-// For console div:
 var logdiv = document.getElementById("logdiv");
 
-// RUNNING SPEED VARIABLES
-var runSpeed=10;     // how many milliseconds between each iteration
-var hyperWarp=false; // simulation is run multiple times per iteration
-                     // WARNING: Messing with this can freeze or crash your browser.
-var hyperSpeed=20;   // how many times to run simulation per iteration
-                     // WARNING: High values lead to lag, freezing, crashing.
-var timeStep=0.5;    // multipled by velocity/movement to change accuracy/speed of the simulation
-                     // (lower is more accurate, but slower)
-
-// PLAYER RELATED VARIABLES
-var playerId=0;      // ID of Thing that is the player
-
-// PHYSICS RELATED VARIABLES
-var colliderType="combine"; // Which collider to use, "combine" or "none" or ???
-
-// RENDER RELATED VARIABLES
-var hyperRender=true; //True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed
-var scaleFactor=1;  // multiplied by data in rendering to adjust zoom level
-var renderRadius=1; // minimum render radius for an object
-var renderId=0;     // ID of Thing to put at center of frame
-var parentId=0;     // ID of Thing to use as parent body (for rotating frame of reference)
-var parentRotation=true; // whether to rotate based on angle between parentId and renderId (true),
-                        // or using the rotation of renderId (false)
-var renderType="norm"; // "norm" shows top-down, "side" shows a sideview (1D), "3D" shows fake-3D
-var path=true;      // draw path? [by not clearing canvas]
-var pathFade=true;  // path fades away over time?
-var fadeAlpha=0.05; // how much fade per iteration
-var zoom=false;     // zoom in slowly? (just for the hell of it)
-var zoomFactor=1;   // how much to increase scaleFactor each frame when zoom is on
-
-// CONSTANTS
-var version="0.1.1"  //Yes, there is a version number now. Don't know why.
-var G;               //Gravitational Constant
-var iLastVelocity=0; //used to find SoI
-var jLastVelocity=0;
-
-
-
-//Math.Tau=2*Math.PI; // I need to see if this can be done, and if so, use it
+Math.Tau=2*Math.PI; // I need to see if this can be done, and if so, use it
 document.getElementById("title").innerHTML+=" "+version;
 Environments();
+var objects=new Array();
 verga(); // Final system to be used in the game.
 //stableySystem(); // two planets, moon and asteroid that get kicked out of system
 //collidingSystem(); // for testing collisions
 //unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
 //orbitalVelocityTest(); // testing the function to set velocities for circular orbits
 start();
-
 </script>
 </body>
 </html>

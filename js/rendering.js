@@ -1,6 +1,6 @@
 function redraw()
 {
-    if (zoom) scaleFactor+=zoomFactor; // just messing around zooming in slowly over time
+    if (zoom) scaleFactor+=Number(zoomFactor);
     if (!parentRotation)
     {
         var rot=objects[renderId].rot;
@@ -9,43 +9,78 @@ function redraw()
         var o=objects[renderId].y-objects[parentId].y;
         var rot=Math.atan2(a,o)-Math.PI/2;
     }
-    path ? canvasPath() : canvasClear();
+    path ? canvasPath() : canvasClear(); // path or clear before drawing?
+    //BACKEND RENDER
     for (var i = 0; i < objects.length; i++)
     {
-        context.beginPath();
-        if (renderType=="side")
+        backctx.beginPath();
+        switch(renderType)
         {
-            var x=(objects[i].x-objects[renderId].x)*scaleFactor+canvas.clientWidth/2;
-            var y=(objects[i].x-objects[renderId].x)*scaleFactor+canvas.clientHeight/2;
-        } else if (renderType=="3D")
-        {
-            var x=((objects[i].x-objects[renderId].x)*Math.cos(30)-(objects[i].y-objects[renderId].y)*Math.sin(30))*scaleFactor+canvas.clientWidth/2;
-            var y=((objects[i].y-objects[renderId].y)*Math.sin(30)+(objects[i].x-objects[renderId].x)*Math.cos(30))*scaleFactor+canvas.clientHeight/2;
-        } else {
-            var x=((objects[i].x-objects[renderId].x)*Math.cos(rot)-(objects[i].y-objects[renderId].y)*Math.sin(rot))*scaleFactor+canvas.clientWidth/2;
-            var y=((objects[i].x-objects[renderId].x)*Math.sin(rot)+(objects[i].y-objects[renderId].y)*Math.cos(rot))*scaleFactor+canvas.clientHeight/2;
+            case "side":
+            var x=(objects[i].x-objects[renderId].x)*scaleFactor+backend.width/2;
+            var y=(objects[i].x-objects[renderId].x)*scaleFactor+backend.height/2;
+            break;
+            case "3D":
+            case "3d":
+            var x=((objects[i].x-objects[renderId].x)*Math.cos(30)-(objects[i].y-objects[renderId].y)*Math.sin(30))*scaleFactor+backend.width/2;
+            var y=((objects[i].y-objects[renderId].y)*Math.sin(30)+(objects[i].x-objects[renderId].x)*Math.cos(30))*scaleFactor+backend.height/2;
+            break;
+            case "norm":
+            var x=((objects[i].x-objects[renderId].x)*Math.cos(rot)-(objects[i].y-objects[renderId].y)*Math.sin(rot))*scaleFactor+backend.width/2;
+            var y=((objects[i].x-objects[renderId].x)*Math.sin(rot)+(objects[i].y-objects[renderId].y)*Math.cos(rot))*scaleFactor+backend.height/2;
+            break;
+            default:
+            throw "invalid renderType";
         }
-        var radius=objects[i].rad*scaleFactor;
+        var radius=objects[i].rad*scaleFactor;          // set radius of object
         if (radius < renderRadius) radius=renderRadius;
-        context.arc(x,y,radius,0,2*Math.PI); //Technically should render from objects[i].rot TO 2*Math.PI+objects[i].rot ?? Doesn't really matter when we're circles...
-        context.fillStyle=objects[i].fill;
-        context.fill();
+        backctx.arc(x,y,radius,0,2*Math.PI); //Technically should render from objects[i].rot TO 2*Math.PI+objects[i].rot ?? Doesn't really matter when we're circles...
+        backctx.fillStyle=objects[i].fill;
+        backctx.fill();
+    }
+    frontctx.clearRect(0,0,frontend.width,frontend.height); // clear frontend
+    frontctx.drawImage(backend,0,0);                                    // draw backend
+    //FRONTEND RENDER
+    for (var i=0;i<objects.length;i++)
+    {
+        switch(renderType)
+        {
+            case "side":
+            var x=(objects[i].x-objects[renderId].x)*scaleFactor+frontend.width/2;
+            var y=(objects[i].x-objects[renderId].x)*scaleFactor+frontend.height/2;
+            break;
+            case "3D":
+            case "3d":
+            var x=((objects[i].x-objects[renderId].x)*Math.cos(30)-(objects[i].y-objects[renderId].y)*Math.sin(30))*scaleFactor+frontend.width/2;
+            var y=((objects[i].y-objects[renderId].y)*Math.sin(30)+(objects[i].x-objects[renderId].x)*Math.cos(30))*scaleFactor+frontend.height/2;
+            break;
+            case "norm":
+            var x=((objects[i].x-objects[renderId].x)*Math.cos(rot)-(objects[i].y-objects[renderId].y)*Math.sin(rot))*scaleFactor+frontend.width/2;
+            var y=((objects[i].x-objects[renderId].x)*Math.sin(rot)+(objects[i].y-objects[renderId].y)*Math.cos(rot))*scaleFactor+frontend.height/2;
+            break;
+            default:
+            throw "invalid renderType";
+        }
+        if (drawNames) {
+            frontctx.font='8pt Calibri';
+            frontctx.fillStyle='white';
+            frontctx.fillText(objects[i].name,x+objects[i].rad*scaleFactor+2,y-objects[i].rad*scaleFactor-2);
+        }
     }
 }
 
 function canvasPath()
 {
     if (pathFade) {
-        //replace this with the solid background version
-        context.beginPath();
-        context.rect(0,0,canvas.clientWidth,canvas.clientHeight);
-        context.fillStyle="rgba(0,0,0,"+fadeAlpha+")";
-        context.fill();
+        backctx.beginPath();
+        backctx.rect(0,0,backend.width,backend.height);
+        backctx.fillStyle="rgba(0,0,0,"+fadeAlpha+")";
+        backctx.fill();
     }
     //don't need to check for anything else yet, because the other type of pathing is to do nothing
 }
 
 function canvasClear()
 {
-    context.clearRect(0,0,canvas.clientWidth,canvas.clientHeight);
+    backctx.clearRect(0,0,backend.width,backend.height);
 }

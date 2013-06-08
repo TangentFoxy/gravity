@@ -11,20 +11,15 @@ These are things I should've done before pushing to github. If there is somethin
 * Try changing collider to delete i and keep j instead? What happens to objects falling through
   the cracks so-to-speak?
 * Add a pause button/pause function/pause command.
-* Add nameplates to planets moving around
-  (need to add second canvas element and do the fanciness with that for pathing from now on).
 * Make system for testing equal sized objects colliding from a stand-still.
 * Make system(s) for testing synchronous movements (should stay synced but won't).
 
 * Make a random system maker. (Or at least a random distribution of mass maker.)
 * Add command to change size of canvas.
 * Make quick command reference built-in.
-* Pathing that overlays previous paths with a black screen with an alpha channel to make the current objects' locations stand out
 
 * Check all for loops to make sure nothing is excluded.
 * Check all loops (think there are errors because looping while deleting).
-
-* Make 'norm' an actual display type and error if an invalid type is selected.
 
 Known Bugs
 ----------
