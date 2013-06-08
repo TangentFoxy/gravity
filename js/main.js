@@ -19,9 +19,8 @@ function start()
 function loop()
 {
     for (var i = 0; i < objects.length-1; i++) for (var j = i+1; j < objects.length; j++) gravity(i,j);
-    //collisionCheck() needs to be moved ahead of update for when objects can rest on the surface of other objects(?)
-    for (var i = 0; i < objects.length; i++) update(i);
     for (var i = objects.length-1; i > 0; i--) for (var j = i-1; j > -1; j--) collisionCheck(i,j);
+    for (var i = 0; i < objects.length; i++) update(i);
     if (hyperRender) {
         redraw();
         debugOut();
@@ -54,7 +53,7 @@ function gravity(i,j)
         var Ay=g-Ax;                 //      for              y
         if (Nx) Ax=-Ax;              //fix negative values
         if (Ny) Ay=-Ay;
-        Ax=-Ax; //i<j always, so needs gravity reversed (for some reason)
+        Ax=-Ax; //i<j always, so needs gravity reversed (for some reason I forgot)
         Ay=-Ay;
         objects[i].Vx+=Ax*timeStep;  //apply change of velocity
         objects[i].Vy+=Ay*timeStep;

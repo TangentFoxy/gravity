@@ -28,6 +28,7 @@ That I haven't figured out how to fix.
 
 * hyperRender may be having an issue along with changing zoom, but these have most likely been fixed (remember hyperRender=false with
   hyperWarp=false will break the rendering until one of them is set true)
+* There are seemingly random errors in the collider. Something to do with deleting objects while looping through the array?
 
 ToDo Soon
 ---------

@@ -1,9 +1,7 @@
-// add surface stuff to update function since that's where things will change
-//      collider will have to be modifed to ignore collisions under a certain tolerance
 function update(i)
 {
     objects[i].rot+=objects[i].rotspd;        //apply rotation
-    if (objects[i].rot > 2*Math.PI) objects[i].rot-=2*Math.PI;
+    if (objects[i].rot > Math.Tau) objects[i].rot-=Math.Tau;
     if (!objects[i].fixed)
     {
         objects[i].x+=objects[i].Vx*timeStep; //apply acceleration
@@ -13,12 +11,10 @@ function update(i)
 
 function collisionCheck(i,j)
 {
-    // The try and catch really shouldn't be needed, check through looping for errors (maybe should be deleting j instead of i??).
-    // Wait, isn't i > j, which would mean i is more likely to be affected / is the only one immediately affected by a change in size of the array?
-    // No wait, j is the one being deleted, so each pass after j is deleted is followed by passes where j is being compared when it doesn't exist?
+    // try/catch shouldn't be needed, but there are errors after collisions where objects are removed
     try
     {
-        var Dx=objects[i].x-objects[j].x; //find distances
+    var Dx=objects[i].x-objects[j].x; //find distances
     }
     catch(err)
     {
@@ -31,17 +27,16 @@ function collisionCheck(i,j)
     {
         if (!objects[i].collides) 
         {
-            consoleOutput("Ignored collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.","Ignored collision between "+i+" and "+j+".");
+            consoleOut("Ignored collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.","Ignored collision between "+i+" and "+j+".");
             return;
         }
         if (!objects[j].collides)
         {
-            consoleOutput("Ignored collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.","Ignored collision between "+i+" and "+j+".");
+            consoleOut("Ignored collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.","Ignored collision between "+i+" and "+j+".");
             return;
         }
-        // add tolerance checks here
-        consoleOutput("Collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.","Collision between "+i+" and "+j+".");
-
+        // add tolerance checks here (surface stuff) or inside the final collider
+        consoleOut("Collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.","Collision between "+i+" and "+j+".");
         switch(colliderType)
         {
             case "combine":
@@ -50,7 +45,7 @@ function collisionCheck(i,j)
             case "none":
             break;
             default:
-            throw "undefined colliderType";
+            throw "invalid colliderType";
         }
     }
 }
@@ -60,8 +55,8 @@ function combine(i,j)
     if (objects[j].m > objects[i].m) objects[i].fill=objects[j].fill; // the color of the more massive object is kept
     if (renderId == j) renderId=i;                    // fix renderId if needed
     if (renderId > j) renderId-=1;
-    if (playerId == j) playerId=i;
-    if (playerId > j) playerId-=1;                    // fix playerId if needed
+    if (playerId == j) playerId=i;                    // fix playerId if needed
+    if (playerId > j) playerId-=1;
     if (objects[i].fixed)
     {
         objects[i].m+=objects[j].m;                   //add mass

@@ -1,27 +1,23 @@
 Quick-Start Stuff!
 ==================
 
-Apparently github's HTML preview function is going a bit wonky, so the next link may not work at all. If that's the case, you'll have to download the archive of this and unzip it and open 'gravity.html' to make it work.
-
-[Click here to play with it] [2]. I also suggest opening up the [Console] [3] reference to see what you can do with it right now.
+[Click here to play with it] [2]. I also suggest opening up the [Console] [3] reference to see what you can do with it right now. Known bugs are listed in the [todo.md] [4] file, along with a scrawled list of my to-be-done's.
 
 What is Gravity?
 ================
 
-I know, it needs a better name.
+Right now, it is a simple 2D n-body gravity simulator using mostly basic maths.
 
-It's a simple little 2D n-body gravitation simulation using mostly basic algebra because I do not know of any higher maths. Okay, that's not strictly true anymore. I am learning better maths, and they will be applied as I continue to learn.
+What I hope for it to be is a complex game based on somewhat realistic physics (gamey but based loosely on reality), with ships you can build and customize and launch from a planet or a station in orbit, go orbit other things, land on things, mine things, do science things. Basically, it's all things and stuff.
 
-A better question might be, what is it to become? Well, a game. I want to make a game with somewhat realistic physics (though this could be thrown out for fun at any time, in which case I will fork this into a more simulator version vs game version), ships you can build and customize and launch from a planet and go to orbit and land and do science-y stuff and mine the heck out of planets and basically do all this really cool stuff.
-
-However, this is the first project I've ever done. Do not expect it to be all that good at anything. Or ever be finished. No, do expect it to be finished, and please poke me muchly to make me continue working on it.
+This is my first project, don't expect much. (Okay, that's not strictly true, but everything I've done before was broken batch files or not related to programming.) If you see this project hasn't been updated in a week, please [send me an email] [5] or annoy me in some other way to keep working at it!
 
 Who am I?
 ---------
 
 Well, I'm surprised you found this instead of me, but I am [Guard13007] [1], mostly known for my YouTube channel of gaming, mostly known for news videos about Kerbal Space Program updates or videos of Kerbal Space Program itself. I want to expand on this, but that's beside the point.
 
-Who am I? I am the Wolf of All Trades, Master of None. Why do I give myself this title? Well, I love wolves, and try to do everything. You name it, if it's a creative endevour, I have tried it at one point (or am trying, or will try). The downside of this, I am not particularly good at anything, just coming up with ideas.
+Who am I? I am the Wolf of All Trades, Master of None. Why do I give myself this title? Well, I try to do everything. You name it, if it's a creative endevour, I have tried it at one point (or am trying, or will try). The downside of this, I am not particularly good at anything, just coming up with ideas. (The wolf part is [a whole other story] [6].)
 
 But hey, this idea is going well, I'll stick with it.
 
@@ -35,11 +31,11 @@ Features
 * colors :P (WIP: images for things instead of just colors)
 * a slightly buggy console for screwing with stuff while it runs
 
-Known Bugs
-----------
+Known Bugs: Check [todo.md] [4] for a list of known bugs, along with all the random ideas I've written down.
 
-* If you have a single object, the thing throws errors like mad. (But I don't care because there should never only be one.)
-
-[1]: http://youtube.com/user/Guard13007 "Guard13007"
-[2]: http://htmlpreview.github.io/?=http://www.github.com/Guard13007/gravity/blob/master/gravity.html "Click here to play with it"
+[1]: http://youtube.com/user/Guard13007 "My YouTube"
+[2]: http://htmlpreview.github.io/?https://github.com/Guard13007/gravity/blob/master/gravity.html "Gravity inside github's HTML preview"
 [3]: https://github.com/guard13007/gravity/blob/master/Console.md "Console"
+[4]: https://github.com/guard13007/gravity/blob/master/todo.md "todo.md"
+[5]: mailto:paul.liverman.iii@gmail.com "email"
+[6]: http://en.wikipedia.org/wiki/Furry_fandom "I'm sorta kinda a furry"

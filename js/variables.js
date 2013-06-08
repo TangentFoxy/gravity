@@ -26,6 +26,7 @@ var path=true;      // draw path? [by not clearing canvas]
 var pathFade=true;  // path fades away over time?
 var fadeAlpha=0.05; // how much fade per iteration
 var drawNames=true; // whether or not to write the names of things next to them
+var namesColor='object'; // color to write names in
 var zoom=false;     // zoom in slowly? (just for the hell of it)
 var zoomFactor=1;   // how much to increase scaleFactor each frame when zoom is on
 

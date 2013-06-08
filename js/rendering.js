@@ -1,15 +1,15 @@
 function redraw()
 {
-    if (zoom) scaleFactor+=Number(zoomFactor);
+    if (zoom) scaleFactor+=Number(zoomFactor);         // zooming ?
     if (!parentRotation)
     {
-        var rot=objects[renderId].rot;
+        var rot=objects[renderId].rot;                 // rotation of view
     } else {
         var a=objects[renderId].x-objects[parentId].x;
         var o=objects[renderId].y-objects[parentId].y;
         var rot=Math.atan2(a,o)-Math.PI/2;
     }
-    path ? canvasPath() : canvasClear(); // path or clear before drawing?
+    path ? canvasPath() : canvasClear();               // path or clear ?
     //BACKEND RENDER
     for (var i = 0; i < objects.length; i++)
     {
@@ -21,7 +21,6 @@ function redraw()
             var y=(objects[i].x-objects[renderId].x)*scaleFactor+backend.height/2;
             break;
             case "3D":
-            case "3d":
             var x=((objects[i].x-objects[renderId].x)*Math.cos(30)-(objects[i].y-objects[renderId].y)*Math.sin(30))*scaleFactor+backend.width/2;
             var y=((objects[i].y-objects[renderId].y)*Math.sin(30)+(objects[i].x-objects[renderId].x)*Math.cos(30))*scaleFactor+backend.height/2;
             break;
@@ -34,12 +33,12 @@ function redraw()
         }
         var radius=objects[i].rad*scaleFactor;          // set radius of object
         if (radius < renderRadius) radius=renderRadius;
-        backctx.arc(x,y,radius,0,2*Math.PI); //Technically should render from objects[i].rot TO 2*Math.PI+objects[i].rot ?? Doesn't really matter when we're circles...
-        backctx.fillStyle=objects[i].fill;
+        backctx.arc(x,y,radius,0,2*Math.PI); //Technically should render from objects[i].rot TO 2*Math.PI+objects[i].rot ??
+        backctx.fillStyle=objects[i].fill;   //  Doesn't really matter when we're circles...
         backctx.fill();
     }
     frontctx.clearRect(0,0,frontend.width,frontend.height); // clear frontend
-    frontctx.drawImage(backend,0,0);                                    // draw backend
+    frontctx.drawImage(backend,0,0);                        // draw backend
     //FRONTEND RENDER
     for (var i=0;i<objects.length;i++)
     {
@@ -50,7 +49,6 @@ function redraw()
             var y=(objects[i].x-objects[renderId].x)*scaleFactor+frontend.height/2;
             break;
             case "3D":
-            case "3d":
             var x=((objects[i].x-objects[renderId].x)*Math.cos(30)-(objects[i].y-objects[renderId].y)*Math.sin(30))*scaleFactor+frontend.width/2;
             var y=((objects[i].y-objects[renderId].y)*Math.sin(30)+(objects[i].x-objects[renderId].x)*Math.cos(30))*scaleFactor+frontend.height/2;
             break;
@@ -62,8 +60,12 @@ function redraw()
             throw "invalid renderType";
         }
         if (drawNames) {
-            frontctx.font='8pt Calibri';
-            frontctx.fillStyle='white';
+            frontctx.font='8pt Calibri'; //should replace font with something else??
+            if (namesColor=='object') {
+                frontctx.fillStyle=objects[i].fill;
+            } else {
+                frontctx.fillStyle=namesColor;
+            }
             frontctx.fillText(objects[i].name,x+objects[i].rad*scaleFactor+2,y-objects[i].rad*scaleFactor-2);
         }
     }

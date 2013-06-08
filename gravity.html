@@ -28,17 +28,18 @@ var backend=document.getElementById("backend");
 var backctx=backend.getContext("2d");
 
 var logdiv = document.getElementById("logdiv");
-
-Math.Tau=2*Math.PI; // I need to see if this can be done, and if so, use it
 document.getElementById("title").innerHTML+=" "+version;
+
+Math.Tau=2*Math.PI;
 Environments();
 var objects=new Array();
-verga(); // Final system to be used in the game.
-//stableySystem(); // two planets, moon and asteroid that get kicked out of system
-//collidingSystem(); // for testing collisions
-//unstableSystem(); // stableySystem, but with lots of extra stuff to unstablize it
+verga();                 // Final system to be used in the game.
+//stableySystem();       // two planets, moon and asteroid that get kicked out of system
+//collidingSystem();     // for testing collisions
+//unstableSystem();      // stableySystem, but with lots of extra stuff to unstablize it
 //orbitalVelocityTest(); // testing the function to set velocities for circular orbits
 start();
+
 </script>
 </body>
 </html>

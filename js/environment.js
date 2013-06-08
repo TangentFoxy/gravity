@@ -1,4 +1,4 @@
-function setEnvironment(cmd,obj,g,rSpeed,hWarp,hSpeed,tStep,plId,cType,hRender,sFactor,rRadius,rId,paId,pRotation,rType,p,pFade,fAlpha,z,zFactor)
+function setEnvironment(cmd,obj,g,rSpeed,hWarp,hSpeed,tStep,plId,cType,hRender,sFactor,rRadius,rId,paId,pRotation,rType,p,pFade,fAlpha,dNames,nColor,z,zFactor)
 {
     // set , obj  = obj isn't used, just put whatever
     // save,"obj" = obj is string naming the object
@@ -25,6 +25,7 @@ function setEnvironment(cmd,obj,g,rSpeed,hWarp,hSpeed,tStep,plId,cType,hRender,s
             pathFade=pFade;
             fadeAlpha=fAlpha;
             drawNames=dNames;
+            namesColor=nColor;
             zoom=z;
             zoomFactor=zFactor;
             break;
@@ -47,6 +48,7 @@ function setEnvironment(cmd,obj,g,rSpeed,hWarp,hSpeed,tStep,plId,cType,hRender,s
             eval(obj+".pathFade="+pFade+";");
             eval(obj+".fadeAlpha="+fAlpha+";");
             eval(obj+".drawNames="+dNames+";");
+            eval(obj+".namesColor="+nColor+";");
             eval(obj+".zoom="+z+";");
             eval(obj+".zoomFactor"+zFactor+";");
             break;
@@ -69,6 +71,7 @@ function setEnvironment(cmd,obj,g,rSpeed,hWarp,hSpeed,tStep,plId,cType,hRender,s
             pathFade=obj.pathFade;
             fadeAlpha=obj.fadeAlpha;
             drawNames=obj.drawNames;
+            namesColor=obj.namesColor;
             zoom=obj.zoom;
             zoomFactor=obj.zoomFactor;
             canvasClear();
@@ -103,6 +106,7 @@ function Environments()
         pathFade:true,
         fadeAlpha:0.05,
         drawNames:true,
+        namesColor:'white',
         zoom:false,
         zoomFactor:0.00001
     };
@@ -125,6 +129,7 @@ function Environments()
         pathFade:true,
         fadeAlpha:0.05,
         drawNames:false,
+        namesColor:'object',
         zoom:false,
         zoomFactor:0.001
     };
@@ -147,6 +152,7 @@ function Environments()
         pathFade:true,
         fadeAlpha:0.05,
         drawNames:false,
+        namesColor:'red',
         zoom:false,
         zoomFactor:1
     };
@@ -248,4 +254,5 @@ function orbitalVelocityTest()
 }
 
 //objects[i]=new Thing(mass,x,y,Vx,Vy,color,radius,name,rotation);
-// rotation in degrees per (what...use timeStep to "fix" this)
+// rotation in degrees per 'second' = 30 intervals
+//  rotation is currently set for EVERY interval
