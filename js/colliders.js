@@ -36,7 +36,7 @@ function collisionCheck(i,j)
             return;
         }
         // add tolerance checks here (surface stuff) or inside the final collider
-        consoleOut("Collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>.","Collision between "+i+" and "+j+".");
+        consoleOut("Collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>. (<span class='var'>"+objects[i].name+"</span> and <span class='var'>"+objects[j].name+"</span>)","Collision between "+i+" and "+j+". ("+objects[i].name+" and "+objects[j].name+")");
         switch(colliderType)
         {
             case "combine":
@@ -52,7 +52,10 @@ function collisionCheck(i,j)
 
 function combine(i,j)
 {
-    if (objects[j].m > objects[i].m) objects[i].fill=objects[j].fill; // the color of the more massive object is kept
+    if (objects[j].m > objects[i].m) {
+        objects[i].fill=objects[j].fill; // color & name of most massive object is kept
+        objects[i].name=objects[j].name;
+    }
     if (renderId == j) renderId=i;                    // fix renderId if needed
     if (renderId > j) renderId-=1;
     if (playerId == j) playerId=i;                    // fix playerId if needed
