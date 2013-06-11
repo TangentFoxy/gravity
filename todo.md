@@ -6,8 +6,8 @@ These are things I should've done before pushing to github. If there is somethin
 * colorName stuff is broken when changed with set var x command (find out why)
 * add how to report a bug to readme
 * add toggle to objects for whether or not to display their names
-* add atmospheres to objects
-* add multilayer atmospheres??????
+* add ability to offset render from center of object
+* check what would happen if something with negative mass collides with something of positive mass
 
 * Something is wrong with changing speed on the fly, speeds don't appear to change until changing hyperRender to false, and then
   they don't appear to change back..
@@ -73,6 +73,7 @@ This is stuff I want to do sooner rather than later.
   of just display code
 * 'Dark Matter' mode for generating random stuff, explodes outward, and a slowly more and more significant
   invisible mass is created at 0,0
+* Read this: http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
 
 Long-Term
 ---------

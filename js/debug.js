@@ -58,6 +58,8 @@ function consoleInput(e)
             break;
             case "scale":
             if (args[1]!==undefined) scaleFactor=args[1];
+            canvasClear();
+            redraw();
             consoleOut("<span class='var'>scaleFactor</span>=<span class='data'>"+scaleFactor+"</span>");
             break;
             case "hyperRender":
@@ -96,8 +98,6 @@ function consoleInput(e)
                 if (args[1]!==undefined) zoomFactor=args[1];
                 consoleOut("Zoom turned on. Current <span class='var'>zoomFactor</span>=<span class='data'>"+zoomFactor+"</span>.");
             }
-            /*clearInterval(interval);
-            start();*/
             break;
             case "clear":
             switch(args[1])
@@ -115,6 +115,16 @@ function consoleInput(e)
                 document.getElementById("out").innerHTML="";
                 consoleOut("Canvas and console cleared.");
             }
+            break;
+            case "pause":
+            case "stop":
+            clearInterval(interval);
+            consoleOut("Simulation paused.")
+            break;
+            case "resume":
+            case "start":
+            start();
+            consoleOut("Simulation resumed.")
             break;
             default:
             throw "unknown command";
@@ -148,7 +158,7 @@ function consoleOut(out,con)
 
 function playerOut()
 {
-    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='2'>Total velocity:<br />"+objects[playerId].getVelocity()+"</td><td colspan='2'>Distance from origin:<br />"+objects[playerId].getOriginDistance()+"</td></tr></table>";
+    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='2'>Total velocity:<br />"+objects[playerId].getVelocity()+"</td><td colspan='2'>Distance from origin:<br />"+objects[playerId].getOriginDistance()+"</td><td>Air Height: "+objects[playerId].atmosphere+"<br />Air Color: "+objects[playerId].air_fill+"</td></tr></table>";
     document.getElementById("playerStats").innerHTML = out;
 }
 

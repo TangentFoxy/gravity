@@ -211,18 +211,18 @@ function vergaScale()
     hyperSpeed=10;
     timeStep=1;
     //objects
-    objects[0]=new Thing(180000,0,0,0,0,"yellow",false,"Verga");
-    objects[1]=new Thing(36,210,0,0,0,"red",false,"Gelshc");
+    objects[0]=new Thing(180000,0,0,0,0,"yellow",false,"Verga",false,6);
+    objects[1]=new Thing(36,210,0,0,0,"red",false,"Gelshc",false,6);
     objects[1].Vy=-setOrbitalVelocity(0,210);
-    objects[2]=new Thing(180,575+287,0,0,0,"orange",false,"Oschi");
+    objects[2]=new Thing(180,575+287,0,0,0,"orange",false,"Oschi",false,6);
     objects[2].Vy=-setOrbitalVelocity(0,575+287);
-    objects[3]=new Thing(150,960+480,0,0,0,"green",false,"Terra");
+    objects[3]=new Thing(150,960+480,0,0,0,"green",false,"Terra",false,6);
     objects[3].Vy=-setOrbitalVelocity(0,960+480);
-    objects[4]=new Thing(69,2100,0,0,0,"red",false,"Ast");
+    objects[4]=new Thing(69,2100,0,0,0,"red",false,"Ast",false,6);
     objects[4].Vy=-setOrbitalVelocity(0,1380+690);
-    objects[5]=new Thing(1800,3600+1800,0,0,0,"yellow",false,"Asgur");
+    objects[5]=new Thing(1800,3600+1800,0,0,0,"yellow",false,"Asgur",false,6);
     objects[5].Vy=-setOrbitalVelocity(0,3500+1750);
-    objects[6]=new Thing(120,3700+1850,0,0,0,"blue",false,"Uriel");
+    objects[6]=new Thing(120,3700+1850,0,0,0,"blue",false,"Uriel",false,6);
     objects[6].Vy=objects[5].Vy-setOrbitalVelocity(5,150);
     // range of 3000 to 3400 for asteroids
     objects[7]=new Thing(1,3200,0,0,0,'#6A6A87',false,'a');
@@ -345,6 +345,8 @@ function orbitalVelocityTest()
     objects[4].Vx=-setOrbitalVelocity(3,20);
 }
 
-//objects[i]=new Thing(mass,x,y,Vx,Vy,color,radius,name,rotation);
+//objects[i]=new Thing(mass,x,y,Vx,Vy,color,radius,name,rotation,air_height,air_fill);
 // rotation in degrees per 'second' = 30 intervals
 //  rotation is currently set for EVERY interval
+// air_height = atmosphere height from surface (real radius + air_height = draw radius)
+//  air_fill = atmosphere color

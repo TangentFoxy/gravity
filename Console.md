@@ -56,6 +56,14 @@ clear x
 - Clears the canvas and console
 - Optional: "x" can specify 'canvas' or 'console' to clear only one
 
+pause
+stop
+- Stops the simulation.
+
+resume
+start
+- Resumes the simulation.
+
 Not Implemented
 ---------------
 
