@@ -60,6 +60,8 @@ function combine(i,j)
     if (renderId > j) renderId-=1;
     if (playerId == j) playerId=i;                    // fix playerId if needed
     if (playerId > j) playerId-=1;
+    if (parentId == j) parentId=i;                    // fix parentId if needed
+    if (parentId > j) parentId-=1;
     if (objects[i].fixed)
     {
         objects[i].m+=objects[j].m;                   //add mass

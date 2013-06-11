@@ -3,8 +3,8 @@ body {
     color: #FFF;
 }
 canvas {
-    border: 3px #FFF solid;
-    border-radius:10px;
+    border: 2px #FFF solid;
+    border-radius:4px;
 }
 table {
     border: 1px #FFF solid;

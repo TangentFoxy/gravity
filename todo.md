@@ -3,6 +3,12 @@ Immediate ToDo
 
 These are things I should've done before pushing to github. If there is something here, I am a lazy fool, beat me with a large stick.
 
+* colorName stuff is broken when changed with set var x command (find out why)
+* add how to report a bug to readme
+* add toggle to objects for whether or not to display their names
+* add atmospheres to objects
+* add multilayer atmospheres??????
+
 * Something is wrong with changing speed on the fly, speeds don't appear to change until changing hyperRender to false, and then
   they don't appear to change back..
 * Somehow the canvas clears when calling a new system, I can't find where I fixed this...

@@ -33,7 +33,7 @@ function redraw()
         }
         var radius=objects[i].rad*scaleFactor;          // set radius of object
         if (radius < renderRadius) radius=renderRadius;
-        backctx.arc(x,y,radius,0,2*Math.PI); //Technically should render from objects[i].rot TO 2*Math.PI+objects[i].rot ??
+        backctx.arc(x,y,radius,0,Math.Tau); //Technically should render from objects[i].rot TO 2*Math.PI+objects[i].rot ??
         backctx.fillStyle=objects[i].fill;   //  Doesn't really matter when we're circles...
         backctx.fill();
     }
@@ -59,6 +59,28 @@ function redraw()
             default:
             throw "invalid renderType";
         }
+        /*
+//"rgba(r,g,b,a)"
+//atmosphere is drawn on frontctx, before drawing the planet
+// air_height + rad = radius
+// air_fill + alpha = color
+//hexToRGBA("#A20F00",0.5)
+
+        var radius=objects[i].rad*scaleFactor;          // set radius of object
+        if (radius < renderRadius) radius=renderRadius;
+        backctx.arc(x,y,radius,0,2*Math.PI); //Technically should render from objects[i].rot TO 2*Math.PI+objects[i].rot ??
+        backctx.fillStyle=objects[i].fill;   //  Doesn't really matter when we're circles...
+        backctx.fill();
+        */
+        /*if (!objects[i].air_height) {
+            frontctx.beginPath();
+            var radius=(objects[i].rad+objects[i].air_height)*scaleFactor;
+            if (radius < renderRadius) radius=renderRadius+0.6; // STOP HARDCODING THIS
+            frontctx.arc(x,y,radius,0,Math.Tau);
+            frontctx.fillStyle=hexToRGBA(objects[i].air_fill,0.8); // STOP HARDCODING THIS AS WELL
+            frontctx.fill();
+        }*/
+        //
         if (drawNames) {
             frontctx.font='8pt Calibri'; //should replace font with something else??
             if (namesColor=='object') {
