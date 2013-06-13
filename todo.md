@@ -3,6 +3,11 @@ Immediate ToDo
 
 These are things I should've done before pushing to github. If there is something here, I am a lazy fool, beat me with a large stick.
 
+* change README to say you have to download it to make it work (cause that's the truth)
+* add in atmosphere collisions (change collider to initially check atmospheric collision, then actual collision)
+* add in rotation changes based on collision angles (in new collider, possible in glancing collision collider?)
+* start work on glancing collision detector...
+* setting hyperWarp isn't working possibly? May be setting a string value instead of a boolean
 * colorName stuff is broken when changed with set var x command (find out why)
 * add how to report a bug to readme
 * add toggle to objects for whether or not to display their names
