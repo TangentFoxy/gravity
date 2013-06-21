@@ -1,0 +1,98 @@
+<html>
+<head>
+    <base href="../">
+    <title>Explosions</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <script type="text/javascript" src="js/functions.js"></script>
+</head>
+<body>
+    <center>
+        <canvas id="canvas" width="560" height="440"></canvas>
+    </center>
+</body>
+<script>
+var canvas=document.getElementById("canvas");
+var context=canvas.getContext("2d");
+var explodeRate=20; // how many intervals to start a new explosion
+var decayRate=0.1; // multiplied by radius to decrease size each turn
+var sizeThreshold=0.5; // smallest explosion size
+var adjustR=-8; // how much to change red value per iteration
+var adjustG=-8; // how much to change green value per iteration
+var adjustB=-8; // how much to change blue value per iteration
+var spawnRate=1; // how many circles to attempt to spawn each iteration (1=explodey-ish, 3=paint splattery)
+var spawnSize=0.2; // how big to attempt to spawn circles each iteration
+var counter=0;
+
+var explosions=[];
+
+Math.Tau=2*Math.PI;
+setInterval("loop();",33);
+
+function loop()
+{
+    counter+=1;
+    if (counter==explodeRate) {
+        // anywhere on canvas, radius 1 to 80, RGB(255,255,0) [yellow]
+        explosions[explosions.length]=new newExplosion(random(0,canvas.clientWidth),random(0,canvas.clientHeight),random(1,80),255,255,0);
+        counter=0;
+    }
+    context.clearRect(0,0,canvas.width,canvas.height);
+    renderExplosions();
+}
+
+function newExplosion(x,y,radius,red,green,blue)
+{
+    this.parts=[];
+    this.parts[0]=new Explosion(x,y,radius,red,green,blue);
+}
+function Explosion(x,y,radius,red,green,blue)
+{
+    this.x=x;
+    this.y=y;
+    this.radius=radius;
+    this.red=red;
+    this.green=green;
+    this.blue=blue;
+}
+
+function renderExplosions()
+{
+try {
+    for (var i=0;i<explosions.length;i++) for (var j=0;j<explosions[i].parts.length;j++) {
+        //render explosions[i].parts[j]
+        context.beginPath();
+        context.arc(explosions[i].parts[j].x,explosions[i].parts[j].y,explosions[i].parts[j].radius,0,Math.Tau);
+        context.fillStyle="rgb("+explosions[i].parts[j].red+","+explosions[i].parts[j].green+","+explosions[i].parts[j].blue+")";
+        context.fill();
+        //decrease radius of explosion
+        // (change to be exponential? change to be something else)
+        explosions[i].parts[j].radius-=explosions[i].parts[j].radius*decayRate;
+        //splice out if too small
+        if (explosions[i].parts[j].radius<sizeThreshold) {
+            explosions[i].parts.splice(j,1);
+            if (explosions[i].parts.length==0) {
+                explosions.splice(i,1);
+            }
+            break;
+        }
+        //darken RGB values
+        explosions[i].parts[j].red+=adjustR;
+        if (explosions[i].parts[j].red<0) explosions[i].parts[j].red=0;
+        if (explosions[i].parts[j].red>255) explosions[i].parts[j].red=255;
+        explosions[i].parts[j].green+=adjustG;
+        if (explosions[i].parts[j].green<0) explosions[i].parts[j].green=0;
+        if (explosions[i].parts[j].green>255) explosions[i].parts[j].green=255;
+        explosions[i].parts[j].blue+=adjustB;
+        if (explosions[i].parts[j].blue<0) explosions[i].parts[j].blue=0;
+        if (explosions[i].parts[j].blue>255) explosions[i].parts[j].blue=255;
+        //new small explosion bits (yellow within +/- radius on x/y)
+        if (explosions[i].parts[j].radius*spawnSize>sizeThreshold) for (var k=0;k<spawnRate;k++) explosions[i].parts[explosions[i].parts.length]=new Explosion(random(explosions[i].parts[j].x-explosions[i].parts[j].radius,explosions[i].parts[j].x+explosions[i].parts[j].radius),random(explosions[i].parts[j].y-explosions[i].parts[j].radius,explosions[i].parts[j].y+explosions[i].parts[j].radius),explosions[i].parts[j].radius*spawnSize,255,255,0);
+    }
+}
+catch(error) {
+    if (error=="TypeError: explosions[i] is undefined") return;
+    console.log(error);
+}
+}
+</script>
+</html>

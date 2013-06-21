@@ -337,3 +337,8 @@ function hexToRGBA(hex,alpha)
     // #FF00FF -> rgba(255,0,255,alpha)
     return "rgba("+parseInt("0x"+hex.substr(1,2))+","+parseInt("0x"+hex.substr(3,2))+","+parseInt("0x"+hex.substr(5,2))+","+alpha+")";
 }
+function hexToRGB(hex)
+{
+    // #FF00FF -> rgb(255,0,255)
+    return "rgb("+parseInt("0x"+hex.substr(1,2))+","+parseInt("0x"+hex.substr(3,2))+","+parseInt("0x"+hex.substr(5,2))+")";
+}
