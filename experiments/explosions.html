@@ -13,27 +13,28 @@
 <script>
 var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
-var explodeRate=30; // how many intervals to start a new explosion
-var decayRate=2400; // how many iterations before deleting a circle
+var runSpeed=5;
+var explodeRate=10; // how many intervals to start a new explosion
+var decayRate=200; // how many iterations before deleting a circle
 var sizeDecay=0.1; // multiplied by radius to decrease size each turn
-var sizeThreshold=1; // smallest explosion size
+var sizeThreshold=0.5; // smallest explosion size
 // changing all adjusts to 8 is a fade, 80 is a flash-crackle kind of thing, 40 is nice middle-ground?
-var adjustR=-8; // how much to change red value per iteration
-var adjustG=-8; // how much to change green value per iteration
+var adjustR=-4; // how much to change red value per iteration
+var adjustG=-40; // how much to change green value per iteration
 var adjustB=-8; // how much to change blue value per iteration
-var rMin=200; // minimum red value to spawn new circle from this circle
-var gMin=200; // minimum green value to spawn new circle from this circle
-var bMin=200; // minimum blue value to spawn new circle from this circle
-var spawnRate=1; // how many circles to attempt to spawn each iteration (1=explodey-ish, 3=paint splattery)
-var spawnCheck=0.2; // size to check against before spawning new circles
-var spawnSize=0.2; // how big to to spawn circles each iteration
-var spawnRadius=1.2; // how much to modify radius for centers of new circles
+var rMin=30; // minimum red value to spawn new circle from this circle
+var gMin=30; // minimum green value to spawn new circle from this circle
+var bMin=30; // minimum blue value to spawn new circle from this circle
+var spawnRate=2; // how many circles to attempt to spawn each iteration (1=explodey-ish, 3=paint splattery)
+var spawnCheck=0.1; // size to check against before spawning new circles
+var spawnSize=0.33; // how big to to spawn circles each iteration
+var spawnRadius=1.4; // how much to modify radius for centers of new circles
 var counter=0;
 
 var explosions=[];
 
 Math.Tau=2*Math.PI;
-setInterval("loop();",33);
+setInterval("loop();",runSpeed);
 
 function loop()
 {
@@ -66,21 +67,25 @@ function Explosion(x,y,radius,red,green,blue)
 function renderExplosions()
 {
 try {
-    for (var i=0;i<explosions.length;i++) for (var j=0;j<explosions[i].parts.length;j++) {
+    //loop through explosions backwards to fix flicker effect (effect is caused by skipping elements when deleting elements) [nope: now the flickering is WORSE]
+    //  this will have a side effect of making it so new elements created won't be looped through on this iteration, which may look different, but overall should be a slight performance gain(?) and look better I think
+    //for (var i=0;i<explosions.length;i++) for (var j=0;j<explosions[i].parts.length;j++) {
+    for (var i=explosions.length-1;i>-1;i--) for (var j=explosions[i].parts.length-1;j>-1;j--) {
         //check if decay counter has reached decayRate
-        explosions[i].parts[j].counter+=1;
         if (explosions[i].parts[j].counter==decayRate) {
             explosions[i].parts.splice(j,1);
             break;
         }
+        explosions[i].parts[j].counter+=1;
         //render explosions[i].parts[j]
+        //if (!j==0) {
         context.beginPath();
         context.arc(explosions[i].parts[j].x,explosions[i].parts[j].y,explosions[i].parts[j].radius,0,Math.Tau);
         context.fillStyle="rgb("+explosions[i].parts[j].red+","+explosions[i].parts[j].green+","+explosions[i].parts[j].blue+")";
         context.fill();
+        //}
         //decrease radius of explosion
-        // (change to be exponential? change to be something else)
-        explosions[i].parts[j].radius-=explosions[i].parts[j].radius*sizeDecay;
+        explosions[i].parts[j].radius-=Math.floor(explosions[i].parts[j].radius*sizeDecay+1);
         //splice out if too small
         if (explosions[i].parts[j].radius<sizeThreshold) {
             explosions[i].parts.splice(j,1);
