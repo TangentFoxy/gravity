@@ -57,6 +57,7 @@ Stuff I want to work on as soon as possible.
 * Glancing collisions collider (idea=Large object loses fraction of mass, small object split in
   half, things go flying off with similar velocity to impact)
 * Make a system with lots of objects (or a way to randomly generate objects) to test it running with more calculations and thus, more lag :)
+* Instead of two canvases with one hidden being copied to the first, have both canvases on top of each other and transparent (removing the need to copy over a canvas image each iteration)
 
 General ToDo
 ------------

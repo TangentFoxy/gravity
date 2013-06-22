@@ -1,9 +1,7 @@
 Quick-Start Stuff!
 ==================
 
-(It seems not to work with the HTML preview anymore. The next link may or may not work. The way to be sure is to download the ZIP from above, extract everything, and double-click 'gravity.html' to start it.)
-
-[Click here to play with it] [2]. I also suggest opening up the [Console] [3] reference to see what you can do with it right now. Known bugs are listed in the [todo.md] [4] file, along with a scrawled list of my to-be-done's.
+Download the ZIP archive containing this repo to try it out, linked at the top of this page (or if you are seeing Github's new design, the bottom right). I also suggest opening up the [Console] [3] reference to see what you can do with it right now. Known bugs are listed in the [todo.md] [4] file, along with a scrawled list of my to-be-done's.
 
 What is Gravity?
 ================
@@ -36,7 +34,7 @@ Features
 Known Bugs: Check [todo.md] [4] for a list of known bugs, along with all the random ideas I've written down.
 
 [1]: http://youtube.com/user/Guard13007 "My YouTube"
-[2]: http://htmlpreview.github.io/?https://github.com/Guard13007/gravity/blob/master/gravity.html "Gravity inside github's HTML preview"
+[2]: http://htmlpreview.github.io/?https://github.com/Guard13007/gravity/blob/master/gravity.html "Gravity inside github's HTML preview (no longer working)"
 [3]: https://github.com/guard13007/gravity/blob/master/Console.md "Console"
 [4]: https://github.com/guard13007/gravity/blob/master/todo.md "todo.md"
 [5]: mailto:paul.liverman.iii@gmail.com "email"

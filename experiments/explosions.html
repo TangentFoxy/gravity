@@ -13,14 +13,21 @@
 <script>
 var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
-var explodeRate=20; // how many intervals to start a new explosion
-var decayRate=0.1; // multiplied by radius to decrease size each turn
-var sizeThreshold=0.5; // smallest explosion size
+var explodeRate=30; // how many intervals to start a new explosion
+var decayRate=2400; // how many iterations before deleting a circle
+var sizeDecay=0.1; // multiplied by radius to decrease size each turn
+var sizeThreshold=1; // smallest explosion size
+// changing all adjusts to 8 is a fade, 80 is a flash-crackle kind of thing, 40 is nice middle-ground?
 var adjustR=-8; // how much to change red value per iteration
 var adjustG=-8; // how much to change green value per iteration
 var adjustB=-8; // how much to change blue value per iteration
+var rMin=200; // minimum red value to spawn new circle from this circle
+var gMin=200; // minimum green value to spawn new circle from this circle
+var bMin=200; // minimum blue value to spawn new circle from this circle
 var spawnRate=1; // how many circles to attempt to spawn each iteration (1=explodey-ish, 3=paint splattery)
-var spawnSize=0.2; // how big to attempt to spawn circles each iteration
+var spawnCheck=0.2; // size to check against before spawning new circles
+var spawnSize=0.2; // how big to to spawn circles each iteration
+var spawnRadius=1.2; // how much to modify radius for centers of new circles
 var counter=0;
 
 var explosions=[];
@@ -53,12 +60,19 @@ function Explosion(x,y,radius,red,green,blue)
     this.red=red;
     this.green=green;
     this.blue=blue;
+    this.counter=0;
 }
 
 function renderExplosions()
 {
 try {
     for (var i=0;i<explosions.length;i++) for (var j=0;j<explosions[i].parts.length;j++) {
+        //check if decay counter has reached decayRate
+        explosions[i].parts[j].counter+=1;
+        if (explosions[i].parts[j].counter==decayRate) {
+            explosions[i].parts.splice(j,1);
+            break;
+        }
         //render explosions[i].parts[j]
         context.beginPath();
         context.arc(explosions[i].parts[j].x,explosions[i].parts[j].y,explosions[i].parts[j].radius,0,Math.Tau);
@@ -66,7 +80,7 @@ try {
         context.fill();
         //decrease radius of explosion
         // (change to be exponential? change to be something else)
-        explosions[i].parts[j].radius-=explosions[i].parts[j].radius*decayRate;
+        explosions[i].parts[j].radius-=explosions[i].parts[j].radius*sizeDecay;
         //splice out if too small
         if (explosions[i].parts[j].radius<sizeThreshold) {
             explosions[i].parts.splice(j,1);
@@ -86,7 +100,9 @@ try {
         if (explosions[i].parts[j].blue<0) explosions[i].parts[j].blue=0;
         if (explosions[i].parts[j].blue>255) explosions[i].parts[j].blue=255;
         //new small explosion bits (yellow within +/- radius on x/y)
-        if (explosions[i].parts[j].radius*spawnSize>sizeThreshold) for (var k=0;k<spawnRate;k++) explosions[i].parts[explosions[i].parts.length]=new Explosion(random(explosions[i].parts[j].x-explosions[i].parts[j].radius,explosions[i].parts[j].x+explosions[i].parts[j].radius),random(explosions[i].parts[j].y-explosions[i].parts[j].radius,explosions[i].parts[j].y+explosions[i].parts[j].radius),explosions[i].parts[j].radius*spawnSize,255,255,0);
+        if (explosions[i].parts[j].radius*spawnCheck>sizeThreshold) {
+            if (!explosions[i].parts[j].red<=rMin && !explosions[i].parts[j].green<=gMin && !explosions[i].parts[j].blue<=bMin) for (var k=0;k<spawnRate;k++) explosions[i].parts[explosions[i].parts.length]=new Explosion(random(explosions[i].parts[j].x-(explosions[i].parts[j].radius*spawnRadius),explosions[i].parts[j].x+(explosions[i].parts[j].radius*spawnRadius)),random(explosions[i].parts[j].y-(explosions[i].parts[j].radius*spawnRadius),explosions[i].parts[j].y+(explosions[i].parts[j].radius*spawnRadius)),explosions[i].parts[j].radius*spawnSize,255,255,0);
+        }
     }
 }
 catch(error) {
