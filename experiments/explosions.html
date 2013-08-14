@@ -13,10 +13,10 @@
 <script>
 var canvas=document.getElementById("canvas");
 var context=canvas.getContext("2d");
-var runSpeed=5;
-var explodeRate=10; // how many intervals to start a new explosion
-var decayRate=200; // how many iterations before deleting a circle
-var sizeDecay=0.1; // multiplied by radius to decrease size each turn
+var runSpeed=33;
+var explodeRate=22; // how many intervals to start a new explosion
+var decayRate=180; // how many iterations before deleting a circle
+var sizeDecay=0.08; // multiplied by radius to decrease size each turn
 var sizeThreshold=0.5; // smallest explosion size
 // changing all adjusts to 8 is a fade, 80 is a flash-crackle kind of thing, 40 is nice middle-ground?
 var adjustR=-4; // how much to change red value per iteration
@@ -25,8 +25,8 @@ var adjustB=-8; // how much to change blue value per iteration
 var rMin=30; // minimum red value to spawn new circle from this circle
 var gMin=30; // minimum green value to spawn new circle from this circle
 var bMin=30; // minimum blue value to spawn new circle from this circle
-var spawnRate=2; // how many circles to attempt to spawn each iteration (1=explodey-ish, 3=paint splattery)
-var spawnCheck=0.1; // size to check against before spawning new circles
+var spawnRate=3; // how many circles to attempt to spawn each iteration (1=explodey-ish, 3=paint splattery)
+var spawnCheck=0.03; // size to check against before spawning new circles
 var spawnSize=0.33; // how big to to spawn circles each iteration
 var spawnRadius=1.4; // how much to modify radius for centers of new circles
 var counter=0;
@@ -35,6 +35,9 @@ var explosions=[];
 
 Math.Tau=2*Math.PI;
 setInterval("loop();",runSpeed);
+
+// size 200 right in center
+//explosions[explosions.length]=new newExplosion(canvas.clientWidth/2,canvas.clientHeight/2,200,255,255,0);
 
 function loop()
 {
