@@ -61,7 +61,7 @@ function combine(i,j)
     } //else {
         //if (objects[i].atmosphere != false) objects[i].atmosphere=objects[j].atmosphere+Math.pow(objects[i].atmosphere,1/3);
     //}
-                                    objects[i].atmosphere+=objects[j].atmosphere; // add the air heights together (improve this properly later)
+                                    objects[i].atmosphere+=Math.pow(objects[j].atmosphere,1/3); // add the air heights together (improve this properly later)
                                     //if (objects[j].atmosphere != false) objects[i].atmosphere+=Math.pow(objects[j].atmosphere,1/3); //add atmospheres
     if (renderId == j) renderId=i;                    // fix renderId if needed
     if (renderId > j) renderId-=1;
