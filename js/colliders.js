@@ -36,7 +36,7 @@ function collisionCheck(i,j)
             return;
         }
         // add tolerance checks here (surface stuff) or inside the final collider
-        consoleOut("Collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>. (<span class='var'>"+objects[i].name+"</span> and <span class='var'>"+objects[j].name+"</span>)","Collision between "+i+" and "+j+". ("+objects[i].name+" and "+objects[j].name+")");
+        consoleOut("Collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>. (<span class='var'>"+objects[i].name+"</span> and <span class='var'>"+objects[j].name+"</span>) (m: "+objects[i].m.toFixed(2)+", "+objects[j].m.toFixed(2)+")","Collision between "+i+" and "+j+". ("+objects[i].name+" and "+objects[j].name+")");
         switch(colliderType)
         {
             case "combine":

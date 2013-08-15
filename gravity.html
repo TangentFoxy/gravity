@@ -56,7 +56,9 @@ function randomSystem()
 	parentId=0;
 
 	// every system needs a star at the center
-	objects[0]=new Thing(random(100,200)*100/scaleFactor,0,0,0,0,"yellow",false,"star",false,random(0.08,0.8)/scaleFactor,"red"); //m and atmosphere need to change depending on scale
+	color=randomInt(0,255);
+	atm_color=randomInt(0,255);
+	objects[0]=new Thing(random(100,200)*100/scaleFactor,0,0,0,0,"#FF"+color.toString(16)+"00",false,"s 0",false,random(0.08,0.8)/scaleFactor,"#FF"+atm_color.toString(16)+"00");
 
 	var gen=randomInt(5,100);
 	var counter=1;
@@ -65,22 +67,26 @@ function randomSystem()
 		//Location
 		var x=random(-225/scaleFactor,225/scaleFactor);
 		var y=random(-225/scaleFactor,225/scaleFactor);
+		//Color
+		color=randomInt(0,16777215);
+		atm_color=randomInt(0,16777215);
+		ast_color=randomInt(0,255);
 		//Type
 		var type=random(0,1);
 		if (type > 0.9) {
 			// gas giant
 			// modify to have more colors
-			objects[counter]=new Thing(random(100,200)*10/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#676767",false,"gas giant "+counter,false,random(0.04,0.4)/scaleFactor);
+			objects[counter]=new Thing(random(75,225)*8/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#"+color.toString(16),false,"g "+counter,false,random(0.04,0.4)/scaleFactor,"#"+atm_color.toString(16));
 		} else if (type < 0.25) {
 			// planet
 			// modify to have more colors
-			objects[counter]=new Thing(random(100,200)/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#676767",false,"planet "+counter,false,random(0.025,0.25)/scaleFactor);
+			objects[counter]=new Thing(random(80,160)/1.5/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#"+color.toString(16),false,"p "+counter,false,random(0.025,0.25)/scaleFactor,"#"+atm_color.toString(16));
 		} else {
 			// asteroid
 			// modify to scale between black and white
-			objects[counter]=new Thing(random(100,200)/10/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#676767",false,"asteroid "+counter);
+			objects[counter]=new Thing(random(50,180)/15/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#"+ast_color.toString(16)+ast_color.toString(16)+ast_color.toString(16),false,"a "+counter);
 		}
-		
+
 		//m,x,y,Vx,Vy,color,radius,name,rotation,air_height,air_fill
 
 		counter++;
