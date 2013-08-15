@@ -36,7 +36,7 @@ function collisionCheck(i,j)
             return;
         }
         // add tolerance checks here (surface stuff) or inside the final collider
-        consoleOut("Collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>. (<span class='var'>"+objects[i].name+"</span> and <span class='var'>"+objects[j].name+"</span>) (m: "+objects[i].m.toFixed(2)+", "+objects[j].m.toFixed(2)+")","Collision between "+i+" and "+j+". ("+objects[i].name+" and "+objects[j].name+")");
+        consoleOut("Collision between <span class='data'>"+i+"</span> and <span class='data'>"+j+"</span>. (<span class='var'>"+objects[i].name+"</span> and <span class='var'>"+objects[j].name+"</span>) (m: "+objects[i].m.toFixed(2)+", "+objects[j].m.toFixed(2)+")","Collision between "+i+" and "+j+". ("+objects[i].name+" and "+objects[j].name+") (m: "+objects[i].m.toFixed(2)+", "+objects[j].m.toFixed(2)+")");
         switch(colliderType)
         {
             case "combine":
@@ -52,10 +52,17 @@ function collisionCheck(i,j)
 
 function combine(i,j)
 {
+    //consoleOut(false+1);
     if (objects[j].m > objects[i].m) {
-        objects[i].fill=objects[j].fill; // color & name of most massive object is kept
+        objects[i].fill=objects[j].fill;              // colors & name of most massive object is kept
+        objects[i].air_fill=objects[j].air_fill;
         objects[i].name=objects[j].name;
-    }
+        //if (objects[j].atmosphere != false) objects[i].atmosphere+=Math.pow(objects[j].atmosphere,1/3);
+    } //else {
+        //if (objects[i].atmosphere != false) objects[i].atmosphere=objects[j].atmosphere+Math.pow(objects[i].atmosphere,1/3);
+    //}
+                                    objects[i].atmosphere+=objects[j].atmosphere; // add the air heights together (improve this properly later)
+                                    //if (objects[j].atmosphere != false) objects[i].atmosphere+=Math.pow(objects[j].atmosphere,1/3); //add atmospheres
     if (renderId == j) renderId=i;                    // fix renderId if needed
     if (renderId > j) renderId-=1;
     if (playerId == j) playerId=i;                    // fix playerId if needed

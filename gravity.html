@@ -8,6 +8,7 @@
 <script type="text/javascript" src="js/environment.js"></script>
 <script type="text/javascript" src="js/functions.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/random.js"></script>
 <script type="text/javascript" src="js/rendering.js"></script>
 <script type="text/javascript" src="js/variables.js"></script>
 </head>
@@ -30,10 +31,9 @@ var backctx=backend.getContext("2d");
 var logdiv = document.getElementById("logdiv");
 document.getElementById("title").innerHTML+=" "+version;
 
-Math.Tau=2*Math.PI;
 Environments();
 var objects=new Array();
-randomSystem();          // Randomly creates a system with 5 to 100 objects.
+randomSystem();          // Randomly generates a system.
 //verga();               // Final system to be used in the game.
 //vergaScale();          // Messing with scale and adding asteroids.
 //stableySystem();       // two planets, moon and asteroid that get kicked out of system
@@ -41,57 +41,6 @@ randomSystem();          // Randomly creates a system with 5 to 100 objects.
 //unstableSystem();      // stableySystem, but with lots of extra stuff to unstablize it
 //orbitalVelocityTest(); // testing the function to set velocities for circular orbits
 start();
-
-function randomSystem()
-{
-	//temporary (later you should already have the environment defined by this point)
-	setEnvironment("load",vergaEnvironment);
-	timeStep=0.8;
-
-	objects.splice(0,objects.length);
-
-	//make sure playerId, renderId, parentId all exist
-	playerId=1;
-	renderId=0;
-	parentId=0;
-
-	// every system needs a star at the center
-	color=randomInt(0,255);
-	atm_color=randomInt(0,255);
-	objects[0]=new Thing(random(100,200)*100/scaleFactor,0,0,0,0,"#FF"+color.toString(16)+"00",false,"s 0",false,random(0.08,0.8)/scaleFactor,"#FF"+atm_color.toString(16)+"00");
-
-	var gen=randomInt(5,100);
-	var counter=1;
-	while(counter < gen)
-	{
-		//Location
-		var x=random(-225/scaleFactor,225/scaleFactor);
-		var y=random(-225/scaleFactor,225/scaleFactor);
-		//Color
-		color=randomInt(0,16777215);
-		atm_color=randomInt(0,16777215);
-		ast_color=randomInt(0,255);
-		//Type
-		var type=random(0,1);
-		if (type > 0.9) {
-			// gas giant
-			// modify to have more colors
-			objects[counter]=new Thing(random(75,225)*8/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#"+color.toString(16),false,"g "+counter,false,random(0.04,0.4)/scaleFactor,"#"+atm_color.toString(16));
-		} else if (type < 0.25) {
-			// planet
-			// modify to have more colors
-			objects[counter]=new Thing(random(80,160)/1.5/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#"+color.toString(16),false,"p "+counter,false,random(0.025,0.25)/scaleFactor,"#"+atm_color.toString(16));
-		} else {
-			// asteroid
-			// modify to scale between black and white
-			objects[counter]=new Thing(random(50,180)/15/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#"+ast_color.toString(16)+ast_color.toString(16)+ast_color.toString(16),false,"a "+counter);
-		}
-
-		//m,x,y,Vx,Vy,color,radius,name,rotation,air_height,air_fill
-
-		counter++;
-	}
-}
 
 </script>
 </body>

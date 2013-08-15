@@ -33,5 +33,11 @@ var zoomFactor=1;   // how much to increase scaleFactor each frame when zoom is 
 // CONSTANTS
 var version="0.1.1"  //Yes, there is a version number now. Don't know why.
 var G;               //Gravitational Constant
+Math.Tau=2*Math.PI;  //Tau is useful. I like Tau.
+
 var iLastVelocity=0; //used to find SoI
 var jLastVelocity=0;
+
+// RANDOMNESS PARAMETERS
+var randSysMin=5;   //5 to 100 default
+var randSysMax=100;
