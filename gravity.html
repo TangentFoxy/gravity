@@ -33,13 +33,59 @@ document.getElementById("title").innerHTML+=" "+version;
 Math.Tau=2*Math.PI;
 Environments();
 var objects=new Array();
-//verga();                 // Final system to be used in the game.
-vergaScale();            // Messing with scale and adding asteroids.
+randomSystem();          // Randomly creates a system with 5 to 100 objects.
+//verga();               // Final system to be used in the game.
+//vergaScale();          // Messing with scale and adding asteroids.
 //stableySystem();       // two planets, moon and asteroid that get kicked out of system
 //collidingSystem();     // for testing collisions
 //unstableSystem();      // stableySystem, but with lots of extra stuff to unstablize it
 //orbitalVelocityTest(); // testing the function to set velocities for circular orbits
 start();
+
+function randomSystem()
+{
+	//temporary (later you should already have the environment defined by this point)
+	setEnvironment("load",vergaEnvironment);
+	timeStep=0.8;
+
+	objects.splice(0,objects.length);
+
+	//make sure playerId, renderId, parentId all exist
+	playerId=1;
+	renderId=0;
+	parentId=0;
+
+	// every system needs a star at the center
+	objects[0]=new Thing(random(100,200)*100/scaleFactor,0,0,0,0,"yellow",false,"star",false,random(0.08,0.8)/scaleFactor,"red"); //m and atmosphere need to change depending on scale
+
+	var gen=randomInt(5,100);
+	var counter=1;
+	while(counter < gen)
+	{
+		//Location
+		var x=random(-225/scaleFactor,225/scaleFactor);
+		var y=random(-225/scaleFactor,225/scaleFactor);
+		//Type
+		var type=random(0,1);
+		if (type > 0.9) {
+			// gas giant
+			// modify to have more colors
+			objects[counter]=new Thing(random(100,200)*10/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#676767",false,"gas giant "+counter,false,random(0.04,0.4)/scaleFactor);
+		} else if (type < 0.25) {
+			// planet
+			// modify to have more colors
+			objects[counter]=new Thing(random(100,200)/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#676767",false,"planet "+counter,false,random(0.025,0.25)/scaleFactor);
+		} else {
+			// asteroid
+			// modify to scale between black and white
+			objects[counter]=new Thing(random(100,200)/10/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#676767",false,"asteroid "+counter);
+		}
+		
+		//m,x,y,Vx,Vy,color,radius,name,rotation,air_height,air_fill
+
+		counter++;
+	}
+}
 
 </script>
 </body>
