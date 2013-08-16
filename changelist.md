@@ -1,5 +1,13 @@
 Changelist
 
+0.1.2
+-----
+
+- Random system generator added, two types.
+- Atmospheres added to planets. Currently not collidable.
+- Pause/Resume commands. Explosion generator (not used yet).
+- Bugfixes of course. Console working properly 99% of the time.
+
 0.1.1
 -----
 
@@ -11,7 +19,7 @@ Changelist
 0.1.0
 -----
 
-Since I will have "versions" for no good reason. Version numbering is "Major.Minor.Bugfix"
+Since I will have "versions" for no good reason. Version numbering is "Release.Major.Minor"
 There won't be a version 1.0.0 for a veeeerrrrryyy long time.
 
 - Removed "realistic" system because it was pointless.

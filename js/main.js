@@ -7,7 +7,7 @@ function start()
             for (var i = 0; i < hyperSpeed; i++) loop();
             if (!hyperRender) {
                 redraw();
-                debugOut();
+                if (debugToggle) debugOut();
                 playerOut();
             }
         },runSpeed);
@@ -23,13 +23,15 @@ function loop()
     for (var i = 0; i < objects.length; i++) update(i);
     if (hyperRender) {
         redraw();
-        debugOut();
+        if (debugToggle) debugOut();
         playerOut();
     }
 }
 
 function gravity(i,j)
 {
+    /*iLastVelocity=0;                  //I believe these need to be reset here
+    jLastVelocity=0;*/
     var Nx=false;
     var Ny=false;
     var Dx=objects[i].x-objects[j].x; //get relative distances
@@ -109,6 +111,8 @@ function Thing(m,x,y,Vx,Vy,color,radius,name,rotation,air_height,air_fill)
     
     this.dataOut = function()
     {
-        return "<tr><td>"+objects.indexOf(this)+". <span style='color:"+this.fill+";'>"+this.name+"</span><br />&nbsp;&nbsp;&nbsp;&nbsp;"+this.fill+"</td><td>Mass:<br />"+this.m.toFixed(3)+"</td><td>Radius:<br />"+this.rad.toFixed(3)+"</td><td>X: "+this.x.toFixed(2)+"<br />Y: "+this.y.toFixed(2)+"</td><td>Velocity X/Y:<br />"+this.Vx.toFixed(2)+" / "+this.Vy.toFixed(2)+"</td><td>Fixed? "+this.fixed.toString()+"<br />Collides? "+this.collides.toString()+"</td></tr>";
+        return "<tr><td>"+objects.indexOf(this)+". <span style='color:"+this.fill+";'>"+this.name+"</span><br />&nbsp;&nbsp;&nbsp;&nbsp;"+this.fill
+        +"</td><td>Mass:<br />"+this.m.toFixed(3)+"</td><td>Radius:<br />"+this.rad.toFixed(3)+"</td><td>X: "+this.x.toFixed(2)+"<br />Y: "+this.y.toFixed(2)
+        +"</td><td>Velocity X/Y:<br />"+this.Vx.toFixed(2)+" / "+this.Vy.toFixed(2)+"</td><td>Fixed? "+this.fixed.toString()+"<br />Collides? "+this.collides.toString()+"</td></tr>";
     }
 }

@@ -12,6 +12,9 @@ var playerId=0;      // ID of Thing that is the player
 
 // PHYSICS RELATED VARIABLES
 var colliderType="combine"; // Which collider to use, "combine" or "none" or ???
+var orbitalVelocityCorrection=1.25; // the formula to calculate circular orbits seems to be off by this factor,
+									// so I use this to correct for it
+							// change to 1.251 and try that
 
 // RENDER RELATED VARIABLES
 var hyperRender=true; //True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed
@@ -27,11 +30,12 @@ var pathFade=true;  // path fades away over time?
 var fadeAlpha=0.05; // how much fade per iteration
 var drawNames=true; // whether or not to write the names of things next to them
 var namesColor='object'; // color to write names in
-var zoom=false;     // zoom in slowly? (just for the hell of it)
-var zoomFactor=1;   // how much to increase scaleFactor each frame when zoom is on
+var zoom=false;       // zoom in slowly? (just for the hell of it)
+var zoomFactor=1;     // how much to increase scaleFactor each frame when zoom is on
+var debugToggle=true; // debug info on or off
 
 // CONSTANTS
-var version="0.1.1"  //Yes, there is a version number now. Don't know why.
+var version="0.1.2"  //Yes, there is a version number now. Don't know why.
 var G;               //Gravitational Constant
 Math.Tau=2*Math.PI;  //Tau is useful. I like Tau.
 
@@ -39,5 +43,7 @@ var iLastVelocity=0; //used to find SoI
 var jLastVelocity=0;
 
 // RANDOMNESS PARAMETERS
-var randSysMin=5;   //5 to 100 default
+var randSysMin=5;       //5 to 100 default
 var randSysMax=100;
+var randType='stabley'; // valid random generation types 'stabley' and 'chaos'
+var randNames=true;     // True generates names like Uuts, False generates a letter and number for type and ID

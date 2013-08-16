@@ -158,7 +158,8 @@ function consoleOut(out,con)
 
 function playerOut()
 {
-    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='2'>Total velocity:<br />"+objects[playerId].getVelocity()+"</td><td colspan='2'>Distance from origin:<br />"+objects[playerId].getOriginDistance()+"</td><td>Air Height: "+objects[playerId].atmosphere+"<br />Air Color: "+objects[playerId].air_fill+"</td></tr></table>";
+    var out="<table>"+objects[playerId].dataOut()+"<tr><td colspan='2'>Total velocity:<br />"+objects[playerId].getVelocity()+"</td><td colspan='2'>Distance from origin:<br />"+objects[playerId].getOriginDistance()
+    +"</td><td>Air Height: "+objects[playerId].atmosphere+"<br />Air Color: "+objects[playerId].air_fill+"</td></tr></table>";
     document.getElementById("playerStats").innerHTML = out;
 }
 

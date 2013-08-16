@@ -1,10 +1,39 @@
 function setOrbitalVelocity(id,d)
 {
     //id=parent body id, d=radius of orbit (distance)
-    //change to set this value relative to the parent body, applying any accelerations to the parent to the child
-    var result=Math.sqrt(Math.abs(G*objects[id].m/(d*1.25)));
+    //this function will remain the same
+    var result=Math.sqrt(Math.abs(G*objects[id].m/(d*orbitalVelocityCorrection)));
     consoleOut("Calculated orbital velocity: "+result,"Calculated orbital velocity: "+result);
     return result;
+}
+
+function setOrbit(parent,child,retrograde)
+{
+    var Nx=false;                                     // reset negative booleans
+    var Ny=false;
+    var Dx=objects[parent].x-objects[child].x;        // get distance
+    var Dy=objects[parent].y-objects[child].y;
+        if (Dx < 0)
+        {
+            Nx=true;                                  // fix negativeness for calculations
+            Dx=-Dx;
+        }
+        if (Dy < 0)
+        {
+            Ny=true;
+            Dy=-Dy;
+        }
+    var distance=Math.sqrt(Dx*Dx+Dy*Dy);
+    var velocity=setOrbitalVelocity(parent,distance); // get velocity
+
+    var Ax=Dx*velocity/(Dx+Dy);
+    var Ay=velocity-Ax;
+        if (!retrograde) {
+        if (Nx) Ax=-Ax;                               // make orbits counterclockwise
+        if (Ny) Ay=-Ay;
+    }
+    objects[child].Vx=-Ay+objects[parent].Vx;
+    objects[child].Vy=Ax+objects[parent].Vy;
 }
 
 function random(min,max)
