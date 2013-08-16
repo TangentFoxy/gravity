@@ -39,10 +39,10 @@ function randomSystem()
 			objects[counter]=new Thing(random(75,225)*8/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#"+color.toString(16),false,"g "+counter,false,random(0.1,0.8)/scaleFactor,"#"+atm_color.toString(16));
 		} else if (type < 0.25) {
 			// planet
-			objects[counter]=new Thing(random(120,200)/1.5/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#"+color.toString(16),false,"p "+counter,false,random(0.2,0.6)/scaleFactor,"#"+atm_color.toString(16));
+			objects[counter]=new Thing(random(10,60)/1.6/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#"+color.toString(16),false,"p "+counter,false,random(0.2,0.6)/scaleFactor,"#"+atm_color.toString(16));
 		} else {
 			// asteroid
-			objects[counter]=new Thing(random(10,80)/15/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#"+ast_color.toString(16)+ast_color.toString(16)+ast_color.toString(16),false,"a "+counter);
+			objects[counter]=new Thing(random(1,60)/16/scaleFactor,x,y,random(-10,10)*G,random(-10,10)*G,"#"+ast_color.toString(16)+ast_color.toString(16)+ast_color.toString(16),false,"a "+counter);
 		}
 
 		//m,x,y,Vx,Vy,color,radius,name,rotation,air_height,air_fill

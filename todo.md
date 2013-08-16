@@ -95,3 +95,35 @@ Long-Term
   Look at this for color codes to use when hitting a color name: http://www.w3schools.com/cssref/css_colornames.asp
   Also check this because I want to take mass into account when mixing colors: http://www.w3schools.com/tags/ref_colormixer.asp
   Also check if min(a1,a2) is the best way to combine colors or not
+
+Unorganized temporary
+---------------------
+
+(From a file of random ideas jotted down while coding.)
+
+Save/Load commands accepting a string of comma-separated data.
+
+system that checks (every 100 turns) how far player is from origin and if above certain distance (I'm thinking 1 mil), moves everything
+in the universe back by that amount
+
+change SoI to only check every 100 turns
+
+make system count up velocity and average it every 100 turns for an average velocity
+
+random stuff generator
+
+make a universe instead of a solar system :)
+
+
+
+add optional settings to remove objects if they get a certain distance from the player (only checks every 100 turns)
+
+make SoI system only consider it truly an SoI if influence is above 0.0001 (allowing for pretty far out orbits but denying anything waaay out)
+(actually find out how to determine the threshold about where gravity will no longer stop something??)
+
+Add game timing thing, so can keep track of when things happen.
+
+find a way to mix colors on collisions, improve the atmosphere height mixing (right now just adds them)
+
+add restart command
+add fade command for toggle
