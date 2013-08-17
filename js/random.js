@@ -22,6 +22,9 @@ function randomSystem()
 		case 'chaos':
 		randChaos();
 		break;
+		case 'formation':
+		randFormation();
+		break;
 		default:
 		throw 'invalid randType';
 	}
@@ -29,8 +32,6 @@ function randomSystem()
 
 function randStabley()
 {
-	//
-
 	// every system needs a star at the center
 	// TODO: make more types, neutron star, brown dwarf (r = 2x g, g = ##, b = 0), white dwarf, red dwarf, black hole, red giant, blue giant (white to blue gradient, up to 113 blue)
 	// make settings for how to gen star?
@@ -137,6 +138,40 @@ function randChaos()
 
 		//m,x,y,Vx,Vy,color,radius,name,rotation,air_height,air_fill
 
+		counter++;
+	}
+}
+
+function randFormation()
+{
+	// every system needs a star at the center
+	// TODO: make more types, neutron star, brown dwarf (r = 2x g, g = ##, b = 0), white dwarf, red dwarf, black hole, red giant, blue giant (white to blue gradient, up to 113 blue)
+	// make settings for how to gen star?
+	var color=randomInt(0,255);
+	var atm_color=randomInt(0,255);
+	if (randNames) {
+		objects[0]=new Thing(random(100,200)*100/scaleFactor,0,0,0,0,"#FF"+color.toString(16)+"00",false,randomName(randomInt(2,6),true),false,random(0.6,2)/scaleFactor,"#FF"+atm_color.toString(16)+"00");
+	} else {
+		objects[0]=new Thing(random(100,200)*100/scaleFactor,0,0,0,0,"#FF"+color.toString(16)+"00",false,"s 0",false,random(0.6,2)/scaleFactor,"#FF"+atm_color.toString(16)+"00");
+	}
+	var gen=randomInt(100,500);
+	var counter=1;
+	while(counter < gen)
+	{
+		//Location
+		var x=random(-225/scaleFactor,225/scaleFactor);
+		var y=random(-225/scaleFactor,225/scaleFactor);
+		//Color
+		//color=randomInt(0,16777215);
+		//atm_color=randomInt(0,16777215);
+		var ast_color=randomInt(0,255);
+		if (randNames) {
+			objects[counter]=new Thing(random(1,60)/16/scaleFactor,x,y,0,0,"#"+ast_color.toString(16)+ast_color.toString(16)+ast_color.toString(16),false,randomName(randomInt(2,6),true));
+		} else {
+			objects[counter]=new Thing(random(1,60)/16/scaleFactor,x,y,0,0,"#"+ast_color.toString(16)+ast_color.toString(16)+ast_color.toString(16),false,"a "+counter);
+		}
+		//Orbit
+		setOrbit(0,counter);
 		counter++;
 	}
 }

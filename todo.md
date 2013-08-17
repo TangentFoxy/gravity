@@ -89,9 +89,7 @@ Long-Term
   at all.
 * window.performance.now() - something you can use to run faster than 1000x per second(?), only in Chrome
 * SoI can be taken out of gravity function to make it faster (and should not require global variables?)
-* Color mixing during collision: separate "#AABBCC" into AA BB CC and min(AA1,AA2) etc to mix colors, then recombine
-  Also check this because I want to take mass into account when mixing colors: http://www.w3schools.com/tags/ref_colormixer.asp
-  Also check if min(a1,a2) is the best way to combine colors or not
+* Brighten the RCS exhaust png, or you know, get a proper asset
 
 Unorganized temporary
 ---------------------

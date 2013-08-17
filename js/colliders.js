@@ -52,17 +52,14 @@ function collisionCheck(i,j)
 
 function combine(i,j)
 {
-    //consoleOut(false+1);
     if (objects[j].m > objects[i].m) {
-        objects[i].fill=objects[j].fill;              // colors & name of most massive object is kept
-        objects[i].air_fill=objects[j].air_fill;
-        objects[i].name=objects[j].name;
-        //if (objects[j].atmosphere != false) objects[i].atmosphere+=Math.pow(objects[j].atmosphere,1/3);
-    } //else {
-        //if (objects[i].atmosphere != false) objects[i].atmosphere=objects[j].atmosphere+Math.pow(objects[i].atmosphere,1/3);
-    //}
-                                    objects[i].atmosphere+=Math.pow(objects[j].atmosphere,1/3); // add the air heights together (improve this properly later)
-                                    //if (objects[j].atmosphere != false) objects[i].atmosphere+=Math.pow(objects[j].atmosphere,1/3); //add atmospheres
+        if (!colorMix) {
+            objects[i].fill=objects[j].fill;              // colors
+            objects[i].air_fill=objects[j].air_fill;
+        }
+        objects[i].name=objects[j].name;                  // & name of most massive object is kept
+    }
+    objects[i].atmosphere+=Math.pow(objects[j].atmosphere,1/3); // add the air heights together (improve this properly later)
     if (renderId == j) renderId=i;                    // fix renderId if needed
     if (renderId > j) renderId-=1;
     if (playerId == j) playerId=i;                    // fix playerId if needed
@@ -101,5 +98,18 @@ function combine(i,j)
     if (rad > objects[i].rad) objects[i].rad=rad;
     objects[i].x=Lx/objects[i].m;                     //find center of mass, place [i] there
     objects[i].y=Ly/objects[i].m;
+    //Colors
+    if (colorMix) {
+        var r1=objects[i].fill.charAt(1)+objects[i].fill.charAt(2);
+        var g1=objects[i].fill.charAt(3)+objects[i].fill.charAt(4);
+        var b1=objects[i].fill.charAt(5)+objects[i].fill.charAt(6);
+        var r2=objects[j].fill.charAt(1)+objects[j].fill.charAt(2);
+        var g2=objects[j].fill.charAt(3)+objects[j].fill.charAt(4);
+        var b2=objects[j].fill.charAt(5)+objects[j].fill.charAt(6);
+        //This was how I was told to mix colors, I know it is wrong and doesn't account for mass, but I don't care for the time being.
+        // (quick example of how bad it is: mix #000 and #FFF, you get #000 when you should get something like #888)
+        // It also might be buggy, turning 11 into B instead of 0B...
+        objects[i].fill="#"+Math.min(r1,r2).toString(16)+Math.min(g1,g2).toString(16)+Math.min(b1,b2).toString(16)
+    }
     objects.splice(j,1);                              //delete [j]
 }

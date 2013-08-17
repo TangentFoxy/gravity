@@ -12,9 +12,9 @@ var playerId=0;      // ID of Thing that is the player
 
 // PHYSICS RELATED VARIABLES
 var colliderType="combine"; // Which collider to use, "combine" or "none" or ???
-var orbitalVelocityCorrection=1.25; // the formula to calculate circular orbits seems to be off by this factor,
+var colorMix=false;          // Experimental color mixing in the collider!
+var orbitalVelocityCorrection=1.251; // the formula to calculate circular orbits seems to be off by this factor,
 									// so I use this to correct for it
-							// change to 1.251 and try that
 
 // RENDER RELATED VARIABLES
 var hyperRender=true; //True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed
@@ -45,5 +45,5 @@ var jLastVelocity=0;
 // RANDOMNESS PARAMETERS
 var randSysMin=5;       //5 to 100 default
 var randSysMax=100;
-var randType='stabley'; // valid random generation types 'stabley' and 'chaos'
+var randType='formation'; // valid random generation types 'stabley' 'chaos' 'formation'
 var randNames=true;     // True generates names like Uuts, False generates a letter and number for type and ID
