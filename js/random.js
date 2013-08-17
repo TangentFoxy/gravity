@@ -171,7 +171,7 @@ function randFormation()
 			objects[counter]=new Thing(random(1,60)/16/scaleFactor,x,y,0,0,"#"+ast_color.toString(16)+ast_color.toString(16)+ast_color.toString(16),false,"a "+counter);
 		}
 		//Orbit
-		setOrbit(0,counter);
+		setOrbit(0,counter,false,gen);
 		counter++;
 	}
 }

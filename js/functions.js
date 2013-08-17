@@ -7,7 +7,7 @@ function setOrbitalVelocity(id,d)
     return result;
 }
 
-function setOrbit(parent,child,retrograde)
+function setOrbit(parent,child,retrograde,num_of_objects)
 {
     var Nx=false;                                     // reset negative booleans
     var Ny=false;
@@ -25,6 +25,13 @@ function setOrbit(parent,child,retrograde)
         }
     var distance=Math.sqrt(Dx*Dx+Dy*Dy);
     var velocity=setOrbitalVelocity(parent,distance); // get velocity
+
+    if (randType=='formation') {
+        if (formationCorrection) {
+            //velocity+=formationCorrectionFactor*distance; // attempt correction for too much mass in simulation
+            velocity+=formationCorrectionFactor*distance/num_of_objects; // attempt correction for too much mass in simulation
+        }
+    }
 
     var Ax=Dx*velocity/(Dx+Dy);
     var Ay=velocity-Ax;

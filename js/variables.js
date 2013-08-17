@@ -11,10 +11,14 @@ var timeStep=0.5;    // multipled by velocity/movement to change accuracy/speed 
 var playerId=0;      // ID of Thing that is the player
 
 // PHYSICS RELATED VARIABLES
-var colliderType="combine"; // Which collider to use, "combine" or "none" or ???
-var colorMix=false;          // Experimental color mixing in the collider!
+var colliderType="combine";          // Which collider to use, "combine" or "none" or ???
+var colorMix=false;                  // Experimental color mixing in the collider!
 var orbitalVelocityCorrection=1.251; // the formula to calculate circular orbits seems to be off by this factor,
-									// so I use this to correct for it
+									 // so I use this to correct for it
+var formationCorrection=true;        // Attempts to correct wider orbits in formation random generation
+var formationCorrectionFactor=0.001; // This * distance + velocity required to maintain orbit = velocity
+//works quite well for 300 objects, so maybe formationCorrection*distance/number_of_objects
+var formationCorrectionFactor=0.3;
 
 // RENDER RELATED VARIABLES
 var hyperRender=true; //True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed
