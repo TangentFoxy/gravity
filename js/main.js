@@ -80,7 +80,7 @@ function gravity(i,j)
     }
 }
 
-function Thing(m,x,y,Vx,Vy,color,radius,name,rotation,air_height,air_fill)
+function Thing(m,x,y,Vx,Vy,color,radius,name,rotation,air_height,air_fill,showName)
 {
     !name ? this.name="unnamed" : this.name=name;
     this.m=m;                                                                 //mass
@@ -98,6 +98,8 @@ function Thing(m,x,y,Vx,Vy,color,radius,name,rotation,air_height,air_fill)
     this.fixed=false;
     this.collides=true;
     this.SoI;                                                                 //ID of Thing in the SoI of
+
+    !showName ? this.showName=true : this.showName=showName;                  //display name on render?
     
     this.getVelocity = function()
     {

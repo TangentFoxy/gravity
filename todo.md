@@ -5,7 +5,6 @@ These are things I should've done before pushing to github. If there is somethin
 
 ** setting hyperWarp isn't working possibly? May be setting a string value instead of a boolean
 
-* add how to report a bug to readme
 * add toggle to objects for whether or not to display their names
 * add ability to offset render from center of object
 

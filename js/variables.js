@@ -33,10 +33,12 @@ var path=true;      // draw path? [by not clearing canvas]
 var pathFade=true;  // path fades away over time?
 var fadeAlpha=0.05; // how much fade per iteration
 var drawNames=true; // whether or not to write the names of things next to them
-var namesColor='object'; // color to write names in
-var zoom=false;       // zoom in slowly? (just for the hell of it)
-var zoomFactor=1;     // how much to increase scaleFactor each frame when zoom is on
-var debugToggle=true; // debug info on or off
+var namesColor='object';   // color to write names in
+var zoom=false;            // zoom in slowly? (just for the hell of it)
+var zoomFactor=1;          // how much to increase scaleFactor each frame when zoom is on
+var debugToggle=true;      // debug info on or off
+var minimumAtmosphere=0.6; // minimum radius to make atmosphere visible
+var atmosphereAlpha=0.15;  // how much the atmosphere fades into the background of space
 
 // CONSTANTS
 var version="0.1.2"  //Yes, there is a version number now. Don't know why.

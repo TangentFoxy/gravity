@@ -62,9 +62,9 @@ function redraw()
         if (objects[i].atmosphere) {
             frontctx.beginPath();
             var radius=(objects[i].rad+objects[i].atmosphere)*scaleFactor;
-            if (radius < renderRadius) radius=renderRadius+0.6; // STOP HARDCODING THIS
+            if (radius < renderRadius) radius=renderRadius+minimumAtmosphere;
             frontctx.arc(x,y,radius,0,Math.Tau);
-            frontctx.fillStyle=hexToRGBA(objects[i].air_fill,0.15); // STOP HARDCODING THIS AS WELL
+            frontctx.fillStyle=hexToRGBA(objects[i].air_fill,atmosphereAlpha);
             frontctx.fill();
         }
         if (drawNames) {
@@ -74,7 +74,8 @@ function redraw()
             } else {
                 frontctx.fillStyle=namesColor;
             }
-            frontctx.fillText(objects[i].name,x+(objects[i].rad+objects[i].atmosphere)*scaleFactor+2,y-(objects[i].rad+objects[i].atmosphere)*scaleFactor-2);
+            if (objects[i].showName) frontctx.fillText(objects[i].name,x+(objects[i].rad+objects[i].atmosphere)*scaleFactor+2,y-(objects[i].rad+objects[i].atmosphere)*scaleFactor-2);
+            // I should probably put that if a little higher up but can't be bothered, I will hate myself later for being lazy like this
         }
     }
 }

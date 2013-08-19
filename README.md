@@ -3,6 +3,8 @@ Quick-Start Stuff!
 
 Download the ZIP archive containing this repo to try it out, linked at the top of this page (or if you are seeing Github's new design, the bottom right). I also suggest opening up the [Console] [3] reference to see what you can do with it right now. Known bugs are listed in the [todo.md] [4] file, along with a scrawled list of my to-be-done's.
 
+If you find a bug, please take it over to [this page] [7] and report the shit out of it.
+
 What is Gravity?
 ================
 
@@ -38,4 +40,5 @@ Known Bugs: Check [todo.md] [4] for a list of known bugs, along with all the ran
 [3]: https://github.com/guard13007/gravity/blob/master/Console.md "Console"
 [4]: https://github.com/guard13007/gravity/blob/master/todo.md "todo.md"
 [5]: mailto:paul.liverman.iii@gmail.com "email"
-[6]: http://en.wikipedia.org/wiki/Furry_fandom "I'm sorta kinda a furry"
+[6]: http://en.wikipedia.org/wiki/Furry_fandom "I'm one of those creepy furry bastards"
+[7]: https://github.com/Guard13007/gravity/issues "Where to report bugs!?!!"

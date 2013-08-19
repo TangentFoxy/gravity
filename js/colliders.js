@@ -23,7 +23,8 @@ function collisionCheck(i,j)
     }
     var Dy=objects[i].y-objects[j].y;
     var d=Math.sqrt(Dx*Dx+Dy*Dy);
-    if (d < objects[i].rad+objects[j].rad)
+    //if (d < objects[i].rad+objects[j].rad)
+    if (d < objects[i].rad+objects[i].atmosphere+objects[j].rad+objects[j].atmosphere)
     {
         if (!objects[i].collides) 
         {
@@ -40,7 +41,7 @@ function collisionCheck(i,j)
         switch(colliderType)
         {
             case "combine":
-            combine(i,j);
+            combine(i,j,d);
             break;
             case "none":
             break;
@@ -50,8 +51,11 @@ function collisionCheck(i,j)
     }
 }
 
-function combine(i,j)
+function combine(i,j,d)
 {
+    if (!d < objects[i].rad+objects[j].rad) {
+        //atmopshere collision code here and return
+    }
     if (objects[j].m > objects[i].m) {
         if (!colorMix) {
             objects[i].fill=objects[j].fill;              // colors
