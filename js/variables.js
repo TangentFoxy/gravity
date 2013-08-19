@@ -49,7 +49,23 @@ var iLastVelocity=0; //used to find SoI
 var jLastVelocity=0;
 
 // RANDOMNESS PARAMETERS
-var randSysMin=5;       //5 to 100 default
+var randSysMin=5;           //5 to 100 default
 var randSysMax=100;
-var randType='formation'; // valid random generation types 'stabley' 'chaos' 'formation'
-var randNames=true;     // True generates names like Uuts, False generates a letter and number for type and ID
+var randType='formation';   // valid random generation types 'stabley' 'chaos' 'formation'
+var randNames=true;         // True generates names like Uuts, False generates a letter and number for type and ID
+
+var randGgiantChance=0.9;   // if rand(0,1) > this, spawn gas giant
+var rantGgiantMin=75;       // min before multiplier
+var randGgiantMax=225;      // max    '       '
+var randGgiantMultiplier=8;
+var randPlanetChance=0.25;  // if rand(0,1) < this, spawn planet
+var randPlanetMin=10;
+var randPlanetMax=60;
+var randPlanetMultiplier=1.6;
+							// else asteroid
+var randAstMin=1;
+var randAstMax=60;
+var randAstMultiplier=16;   // actually, is divided
+
+var randChaosMin=5;		// decided to move chaos randomization into its own thing and abandon any possible improvements
+var randChaosMax=200;	// it won't be used in the future anyhow!

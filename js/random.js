@@ -56,26 +56,26 @@ function randStabley()
 		var ast_color=randomInt(0,255);
 		//Type
 		var type=random(0,1);
-		if (type > 0.9) {
+		if (type > randGgiantChance) {
 			// gas giant
 			if (randNames) {
-				objects[counter]=new Thing(random(75,225)*8/scaleFactor,x,y,0,0,"#"+color.toString(16),false,randomName(randomInt(2,6),true),false,random(0.1,0.8)/scaleFactor,"#"+atm_color.toString(16));
+				objects[counter]=new Thing(random(rantGgiantMin,randGgiantMax)*randGgiantMultiplier/scaleFactor,x,y,0,0,"#"+color.toString(16),false,randomName(randomInt(2,6),true),false,random(0.1,0.8)/scaleFactor,"#"+atm_color.toString(16));
 			} else {
-				objects[counter]=new Thing(random(75,225)*8/scaleFactor,x,y,0,0,"#"+color.toString(16),false,"g "+counter,false,random(0.1,0.8)/scaleFactor,"#"+atm_color.toString(16));
+				objects[counter]=new Thing(random(rantGgiantMin,randGgiantMax)*randGgiantMultiplier/scaleFactor,x,y,0,0,"#"+color.toString(16),false,"g "+counter,false,random(0.1,0.8)/scaleFactor,"#"+atm_color.toString(16));
 			}
-		} else if (type < 0.25) {
+		} else if (type < randPlanetChance) {
 			// planet
 			if (randNames) {
-				objects[counter]=new Thing(random(10,60)/1.6/scaleFactor,x,y,0,0,"#"+color.toString(16),false,randomName(randomInt(2,6),true),false,random(0.2,0.6)/scaleFactor,"#"+atm_color.toString(16));
+				objects[counter]=new Thing(random(randPlanetMin,randPlanetMax)/randPlanetMultiplier/scaleFactor,x,y,0,0,"#"+color.toString(16),false,randomName(randomInt(2,6),true),false,random(0.2,0.6)/scaleFactor,"#"+atm_color.toString(16));
 			} else {
-				objects[counter]=new Thing(random(10,60)/1.6/scaleFactor,x,y,0,0,"#"+color.toString(16),false,"p "+counter,false,random(0.2,0.6)/scaleFactor,"#"+atm_color.toString(16));
+				objects[counter]=new Thing(random(randPlanetMin,randPlanetMax)/randPlanetMultiplier/scaleFactor,x,y,0,0,"#"+color.toString(16),false,"p "+counter,false,random(0.2,0.6)/scaleFactor,"#"+atm_color.toString(16));
 			}
 		} else {
 			// asteroid
 			if (randNames) {
-				objects[counter]=new Thing(random(1,60)/16/scaleFactor,x,y,0,0,"#"+ast_color.toString(16)+ast_color.toString(16)+ast_color.toString(16),false,randomName(randomInt(2,6),true));
+				objects[counter]=new Thing(random(randAstMin,randAstMax)/randAstMultiplier/scaleFactor,x,y,0,0,"#"+ast_color.toString(16)+ast_color.toString(16)+ast_color.toString(16),false,randomName(randomInt(2,6),true));
 			} else {
-				objects[counter]=new Thing(random(1,60)/16/scaleFactor,x,y,0,0,"#"+ast_color.toString(16)+ast_color.toString(16)+ast_color.toString(16),false,"a "+counter);
+				objects[counter]=new Thing(random(randAstMin,randAstMax)/randAstMultiplier/scaleFactor,x,y,0,0,"#"+ast_color.toString(16)+ast_color.toString(16)+ast_color.toString(16),false,"a "+counter);
 			}
 		}
 		//Orbit
@@ -100,7 +100,7 @@ function randChaos()
 		objects[0]=new Thing(random(100,200)*100/scaleFactor,0,0,0,0,"#FF"+color.toString(16)+"00",false,"s 0",false,random(0.6,2)/scaleFactor,"#FF"+atm_color.toString(16)+"00");
 	}
 
-	var gen=randomInt(randSysMin,randSysMax);
+	var gen=randomInt(randChaosMin,randChaosMax);
 	var counter=1;
 	while(counter < gen)
 	{
