@@ -11,18 +11,21 @@ var timeStep=0.5;    // multipled by velocity/movement to change accuracy/speed 
 var playerId=0;      // ID of Thing that is the player
 
 // PHYSICS RELATED VARIABLES
+var scaleFactor=0.08; // I have started using this for too many physics things, it should be constant now
 var colliderType="combine";          // Which collider to use, "combine" or "none" or ???
 var colorMix=false;                  // Experimental color mixing in the collider!
+var atmosphereGeneration=true;       // when a big enough object is created through collisions, it gets a small atmosphere
+var atmGenThreshold=32;              // this/scaleFactor = minimum mass for atmosphereca (32/0.08=400)
+var atmGenAmount=0.1;                // how much atmosphere to initially give these objects
 var orbitalVelocityCorrection=1.251; // the formula to calculate circular orbits seems to be off by this factor,
 									 // so I use this to correct for it
 var formationCorrection=true;        // Attempts to correct wider orbits in formation random generation
-var formationCorrectionFactor=0.001; // This * distance + velocity required to maintain orbit = velocity
-//works quite well for 300 objects, so maybe formationCorrection*distance/number_of_objects
-var formationCorrectionFactor=0.3;
+var formationCorrectionFactor=0.32;  // this * distance/num_of_obj + velocity to maintain orbit = true velocity
 
 // RENDER RELATED VARIABLES
 var hyperRender=true; //True=normal render, False=rendering ONLY WORKS with hyperWarp on, and at runSpeed
-var scaleFactor=1;  // multiplied by data in rendering to adjust zoom level
+var displayScaleFactor=1;  // (CURRENTLY STILL USING scaleFactor) multiplied by data in rendering to adjust zoom level
+var displayScaleFactor=scaleFactor;
 var renderRadius=1; // minimum render radius for an object
 var renderId=0;     // ID of Thing to put at center of frame
 var parentId=0;     // ID of Thing to use as parent body (for rotating frame of reference)

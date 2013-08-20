@@ -55,6 +55,8 @@ function combine(i,j,d)
 {
     if (!d < objects[i].rad+objects[j].rad) {
         //atmopshere collision code here and return
+        //I need to learn better physics stuff before I actually do this
+        return;
     }
     if (objects[j].m > objects[i].m) {
         if (!colorMix) {
@@ -70,6 +72,7 @@ function combine(i,j,d)
     if (playerId > j) playerId-=1;
     if (parentId == j) parentId=i;                    // fix parentId if needed
     if (parentId > j) parentId-=1;
+    // Objects when fixed don't get colorMix or atmosphereGeneration, but I do not intend to have fixed objects anymore.
     if (objects[i].fixed)
     {
         objects[i].m+=objects[j].m;                   //add mass
@@ -113,7 +116,21 @@ function combine(i,j,d)
         //This was how I was told to mix colors, I know it is wrong and doesn't account for mass, but I don't care for the time being.
         // (quick example of how bad it is: mix #000 and #FFF, you get #000 when you should get something like #888)
         // It also might be buggy, turning 11 into B instead of 0B...
-        objects[i].fill="#"+Math.min(r1,r2).toString(16)+Math.min(g1,g2).toString(16)+Math.min(b1,b2).toString(16)
+        objects[i].fill="#"+Math.min(r1,r2).toString(16)+Math.min(g1,g2).toString(16)+Math.min(b1,b2).toString(16);
+        // atmospheres
+        r1=objects[i].air_fill.charAt(1)+objects[i].air_fill.charAt(2);
+        g1=objects[i].air_fill.charAt(3)+objects[i].air_fill.charAt(4);
+        b1=objects[i].air_fill.charAt(5)+objects[i].air_fill.charAt(6);
+        r2=objects[j].air_fill.charAt(1)+objects[j].air_fill.charAt(2);
+        g2=objects[j].air_fill.charAt(3)+objects[j].air_fill.charAt(4);
+        b2=objects[j].air_fill.charAt(5)+objects[j].air_fill.charAt(6);
+        objects[i].air_fill="#"+Math.min(r1,r2).toString(16)+Math.min(g1,g2).toString(16)+Math.min(b1,b2).toString(16);
     }
     objects.splice(j,1);                              //delete [j]
+    //Atmosphere Generation
+    if (objects[i].m > atmGenThreshold/scaleFactor & objects[j].atmosphere==false & atmosphereGeneration) {
+        objects[i].atmosphere=atmGenAmount;
+        // need a random color
+        objects[i].air_fill="#000000"; // I forgot whether 000 is black or white
+    }
 }

@@ -125,3 +125,7 @@ every time an object passes the positive x axis around it's parent (within 10 un
 however, if less than 100 iterations have occured between the last count, it not count as orbit (so that far out stuff won't have 1 iteration orbits between true orbits)
 - side effect things in extremely low orbit might only get an orbit counted every two times around
 - things in a far enough out orbit might have an extremely short orbit followed by the proper time, followed by a short again
+
+objects closer to star get atmospheres blown away
+objects with atmosphere get tiny fraction of mass more atmosphere from objects with no atmosphere
+objects atmosphere values are treated like mass?? they should be anyhow, and there needs to be some sort of variation with atmospheres besides mass???
