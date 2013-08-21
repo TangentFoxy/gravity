@@ -118,3 +118,40 @@ function Thing(m,x,y,Vx,Vy,color,radius,name,rotation,air_height,air_fill,showNa
         +"</td><td>Velocity X/Y:<br />"+this.Vx.toFixed(2)+" / "+this.Vy.toFixed(2)+"</td><td>Fixed? "+this.fixed.toString()+"<br />Collides? "+this.collides.toString()+"</td></tr>";
     }
 }
+
+function Vessel(parts,x,y,Vx,Vy,rot,name,showName)
+{
+    this.parts=parts; //an array of parts
+    this.x=x;
+    this.y=y;
+    this.Vx=Vx;
+    this.Vy=Vy;
+    this.rot=rot;
+    this.rotspd=0;
+    !name ? this.name="unnamed" : this.name=name;
+    !showName ? this.showName=true : this.showName=showName;
+}
+
+function Part(type,x,y,len_rad,rot,r1,r1_amt,r2,r2_amt)
+{
+    this.type=type;
+    this.x=x;               // these are relative to the center of the vessel (or craft)
+    this.y=y;
+    // Could/Should replace this switch with just everything being len_rad and let type choose how to operate in physics/display?
+    switch(type)
+    {
+        case "circle":
+        this.rad=len_rad;   // length for rectangles/squares, radius for circles
+        break;
+        case "square":
+        this.sides=len_rad;
+        break;
+        case "rectangle":
+        this.len=len_rad;
+        this.wid=len_rad*3;
+        break;
+        default:
+        throw "invalid part type";
+    }
+    eval("this."+r1+"="+r1_amt); // is this right? I just want these things to have their own resouces properly XD
+}
