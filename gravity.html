@@ -4,6 +4,7 @@
 <title>Gravity</title>
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 <script type="text/javascript" src="js/colliders.js"></script>
+<script type="text/javascript" src="js/constructers.js"></script>
 <script type="text/javascript" src="js/debug.js"></script>
 <script type="text/javascript" src="js/environment.js"></script>
 <script type="text/javascript" src="js/functions.js"></script>
@@ -33,8 +34,8 @@ document.getElementById("title").innerHTML+=" "+version;
 
 Environments();
 var objects=new Array();
-randomSystem();          // Randomly generates a system.
-//verga();               // Final system to be used in the game.
+//randomSystem();        // Randomly generates a system.
+verga();               // Final system to be used in the game.
 //vergaScale();          // Messing with scale and adding asteroids.
 //stableySystem();       // two planets, moon and asteroid that get kicked out of system
 //collidingSystem();     // for testing collisions
