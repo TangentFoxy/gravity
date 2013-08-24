@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Gravity</title>
-<link rel="stylesheet" type="text/css" href="css/style.css" />
-<script type="text/javascript" src="js/colliders.js"></script>
-<script type="text/javascript" src="js/constructers.js"></script>
-<script type="text/javascript" src="js/debug.js"></script>
-<script type="text/javascript" src="js/environment.js"></script>
-<script type="text/javascript" src="js/functions.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
-<script type="text/javascript" src="js/random.js"></script>
-<script type="text/javascript" src="js/rendering.js"></script>
-<script type="text/javascript" src="js/variables.js"></script>
+	<title>Gravity</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<script type="text/javascript" src="js/colliders.js"></script>
+	<script type="text/javascript" src="js/constructers.js"></script>
+	<script type="text/javascript" src="js/debug.js"></script>
+	<script type="text/javascript" src="js/environment.js"></script>
+	<script type="text/javascript" src="js/functions.js"></script>
+	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/random.js"></script>
+	<script type="text/javascript" src="js/rendering.js"></script>
+	<script type="text/javascript" src="js/variables.js"></script>
 </head>
 <body>
-<center>
-<h1 id="title">Gravity</h1>
-<canvas id="frontend" width="560" height="440">If you can see this, something went wrong.</canvas>
-<canvas id="backend" width="560" height="440"></canvas>
-<div id="logdiv"><p id="out"></p></div>
-<input name="text" type="textarea" id="in" onkeyup="consoleInput(event);" />
-<div id="playerStats"></div>
-<div id="debug"></div>
-</center>
+	<center>
+		<h1 id="title">Gravity</h1>
+		<div id="canvases">
+			<canvas id="backend" width="560" height="440"></canvas>
+			<canvas id="frontend" width="560" height="440"></canvas>
+		</div>
+		<div id="logdiv"><p id="out"></p></div>
+		<input name="text" type="textarea" id="in" onkeyup="consoleInput(event);" />
+		<div id="playerStats"></div>
+		<div id="debug"></div>
+	</center>
 <script>
 var frontend=document.getElementById("frontend");
 var frontctx=frontend.getContext("2d");

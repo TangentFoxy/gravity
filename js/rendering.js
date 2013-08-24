@@ -38,7 +38,7 @@ function redraw()
         backctx.fill();
     }
     frontctx.clearRect(0,0,frontend.width,frontend.height); // clear frontend
-    frontctx.drawImage(backend,0,0);                        // draw backend
+    //frontctx.drawImage(backend,0,0);                      // draw backend
     //FRONTEND RENDER
     for (var i=0;i<objects.length;i++)
     {
