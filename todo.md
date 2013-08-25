@@ -3,8 +3,6 @@ Immediate ToDo
 
 These are things I should've done before pushing to github. If there is something here, I am a lazy fool, beat me with a large stick.
 
-** setting hyperWarp isn't working possibly? May be setting a string value instead of a boolean
-
 * add toggle to objects for whether or not to display their names
 * add ability to offset render from center of object
 

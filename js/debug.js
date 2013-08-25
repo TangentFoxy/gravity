@@ -30,7 +30,7 @@ function consoleInput(e)
                 consoleOut("<span class='var'>runSpeed</span>=<span class='data'>"+runSpeed+"</span>, <span class='var'>hyperWarp</span>=<span class='data'>"+hyperWarp+"</span>, <span class='var'>hyperSpeed</span>=<span class='data'>"+hyperSpeed+"</span>");
             } else {
                 runSpeed=args[1];
-                if (args[2]!==undefined) hyperWarp=args[2];
+                if (args[2]!==undefined) hyperWarp=Boolean(args[2]); //should fix hyperWarp not activating/deactivating properly
                 if (args[3]!==undefined) hyperSpeed=args[3];
                 consoleOut("Running every <span class='data'>"+runSpeed+"</span> milliseconds. <span class='var'>hyperWarp</span>: <span class='data'>"+hyperWarp+"</span> (<span class='var'>hyperSpeed</span>: <span class='data'>"+hyperSpeed+"</span>).");
                 clearInterval(interval);
