@@ -64,6 +64,9 @@ resume
 start
 - Resumes the simulation.
 
+restart
+- Restarts the simulation as if the page was reloaded. Does not clear console.
+
 Not Implemented
 ---------------
 

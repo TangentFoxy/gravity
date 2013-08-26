@@ -111,7 +111,6 @@ make SoI system only consider it truly an SoI if influence is above 0.0001 (allo
 Add game timing thing, so can keep track of when things happen.
 find a way to mix colors on collisions, improve the atmosphere height mixing (right now just adds them)
 
-add restart command
 add fade command for toggle
 
 For SoI checking calculation what about this idea?
@@ -127,3 +126,5 @@ however, if less than 100 iterations have occured between the last count, it not
 objects closer to star get atmospheres blown away
 objects with atmosphere get tiny fraction of mass more atmosphere from objects with no atmosphere
 objects atmosphere values are treated like mass?? they should be anyhow, and there needs to be some sort of variation with atmospheres besides mass???
+
+http://www.reddit.com/r/KerbalSpaceProgram/comments/1id0u2/curious_about_how_good_the_orbital_physics_are/cbh7qkg?context=3

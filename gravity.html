@@ -36,14 +36,19 @@ document.getElementById("title").innerHTML+=" "+version;
 
 Environments();
 var objects=new Array();
-//randomSystem();        // Randomly generates a system.
-verga();               // Final system to be used in the game.
-//vergaScale();          // Messing with scale and adding asteroids.
-//stableySystem();       // two planets, moon and asteroid that get kicked out of system
-//collidingSystem();     // for testing collisions
-//unstableSystem();      // stableySystem, but with lots of extra stuff to unstablize it
-//orbitalVelocityTest(); // testing the function to set velocities for circular orbits
-start();
+mainStart();
+
+function mainStart()
+{
+	//randomSystem();        // Randomly generates a system.
+	verga();               // Final system to be used in the game.
+	//vergaScale();          // Messing with scale and adding asteroids.
+	//stableySystem();       // two planets, moon and asteroid that get kicked out of system
+	//collidingSystem();     // for testing collisions
+	//unstableSystem();      // stableySystem, but with lots of extra stuff to unstablize it
+	//orbitalVelocityTest(); // testing the function to set velocities for circular orbits
+	start();
+}
 
 </script>
 </body>

@@ -119,12 +119,16 @@ function consoleInput(e)
             case "pause":
             case "stop":
             clearInterval(interval);
-            consoleOut("Simulation paused.")
+            consoleOut("Simulation paused.");
             break;
             case "resume":
             case "start":
             start();
-            consoleOut("Simulation resumed.")
+            consoleOut("Simulation resumed.");
+            break;
+            case "restart":
+            mainStart();
+            consoleOut("Simulation restarted.");
             break;
             default:
             throw "unknown command";
