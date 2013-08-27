@@ -130,6 +130,10 @@ function consoleInput(e)
             mainStart();
             consoleOut("Simulation restarted.");
             break;
+            case "fade":
+            pathFade=!pathFade;
+            consoleOut("Fade toggled.");
+            break;
             default:
             throw "unknown command";
         }

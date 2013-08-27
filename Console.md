@@ -67,6 +67,9 @@ start
 restart
 - Restarts the simulation as if the page was reloaded. Does not clear console.
 
+fade
+- Toggles path fading.
+
 Not Implemented
 ---------------
 

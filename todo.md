@@ -111,8 +111,6 @@ make SoI system only consider it truly an SoI if influence is above 0.0001 (allo
 Add game timing thing, so can keep track of when things happen.
 find a way to mix colors on collisions, improve the atmosphere height mixing (right now just adds them)
 
-add fade command for toggle
-
 For SoI checking calculation what about this idea?
 
 Every iteration, the time keeping variable will be subtracted by the number of things in the simulation.
