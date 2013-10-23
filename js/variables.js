@@ -52,8 +52,8 @@ var iLastVelocity=0; //used to find SoI
 var jLastVelocity=0;
 
 // RANDOMNESS PARAMETERS
-var randSysMin=5;           //5 to 100 default
-var randSysMax=100;
+var randSysMin=20;           //5 to 100 default
+var randSysMax=80;
 var randType='stabley';   // valid random generation types 'stabley' 'chaos' 'formation'
 var randNames=true;         // True generates names like Uuts, False generates a letter and number for type and ID
 
