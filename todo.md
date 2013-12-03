@@ -126,3 +126,5 @@ objects with atmosphere get tiny fraction of mass more atmosphere from objects w
 objects atmosphere values are treated like mass?? they should be anyhow, and there needs to be some sort of variation with atmospheres besides mass???
 
 http://www.reddit.com/r/KerbalSpaceProgram/comments/1id0u2/curious_about_how_good_the_orbital_physics_are/cbh7qkg?context=3
+
+http://www.quackit.com/javascript/javascript_reserved_words.cfm
