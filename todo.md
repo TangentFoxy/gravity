@@ -87,6 +87,10 @@ Long-Term
 * window.performance.now() - something you can use to run faster than 1000x per second(?), only in Chrome
 * SoI can be taken out of gravity function to make it faster (and should not require global variables?)
 * Brighten the RCS exhaust png, or you know, get a proper asset
+* http://en.wikipedia.org/wiki/Tsiolkovsky_rocket_equation
+* Payload fraction: Weight of payload/weight of vehicle at takeoff
+* Propellant mass fraction: Mass of propellant/mass of vehicle at takeoff
+* Mass ratio: Weight of rocket fully fueled/weight of rocket without fuel
 
 Unorganized temporary
 ---------------------
