@@ -1,0 +1,45 @@
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Gravity</title>
+	<script type="text/javascript" src="engine/constructors.js"></script>
+	<script type="text/javascript" src="engine/physics.js"></script>
+	<script type="text/javascript" src="engine/rendering.js"></script>
+	<script type="text/javascript" src="engine/variables.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="custom/canvas.css" />
+	<script type="text/javascript" src="custom/constructors.js"></script>
+	<script type="text/javascript" src="custom/main.js"></script>
+	<script type="text/javascript" src="custom/rendering.js"></script>
+	<script type="text/javascript" src="custom/variables.js"></script>
+</head>
+<body>
+	<div id="canvases">
+		<canvas id="backend">Update your browser to something that can use the HTML5 canvas element.</canvas>
+		<canvas id="frontend"></canvas><!--<canvas id="UI"></canvas>-->
+	</div>
+	<script>
+	//document.addEventListener('keydown',keyHandler,true);
+	//define key() function in main.js to accept a key code
+
+	frontend=document.getElementById("frontend");
+	frontctx=frontend.getContext('2d');
+	backend=document.getElementById("backend");
+	backctx=backend.getContext('2d');
+	//UIcanvas=document.getElementById("UI");
+	//UI=UIcanvas.getContext('2d');
+
+	//UIcanvas.width=window.innerWidth;
+	//UIcanvas.height=window.innerHeight;
+	frontend.width=window.innerWidth;
+	frontend.height=window.innerHeight;
+	backend.width=window.innerWidth;
+	backend.height=window.innerHeight;
+
+	initialize();
+	physics=setInterval("physicsLoop();",physicsSpeed);
+	render=setInterval("renderLoop();",renderSpeed);
+	//slow=setInterval("slowLoop();",slowSpeed);
+	</script>
+</body>
+</html>
