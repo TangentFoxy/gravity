@@ -1,5 +1,6 @@
 //IO
 var keys=[];	//used in keyHandler()
+//var keys;
 
 //RENDERING
 var windowWidth=window.innerWidth;	//used for updateCanvasSize()
@@ -10,9 +11,11 @@ var canvasY=0;	//current translation on y-axis
 var canvasS=1;	//current scale of canvases
 
 //DEBUG
-var engineVersion=0.02;	//version number of engine
-var debugWidth=0;		//width of text in debug area
-var lastDebugTxt='~';
+var engineVersion=0.03;	//version number of engine
 
 //CONSTANTS
 Math.Tau=Math.PI*2;
+
+//DEPRECIATED
+var debugWidth=0;		//width of text in debug area
+var lastDebugTxt='~';

@@ -1,19 +1,17 @@
 function clearUI() {UI.clearRect(0,0,UI.width,UI.height);}
 function clearFrontend() {frontctx.clearRect(0-canvasX,0-canvasY,frontend.width,frontend.height);}
 function clearBackend() {backctx.clearRect(0-canvasX,0-canvasY,backend.width,backend.height);}
-function clearLastCircle(object,context) {
-	if (context==null) {
-		backctx.beginPath();
-		backctx.arc(object.lastX,object.lastY,object.radius,0,Math.Tau);
-		backctx.fillStyle='#000';
-		backctx.fill();
-	} else {
-		context.beginPath();
-		context.arc(object.lastX,object.lastY,object.radius,0,Math.Tau);
-		context.fillStyle='#000';
-		context.fill();
-	}
-}
+function clearAll() {clearUI();	clearFrontend();	clearBackend();}
+function fadeUI() {
+	UI.fillStyle='rgba('+fadeColor+','+fadeAlpha+')';
+	UI.fillRect(0,0,UI.width,UI.height);}
+function fadeFrontend() {
+	frontctx.fillStyle='rgba('+fadeColor+','+fadeAlpha+')';
+	frontctx.fillRect(0-canvasX,0-canvasY,frontend.width,frontend.height);}
+function fadeBackend() {
+	backctx.fillStyle='rgba('+fadeColor+','+fadeAlpha+')';
+	backctx.fillRect(0-canvasX,0-canvasY,backend.width,backend.height);}
+function fadeAll() {fadeUI();	fadeFrontend();	fadeBackend();}
 
 
 
@@ -62,7 +60,23 @@ function setScale(s) {
 
 
 
+function roundRect(x,y,width,height,radius,context) {
+	if (context==null) context=backctx;
+	if (radius==null) radius=5;
+	context.translate(x,y);
+	context.beginPath();
+	context.moveTo(width/-2+radius,height/-2);
+	context.arcTo(width/-2+width,height/-2,width/-2+width,height/-2+height,radius);
+	context.arcTo(width/-2+width,height/-2+height,width/-2,height/-2+height,radius);
+	context.arcTo(width/-2,height/-2+height,width/-2,height/-2,radius);
+	context.arcTo(width/-2,height/-2,width/-2+width,height/-2,radius);
+	context.closePath();
+	context.translate(-x,-y);}
+
+
+
 function updateCanvasSize() {
+	//Ignores translations and rotations I guess, is annoying as hell
 	if (windowWidth!=window.innerWidth || windowHeight!=window.innerHeight) {
 		var frontImg=frontctx.getImageData(0,0,windowWidth,windowHeight);
 		var backImg=backctx.getImageData(0,0,windowWidth,windowHeight);
@@ -70,11 +84,31 @@ function updateCanvasSize() {
 		frontend.height=window.innerHeight;
 		backend.width=window.innerWidth;
 		backend.height=window.innerHeight;
+		//setTranslation(canvasX,canvasY);
 		frontctx.putImageData(frontImg,(window.innerWidth-windowWidth)/2,(window.innerHeight-windowHeight)/2);
 		backctx.putImageData(backImg,(window.innerWidth-windowWidth)/2,(window.innerHeight-windowHeight)/2);
+		//setTranslation(canvasX,canvasY);
 		UIcanvas.width=window.innerWidth;
 		UIcanvas.height=window.innerHeight;
 		drawUI();
 		windowWidth=window.innerWidth;
 		windowHeight=window.innerHeight;
+	}}
+
+
+
+// DEPRECIATED FUNCTIONS, DO NOT USE
+
+//depreciated, use object.clearLast(context) instead
+function clearLastCircle(object,context) {
+	if (context==null) {
+		backctx.beginPath();
+		backctx.arc(object.lastX,object.lastY,object.radius,0,Math.Tau);
+		backctx.fillStyle='#000';
+		backctx.fill();
+	} else {
+		context.beginPath();
+		context.arc(object.lastX,object.lastY,object.radius,0,Math.Tau);
+		context.fillStyle='#000';
+		context.fill();
 	}}

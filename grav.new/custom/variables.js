@@ -6,7 +6,19 @@ var G=0.1;				//gravitational constant (intentionally way wrong)
 
 
 //RENDERING
+var showNames=true;		//whether or not to display names with bodies
 var renderSpeed=10;		//how many milliseconds between each frame rendering
+var fadeColor='0,0,0';	//what color to use on fadeCanvas functions (r,g,b)
+var fadeAlpha=0.05;		//how much alpha to use on fadeCanvas functions
+function initCanvas() {
+	//width/height
+	UIcanvas.width=window.innerWidth;
+	UIcanvas.height=window.innerHeight;
+	frontend.width=window.innerWidth;
+	frontend.height=window.innerHeight;
+	backend.width=window.innerWidth;
+	backend.height=window.innerHeight;
+}
 var defaultFont='12px sans-serif';
 var defaultLineHeight=12;	//must match font size in defaultFont
 var defaultTextPadding=2;
@@ -26,8 +38,8 @@ var defaultTextPadding=2;
 
 //OTHER
 var version=0;			//version number of program
-//var slowSpeed=1000;		//milliseconds between iterations of slowLoop()
-//document.title='v '+version+' Engine v'+engineVersion;//title displayed at top of window/tab
+var slowSpeed=1000;		//milliseconds between iterations of slowLoop()
+document.title='v '+version+' Engine v'+engineVersion;//title displayed at top of window/tab
 
 
 
@@ -37,6 +49,22 @@ var version=0;			//version number of program
 
 
 //DEBUG
+terminal.clearLast=true;
+terminal.background=null;
+terminal.color='black';
+terminal.font='12px sans-serif';
+terminal.textHeight=12;
+terminal.xOffset=4;
+terminal.yOffset=4;
+terminal.logging=true;
+
+
+
+//DEPRECIATED
+var logging=true;
+var txtLog='~';
+
+var debugClearLast=true;
 var debugBackground=null;
 var debugColor='black';
 var debugFont='12px sans-serif';
