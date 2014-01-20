@@ -4,8 +4,10 @@ function initialize() {
 	bodies[1]=new Body(500,400,0,'red');
 	bodies[1].Vy=-getOrbitalVelocity(bodies[0],400); //remember this will be changed
 	bodies[2]=new Body(10,430,0,'grey');
-	bodies[2].Vy=bodies[1].Vy+getOrbitalVelocity(bodies[1],30); // remember this will be changed
-	//bodies[3]=new Body(1,450,0,'orange'); //temporarily not here, add back in for collisions testing
+	bodies[2].Vy=bodies[1].Vy+(getOrbitalVelocity(bodies[1],30))*0.9; // remember this will be changed
+	bodies[3]=new Body(1000,100,0,'orange');
+	bodies[3].Vy=-getOrbitalVelocity(bodies[0],100)*0.9;
+	bodies[4]=new Body(1,450,0,'#BADA55'); //temporarily not here, add back in for collisions testing
 	//bodies=new randomSystem();
 }
 

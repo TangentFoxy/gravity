@@ -1,13 +1,13 @@
 //PHYSICS
-var physicsSpeed=10;	//how many milliseconds between each physics calculation
-var timeStep=0.2;		//multiplied to physics calculations and updates (low speed,high accuracy OR high speed,low accuracy)
-var G=0.1;				//gravitational constant (intentionally way wrong)
+var physicsSpeed=33;	//how many milliseconds between each physics calculation
+var timeStep=0.4;		//multiplied to physics calculations and updates (low speed,high accuracy OR high speed,low accuracy)
+var G=0.4;				//gravitational constant (intentionally way wrong)
 
 
 
 //RENDERING
 var showNames=true;		//whether or not to display names with bodies
-var renderSpeed=10;		//how many milliseconds between each frame rendering
+var renderSpeed=33;		//how many milliseconds between each frame rendering
 var fadeColor='0,0,0';	//what color to use on fadeCanvas functions (r,g,b)
 var fadeAlpha=0.05;		//how much alpha to use on fadeCanvas functions
 function initCanvas() {
@@ -37,9 +37,9 @@ var defaultTextPadding=2;
 
 
 //OTHER
-var version=0;			//version number of program
+var version='0.1.3';			//version number of program
 var slowSpeed=1000;		//milliseconds between iterations of slowLoop()
-document.title='v '+version+' Engine v'+engineVersion;//title displayed at top of window/tab
+document.title='Gravity v '+version+' Engine v'+engineVersion;//title displayed at top of window/tab
 
 
 
