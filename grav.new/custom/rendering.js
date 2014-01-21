@@ -10,8 +10,8 @@ function renderLoop() {
 	//translate(bodies[renderID].x,bodies[renderID].y);
 	//setTranslation(x,y);
 	var rotation=bodies[renderID].rotation;
-	//fadeBackend();
-	circlesClearFadeThing(rotation);
+	fadeBackend();
+	//circlesClearFadeThing(rotation);
 	for (var i=0;i<bodies.length;i++) redraw(bodies[i],rotation);
 	clearFrontend();
 	for (var i=0;i<bodies.length;i++) drawText(bodies[i],rotation);
@@ -55,7 +55,7 @@ function circlesClearFadeThing(rotation) {
 	for (var i=0;i<bodies.length;i++) {//bodies[i].clearLast('rgba(0,0,0,0.05)');
 		//var focus=getFocus(bodies[i],bodies[renderID],rotation);
 		var x=((bodies[i].lastX-bodies[renderID].lastX)*Math.cos(rotation)-(bodies[i].lastY-bodies[renderID].lastY)*Math.sin(rotation))*scaleFactor+backend.width/2;
-		var y=((bodies[i].lastX-bodies[renderID].lastX)*Math.sin(rotation)-(bodies[i].lastY-bodies[renderID].lastY)*Math.cos(rotation))*scaleFactor+backend.width/2-141;
+		var y=((bodies[i].lastX-bodies[renderID].lastX)*Math.sin(rotation)-(bodies[i].lastY-bodies[renderID].lastY)*Math.cos(rotation))*scaleFactor+backend.width/2/*-141*/;
 		backctx.beginPath();
 		backctx.arc(x,y,bodies[i].radius+0.6,0,Math.Tau);
 		backctx.fillStyle='rgba(0,0,0,0.90)';
