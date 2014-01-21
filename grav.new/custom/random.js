@@ -1,23 +1,28 @@
 var minSolarMass=1e+8;
 var maxSolarMass=1e+14;
-var minBodyMass=
-var maxBodyMass=
-var minAtmosphereHeight=
-var maxAtmosphereHeight=
+var minBodyMass=1e+1;
+var maxBodyMass=1e+4;
+var minAtmosphereHeight=1e+0;
+var maxAtmosphereHeight=1e+1;
 
 function randomSystem(min,max) {
 	//Body(mass,x,y,color,name,atmosphereHeight,atmosphereColor,rotation,rotationSpeed)
 	var count=randomInt(min,max);
 	var system=[];
+	var solarColor=randomInt(0,255).toString(16);
 	system[0]=new Body(randomNum(minSolarMass,maxSolarMass),0,0,
-		'#'+randomInt(0,255).toString(16)+'0000',
+		'#'+solarColor+solarColor+'00',
 		'Sol');
 	for (var i=1;i<count;i++) {
-		system[i]=new Body(randomNum(minBodyMass,maxBodyMass),0,0,
+		system[i]=new Body(randomNum(minBodyMass,maxBodyMass),
+			randomNum(0,window.innerWidth/scaleFactor/2)-window.innerWidth/2,
+			randomNum(0,window.innerHeight/scaleFactor/2)-window.innerHeight/2,
 			randomColor(),
 			false,
 			randomNum(minAtmosphereHeight,maxAtmosphereHeight),
 			randomColor());
+		//system[i].Vy+getOrbitalVelocity(system[0],system[i].getMagnitude());
+		setOrbit(system[0],system[i]);
 	}
 	return system;}
 

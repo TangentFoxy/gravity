@@ -1,4 +1,4 @@
-var scaleFactor=1;
+var scaleFactor=0.0005;
 var minimumRadius=0.8;
 var renderID=0;
 

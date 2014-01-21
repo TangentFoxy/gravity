@@ -1,7 +1,7 @@
 //PHYSICS
 var physicsSpeed=33;	//how many milliseconds between each physics calculation
-var timeStep=0.4;		//multiplied to physics calculations and updates (low speed,high accuracy OR high speed,low accuracy)
-var G=0.4;				//gravitational constant (intentionally way wrong)
+var timeStep=1;		//multiplied to physics calculations and updates (low speed,high accuracy OR high speed,low accuracy)
+var G=4;				//gravitational constant (intentionally way wrong)
 
 
 

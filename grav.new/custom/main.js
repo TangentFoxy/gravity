@@ -1,5 +1,5 @@
 function initialize() {
-	//*bodies=[];
+	/*bodies=[];
 	bodies[0]=new Body(200000,0,0,'yellow');
 	bodies[1]=new Body(500,400,0,'red');
 	bodies[1].Vy=-getOrbitalVelocity(bodies[0],400); //remember this will be changed
@@ -8,7 +8,7 @@ function initialize() {
 	bodies[3]=new Body(1000,100,0,'orange');
 	bodies[3].Vy=-getOrbitalVelocity(bodies[0],100)*0.9;
 	bodies[4]=new Body(1,450,0,'#BADA55'); //temporarily not here, add back in for collisions testing*/
-	//bodies=new randomSystem(5,10);
+	bodies=new randomSystem(5,10);
 }
 
 function physicsLoop() {
