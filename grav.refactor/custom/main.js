@@ -2,7 +2,7 @@ var timing=1; //normally want it at 33 ?
 var focusBody=0;
 
 function initialize() {
-	bodies=new randomSystem(2,20);
+	bodies=new randomSystem(200,200);
 	barycenter=calculateBarycenter(bodies);
 	interval.loop=interval.start('loop();',timing);
 	// old draw around 0,0 used this, and we still use it because we base on 0,0 being centered
@@ -126,6 +126,29 @@ function Circle(radius,x,y,color){
 		context.fillStyle=this.color;
 		context.fill();
 	}
+}
+
+//taken from an edit someone made a long time back
+// the idea is to apply this scale to rendering by default to adapt it to show everything
+// this needs to be adapted/modified and possibly used for a minimap
+function scaleEstimate(){
+	var maxDistance=0;
+	forEach(bodies,function(b){
+		var D=b.x*b.x+b.y*b.y;
+		if (D>maxDistance) maxDistance=D;
+	});
+	return 0.4875 * window.innerHeight / Math.sqrt(maxDistance);
+}
+
+//alternate gravity thing which is weird:
+// this apparently works AND checks for collisions?
+//  and requires a lot less calculation
+//   test this
+function altGravity(a,b){
+	var rx=a.x-b.x;		var ry=a.y-b.y;
+	var R2=rx*rx+ry*ry;	var Rdiv=Math.pow(R2,-1.5);
+	a.Vx-=a.mass*Rdiv*rx;	b.Vx+=b.mass*Rdiv*rx;
+	a.Vy-=a.mass*Rdiv*ry;	b.Vy+=b.mass*Rdiv*ry;
 }
 
 
