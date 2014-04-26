@@ -1,0 +1,65 @@
+* {
+	padding:0px;
+	margin: 0px;
+}
+canvas {
+	background:transparent;
+	position:  absolute;
+	top: 0px;
+	left:0px;
+}
+#canvases {
+	position: relative;
+}
+#canvas0 {
+	background: #000;
+}
+/* THESE ARE FROM GRAV TEST
+div>canvas {
+	background:transparent;
+	position:  absolute;
+	top: 0px;
+	left:0px;
+}
+#canvas0 {
+	background:#000;
+	z-index:0;
+}
+#canvas1 {
+	z-index:1;
+}
+#canvas2 {
+	background:'red';
+	z-index:2;
+}
+#canvas3 {
+	background:#ABC;
+	z-index:3;
+}
+*/
+
+
+
+/* THESE ARE FROM ORIGINAL ENGINE
+body, div, canvas {
+	margin: 0px;
+	padding:0px;
+	background:#FFF;
+	color:#000;}
+#canvases {
+	position:  relative;}
+#UI {
+	background:transparent;
+	position:  absolute;
+	top: 0px;
+	left:0px;}
+#frontend {
+	background:transparent;
+	position:  absolute;
+	top: 0px;
+	left:0px;}
+#backend {
+	position: absolute;
+	top: 0px;
+	left:0px;}
+*/
