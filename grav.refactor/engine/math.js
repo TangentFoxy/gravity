@@ -20,3 +20,8 @@ Math.Tau=Math.PI*2;
 
 Math.toDegrees=function(radians){return radians*180/Math.PI;}
 Math.toRadians=function(degrees){return degrees*Math.PI/180;}
+
+Math.getDistance=function(A,B){
+	var Dx=A.x-B.x;		var Dy=A.y-B.y;
+	return Math.sqrt(Dx*Dx+Dy*Dy);
+}

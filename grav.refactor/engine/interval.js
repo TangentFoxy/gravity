@@ -16,26 +16,75 @@
 	You should have received a copy of the GNU General Public License
 	along with Jenjens.  If not, see <http://www.gnu.org/licenses/>.
 */
-var interval={
-	start:	function(funcStr,timing){
-		return {func:funcStr,time:timing,id:setInterval(funcStr,timing)};
-	},
-	pause:	function(i){
-		clearInterval(interval.i.id);
-	},
-	resume:	function(i){
-		i.id=setInterval(interval.i.func,interval.i.time);
-	},
-	stop:	function(i){
-		clearInterval(interval.i.id);
-		delete interval.i.func;
-		delete interval.i.time;
-		delete interval.i.id;
-		delete interval.i;
+function Interval(funcStr,timing){
+	this.func=funcStr;
+	this.timing=timing;
+	this.id=setInterval(funcStr,timing);
+	this.running=true;
+
+	this.pause=function(){
+		clearInterval(this.id);
+		this.running=false;
 	}
-};
+	this.resume=function(){
+		this.id=setInterval(this.func,this.timing);
+		this.running=true;
+	}
+	this.start=function(){
+		this.id=setInterval(this.func,this.timing);
+		this.running=true;
+	}
+	this.stop=function(){
+		clearInterval(this.id);
+		this.running=false;
+	}
+	this.incSpeed=function(amt){
+		if (amt==undefined) amt=1;
+		this.timing-=amt;	if (this.running) this.restart();
+	}
+	this.decSpeed=function(amt){
+		if (amt==undefined) amt=1;
+		this.timing+=amt;	if (this.running) this.restart();
+	}
+	this.setSpeed=function(spd){
+		this.timing=spd;
+		if (this.running) this.restart();
+	}
+	this.restart=function(){
+		clearInterval(this.id);
+		this.id=setInterval(this.func,this.timing);
+	}
+}
 
 var Timer={
 	set:	function(func,time){return setTimeout(func,time);},
 	cancel:	function(ref){clearTimeout(ref);}
+};
+
+
+
+var interval={ /*THIS OBJECT IS DEPRECATED*/
+	start:		function(funcStr,timing){
+		console.log("Using a deprecated function: interval.start()");
+		return {func:funcStr,time:timing,running:true,id:setInterval(funcStr,timing)};
+	},
+	pause:		function(i){
+		console.log("Using a deprecated function: interval.pause()");
+		clearInterval(interval.i.id);
+		interval.i.running=false;
+	},
+	resume:		function(i){
+		console.log("Using a deprecated function: interval.resume()");
+		interval.i.id=setInterval(interval.i.func,interval.i.time);
+		interval.i.running=true;
+	},
+	stop:		function(i){
+		console.log("Using a deprecated function: interval.stop()");
+		clearInterval(interval.i.id);
+		delete interval.i.func;
+		delete interval.i.time;
+		delete interval.i.running;
+		delete interval.i.id;
+		delete interval.i;
+	}
 };

@@ -16,4 +16,8 @@
 	You should have received a copy of the GNU General Public License
 	along with Jenjens.  If not, see <http://www.gnu.org/licenses/>.
 */
-var engineVersion=0.05;
+var engineVersion=0.06;
+
+debug={
+	defaultColor:'#FFF'
+};	//will be filled in with more later?

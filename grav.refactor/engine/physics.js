@@ -78,6 +78,8 @@ Vector=function(a,b,polar){
 }
 
 physics={
+	G:6.67384e-11,		//these are overwritten in custom
+	timeStep:1,
 	//expects objects with mass,x,y,Vx,Vy
 	// applies each object's gravity to the other
 	applyGravity:	function(a,b){
@@ -100,6 +102,46 @@ physics={
 		if (Nx) Ax=-Ax;	if (Ny) Ay=-Ay;	//fix acceleration direction
 		b.Vx+=Ax*physics.timeStep;		//apply acceleration
 		b.Vy+=Ay*physics.timeStep;
+	},
+	setOrbit:		function(parent,child,retrograde){
+		var Nx=false;	var Ny=false;	//flags for negatives
+		var Dx=parent.x-child.x;		//get distance
+		var Dy=parent.y-child.y;
+		if (Dx<0){Nx=true;Dx=-Dx;}		//fix signs for calculations
+		if (Dy<0){Ny=true;Dy=-Dy;}
+		var distance=Math.sqrt(Dx*Dx+Dy*Dy);
+		var velocity=Math.sqrt(physics.G*parent.mass/distance);
+		var Ax=Dx*velocity/(Dx+Dy);		//split velocity into x/y
+		var Ay=velocity-Ax;
+		if (!retrograde){				//make orbits counterclockwise
+			if (Nx) Ax=-Ax;
+			if (Ny) Ay=-Ay;}
+		child.Vx=-Ay+parent.Vx;			//apply at right angle to balance against gravity
+		child.Vy=Ax+parent.Vy;
+	},
+	calculateBarycenter:function(array){
+		var B={x:0,y:0}; var totalMass=0;//position and temporary totalMass
+		forEach(array,function(a){		//weight x/y against mass
+			B.x+=a.mass*a.x;
+			B.y+=a.mass*a.y;
+			totalMass+=a.mass;
+		});
+		B.x/=totalMass;	B.y/=totalMass;	//fix weighted values to actual values
+		return B;					//Barycenter object with position
+	},
+	calculateBarycenterVector:function(array){
+		var B=new Vector();				//create Vector
+		B.x=0;	B.y=0;	var totalMass=0;//add x/y and temporary totalMass
+		forEach(array,function(a){
+			B.x+=a.mass*a.x;
+			B.y+=a.mass*a.y;
+			B.Vx+=a.mass*a.Vx;
+			B.Vy+=a.mass*a.Vy;
+			totalMass+=a.mass;
+		});
+		B.x/=totalMass;		B.y/=totalMass;	//fix weighted values to actual values
+		B.Vx/=totalMass;	B.Vy/=totalMass;
+		return B;						//Barycenter object with position/velocity
 	},
 
 	updateLocation:	function(o){
@@ -147,23 +189,6 @@ function getOrbitalVelocity(parent,child) {
 	var velocity=G*parent.mass/distance;
 	if (isNaN(velocity)) return 0;
 	return Math.sqrt(Math.abs(velocity));}
-function setOrbit(parent,child,retrograde) {
-	var Nx=false;
-	var Ny=false;
-	var Dx=parent.x-child.x;
-	var Dy=parent.y-child.y;
-	if (Dx<0) {Nx=true;Dx=-Dx;}
-	if (Dy<0) {Ny=true;Dy=-Dy;}
-	var distance=Math.sqrt(Dx*Dx+Dy*Dy);
-	var velocity=getOrbitalVelocity(parent,distance);
-	var Ax=Dx*velocity/(Dx*Dy);
-	var Ay=velocity-Ax;
-	if (!retrograde) {
-		if (Nx) Ax=-Ax;
-		if (Ny) Ay=-Ay;}
-	child.Vx=-Ay+parent.Vx; //velocity on the x axis seems to be working (but somewhat wrong?)
-	child.Vy=Ax+parent.Vy;  /*y axis doesn't work at all anymore/}
-
 function getSemiMajorAxis(parent,child) {
 	var tmp=new Vector(child);
 	tmp.subtractVector(parent);

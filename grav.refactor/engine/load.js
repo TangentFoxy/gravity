@@ -24,7 +24,8 @@ var engine=['engine/color.js',
 			'engine/math.js',
 			'engine/physics.js',
 			'engine/random.js',
-			'engine/render.js'
+			'engine/render.js',
+			'engine/structures.js'
 ];
 
 

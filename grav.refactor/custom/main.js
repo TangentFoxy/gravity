@@ -3,8 +3,8 @@ var focusBody=0;
 
 function initialize() {
 	bodies=new randomSystem(2,20);
-	barycenter=calculateBarycenter(bodies);
-	interval.loop=interval.start('loop();',timing);
+	barycenter=physics.calculateBarycenterVector(bodies);
+	game=new Interval('loop();',timing);
 	// this is supposed to work with barycenters (and it does initially, but breaks quickly)
 	//render[1].setTransform(1,0,0,1,barycenter.x+window.innerWidth/2,barycenter.y+window.innerHeight/2);
 }
@@ -15,7 +15,7 @@ function loop(){
 	// barycenters tend to not stay correct for long,
 	// this may be because of glitchiness with colliding things that don't collide
 	//physics.updateLocation(barycenter);
-	barycenter=calculateBarycenter(bodies);
+	barycenter=physics.calculateBarycenterVector(bodies);
 
 	redrawIdontLike();
 	/* these should work for Barycenter based drawing, but don't
@@ -27,16 +27,6 @@ function loop(){
 	// this line was when using static position
 	//render[1].clearRect(-window.innerWidth/2,-window.innerHeight/2,window.innerWidth,window.innerHeight);
 }
-
-//this should be in Jenjens
-function forEach(array,action){
-	for (var i=0;i<array.length;i++)
-		action(array[i]);}
-//this should be in Jenjens
-function forEachCompare(array,action){
-	for (var i=0;i<array.length-1;i++)
-		for (var j=i+1;j<array.length;j++)
-			action(array[i],array[j]);}
 
 function randomSystem(min,max){
 	//2*radius of star*2.8 should be where habitable zone is?
@@ -50,7 +40,7 @@ function randomSystem(min,max){
 			random.number(-window.innerWidth/2,window.innerWidth/2),
 			random.number(-window.innerHeight/2,window.innerHeight/2));
 		//this is where a setOrbit call would go
-		setOrbit(b[0],b[i]);
+		physics.setOrbit(b[0],b[i]);
 	}
 	return b;
 }
@@ -62,24 +52,6 @@ function Body(mass,x,y,color,rotationSpeed){
 	this.mass=mass;
 	this.rotation=0;
 	!rotationSpeed ? this.rotationSpeed=0 : this.rotationSpeed=rotationSpeed;
-}
-
-//should be rewritten/in Jenjens
-function Circle(radius,x,y,color){
-	!radius ? this.radius=5 : this.radius=radius;
-	!x ? this.x=0 : this.x=x;
-	!y ? this.y=0 : this.y=y;
-	!color ? this.color='#FFF' : this.color=color;
-
-	// the fill() method obsoleted by old style of rendering because setTransform()
-	// doesn't work in a loop
-	this.fill=function(context){
-		if (!context) context=render[1];
-		context.beginPath();
-		context.arc(this.x,this.y,this.radius,0,Math.Tau);
-		context.fillStyle=this.color;
-		context.fill();
-	}
 }
 
 //taken from an edit someone made a long time back

@@ -1,4 +1,5 @@
-var custom=['custom/main.js',
+var custom=['custom/debug.js',
+			'custom/main.js',
 			'custom/physics.js',
 			'custom/render.js'
 			//UNCOMMENT NEXT LINE TO RUN JENJENS TEST
