@@ -1,23 +1,42 @@
 render.c0.width=window.innerWidth;
 render.c0.height=window.innerHeight;
-render.c1.width=window.innerWidth;
-render.c1.height=window.innerHeight;
+	// old draw around 0,0 used this, and we still use it because we base on 0,0 being centered
+	render[0].setTransform(1,0,0,1,window.innerWidth/2,window.innerHeight/2);
+
+resizeMap();
+mapCenterDot();
+//render.c1.style.background="#011";
+
 render.c2.width=window.innerWidth;
 render.c2.height=window.innerHeight;
 
 render.cUI.width=window.innerWidth;
 render.cUI.height=window.innerHeight;
 
+function resizeMap(){
+	var relWidth=window.innerWidth/4;	var relHeight=window.innerHeight/3;
+	if (relWidth>relHeight) relWidth=relHeight;
+	render.c1.width=relWidth;		//*4 for ratio, /4 for a 4th of window
+	render.c1.height=relHeight*3/4;	//*3 for ratio, /4 for a 4th of window
+	render[1].setTransform(1,0,0,1,render.c1.width/2,render.c1.height/2);
+}
+function mapCenterDot(){
+	render[1].beginPath();
+	render[1].arc(0,0,1,0,Math.Tau);
+	render[1].fillStyle='#F00'; //red
+	render[1].fill();
+}
+
 function redrawIdontLike(){
 	// use the old drawing method here,
 	//NOT based on the barycenter because that isn't working wtf
-	render[1].clearRect(-window.innerWidth/2,-window.innerHeight/2,window.innerWidth,window.innerHeight);
+	render[0].clearRect(-window.innerWidth/2,-window.innerHeight/2,window.innerWidth,window.innerHeight);
 	forEach(bodies,function(b){
-		render[1].beginPath();
+		render[0].beginPath();
 		//render[1].arc(b.x-barycenter.x,b.y-barycenter.y,b.radius,0,Math.Tau);
-		render[1].arc(b.x-bodies[focusBody].x,b.y-bodies[focusBody].y,b.radius,0,Math.Tau);
-		render[1].fillStyle=b.color;
-		render[1].fill();
+		render[0].arc(b.x-bodies[focusBody].x,b.y-bodies[focusBody].y,b.radius,0,Math.Tau);
+		render[0].fillStyle=b.color;
+		render[0].fill();
 	});
 }
 

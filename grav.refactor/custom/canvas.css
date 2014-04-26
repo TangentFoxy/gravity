@@ -2,6 +2,9 @@
 	padding:0px;
 	margin: 0px;
 }
+body {
+	background: Black;
+}
 canvas {
 	background:transparent;
 	position:  absolute;
@@ -12,7 +15,11 @@ canvas {
 	position: relative;
 }
 #canvas0 {
-	background: #000;
+	/*background: #000;/**/
+}
+#canvas1 {
+	/*map bottom left*/
+	background: #011;/*dark BlueGreen*/
 }
 /* THESE ARE FROM GRAV TEST
 div>canvas {

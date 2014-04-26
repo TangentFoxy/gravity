@@ -5,8 +5,6 @@ function initialize() {
 	bodies=new randomSystem(2,20);
 	barycenter=calculateBarycenter(bodies);
 	interval.loop=interval.start('loop();',timing);
-	// old draw around 0,0 used this, and we still use it because we base on 0,0 being centered
-	render[1].setTransform(1,0,0,1,window.innerWidth/2,window.innerHeight/2);
 	// this is supposed to work with barycenters (and it does initially, but breaks quickly)
 	//render[1].setTransform(1,0,0,1,barycenter.x+window.innerWidth/2,barycenter.y+window.innerHeight/2);
 }
