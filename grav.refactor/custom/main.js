@@ -54,6 +54,9 @@ function forEachCompare(array,action){
 			action(array[i],array[j]);}
 
 function randomSystem(min,max){
+	//2*radius of star*2.8 should be where habitable zone is?
+	//maybe even closer, like 2*radius*2.5 TO 2*radius*3.2 ???
+	// 2*radius*2.4 TO 2*radius*4.2 seems best!?
 	var total=random.integer(min,max);
 	var b=[];
 	b[0]=new Body(random.number(10000,50000),0,0);
