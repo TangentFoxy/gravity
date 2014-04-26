@@ -2,7 +2,7 @@ var timing=1; //normally want it at 33 ?
 var focusBody=0;
 
 function initialize() {
-	bodies=new randomSystem(200,200);
+	bodies=new randomSystem(2,20);
 	barycenter=calculateBarycenter(bodies);
 	interval.loop=interval.start('loop();',timing);
 	// old draw around 0,0 used this, and we still use it because we base on 0,0 being centered
@@ -30,19 +30,6 @@ function loop(){
 	//render[1].clearRect(-window.innerWidth/2,-window.innerHeight/2,window.innerWidth,window.innerHeight);
 }
 
-function redrawIdontLike(){
-	// use the old drawing method here,
-	//NOT based on the barycenter because that isn't working wtf
-	render[1].clearRect(-window.innerWidth/2,-window.innerHeight/2,window.innerWidth,window.innerHeight);
-	forEach(bodies,function(b){
-		render[1].beginPath();
-		//render[1].arc(b.x-barycenter.x,b.y-barycenter.y,b.radius,0,Math.Tau);
-		render[1].arc(b.x-bodies[focusBody].x,b.y-bodies[focusBody].y,b.radius,0,Math.Tau);
-		render[1].fillStyle=b.color;
-		render[1].fill();
-	});
-}
-
 //this should be in Jenjens
 function forEach(array,action){
 	for (var i=0;i<array.length;i++)
@@ -68,40 +55,6 @@ function randomSystem(min,max){
 		setOrbit(b[0],b[i]);
 	}
 	return b;
-}
-
-//this should be in Jenjens
-function setOrbit(parent,child,retrograde){
-	var Nx=false;	var Ny=false;	// flags for negatives
-	var Dx=parent.x-child.x;		// get distance
-	var Dy=parent.y-child.y;
-	if (Dx<0){Nx=true;Dx=-Dx;}		// fix signs for calculation
-	if (Dy<0){Ny=true;Dy=-Dy;}
-	var distance=Math.sqrt(Dx*Dx+Dy*Dy);
-	var velocity=Math.sqrt(physics.G*parent.mass/distance);
-	var Ax=Dx*velocity/(Dx+Dy);		// split velocity into x/y axis
-	var Ay=velocity-Ax;
-	if (!retrograde){				// make orbits counterclockwise
-		if (Nx) Ax=-Ax;
-		if (Ny) Ay=-Ay;}
-	child.Vx=-Ay+parent.Vx;			// apply at angles to balance gravitational pull
-	child.Vy=Ax+parent.Vy;
-}
-
-//this should be in Jenjens
-function calculateBarycenter(array){
-	var B=new Vector();					//create Vector
-	B.x=0;	B.y=0;	var totalMass=0;	//add x/y and temporary totalMass
-	forEach(array,function(a){			//weight x/y and Vx/Vy against mass
-		B.x+=a.mass*a.x;
-		B.y+=a.mass*a.y;
-		B.Vx+=a.mass*a.Vx;
-		B.Vy+=a.mass*a.Vy;
-		totalMass+=a.mass;
-	});
-	B.x/=totalMass;		B.y/=totalMass;	//fix weighted values to actual values
-	B.Vx/=totalMass;	B.Vy/=totalMass;
-	return B;							//Barycenter object containing a position and velocity
 }
 
 function Body(mass,x,y,color,rotationSpeed){
@@ -141,17 +94,6 @@ function scaleEstimate(){
 		if (D>maxDistance) maxDistance=D;
 	});
 	return 0.4875 * window.innerHeight / Math.sqrt(maxDistance);
-}
-
-//alternate gravity thing which is weird:
-// this apparently works AND checks for collisions?
-//  and requires a lot less calculation
-//   test this
-function altGravity(a,b){
-	var rx=a.x-b.x;		var ry=a.y-b.y;
-	var R2=rx*rx+ry*ry;	var Rdiv=Math.pow(R2,-1.5);
-	a.Vx-=a.mass*Rdiv*rx;	b.Vx+=b.mass*Rdiv*rx;
-	a.Vy-=a.mass*Rdiv*ry;	b.Vy+=b.mass*Rdiv*ry;
 }
 
 

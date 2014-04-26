@@ -8,6 +8,19 @@ render.c2.height=window.innerHeight;
 render.cUI.width=window.innerWidth;
 render.cUI.height=window.innerHeight;
 
+function redrawIdontLike(){
+	// use the old drawing method here,
+	//NOT based on the barycenter because that isn't working wtf
+	render[1].clearRect(-window.innerWidth/2,-window.innerHeight/2,window.innerWidth,window.innerHeight);
+	forEach(bodies,function(b){
+		render[1].beginPath();
+		//render[1].arc(b.x-barycenter.x,b.y-barycenter.y,b.radius,0,Math.Tau);
+		render[1].arc(b.x-bodies[focusBody].x,b.y-bodies[focusBody].y,b.radius,0,Math.Tau);
+		render[1].fillStyle=b.color;
+		render[1].fill();
+	});
+}
+
 /*
 //RENDERING
 var renderSpeed=33;		//how many milliseconds between each frame rendering
