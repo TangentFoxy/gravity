@@ -2,7 +2,7 @@ var timing=1; //normally want it at 33 ?
 var focusBody=0;
 
 function initialize() {
-	bodies=new randomSystem(2,20);
+	bodies=new randomSystem(2,2);
 	barycenter=physics.calculateBarycenterVector(bodies);
 	game=new Interval('loop();',timing);
 	// this is supposed to work with barycenters (and it does initially, but breaks quickly)
@@ -42,6 +42,7 @@ function randomSystem(min,max){
 		//this is where a setOrbit call would go
 		physics.setOrbit(b[0],b[i]);
 	}
+	console.log("Generated "+b.length+" bodies.");
 	return b;
 }
 
@@ -54,22 +55,10 @@ function Body(mass,x,y,color,rotationSpeed){
 	!rotationSpeed ? this.rotationSpeed=0 : this.rotationSpeed=rotationSpeed;
 }
 
-//taken from an edit someone made a long time back
-// the idea is to apply this scale to rendering by default to adapt it to show everything
-// this needs to be adapted/modified and possibly used for a minimap
-function scaleEstimate(){
-	var maxDistance=0;
-	forEach(bodies,function(b){
-		var D=b.x*b.x+b.y*b.y;
-		if (D>maxDistance) maxDistance=D;
-	});
-	return 0.4875 * window.innerHeight / Math.sqrt(maxDistance);
-}
 
 
-
-var version=0;	//version number of your program
-document.title='v'+version+' Jenjens v'+engineVersion;
+var version="0.1.2r";	//version number of your program
+document.title='Gravity v'+version+' Jenjens v'+engineVersion;
 /*
 terminal.clearLast=true;
 terminal.background=null;
