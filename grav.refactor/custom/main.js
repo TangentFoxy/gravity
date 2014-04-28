@@ -2,7 +2,7 @@ var timing=1; //normally want it at 33 ?
 var focusBody=0;
 
 function initialize() {
-	bodies=new randomSystem(2,2);
+	bodies=new randomSystem(2,20);
 	barycenter=physics.calculateBarycenterVector(bodies);
 	game=new Interval('loop();',timing);
 	// this is supposed to work with barycenters (and it does initially, but breaks quickly)

@@ -63,21 +63,22 @@ function redrawIdontLike(){
 // the idea is to apply this scale to rendering by default to adapt it to show everything
 // this needs to be adapted/modified and possibly used for a minimap
 function estimateScale(){
-	/*var maxDistance=0;
+	var maxDistance=0;
 	forEach(bodies,function(b){
 		var D=b.x*b.x+b.y*b.y;
 		if (D>maxDistance) maxDistance=D;
 	});
-	//return  0.4875 *  window.innerHeight / Math.sqrt(maxDistance);
-	return 0.4 * render.c1.width/Math.sqrt(maxDistance);*/
-	var maxDistance=0;
+	return  0.4875 *  window.innerHeight / Math.sqrt(maxDistance);
+	//return 0.4 * render.c1.width/Math.sqrt(maxDistance);/**/
+
+	/*var maxDistance=0;
 	forEach(bodies,function(b){
 		var d=Math.getDistance(bodies[0],b);
 		if (d>maxDistance) maxDistance=d;
 	});
 	result=render.c1.width/Math.sqrt(maxDistance);
 	console.log(result);
-	return 1/result*3;
+	return 1/result*3;*/
 }
 
 /*
