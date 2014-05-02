@@ -9,8 +9,13 @@ function initialize() {
 function loop(){
 	forEachCompare(bodies,function(a,b){
 		physics.applyGravity(a,b);
-		//do orbital stuff
+		getParentAndInfluencer(a,b);
 	});
+
+	forEach(bodies,function(b){
+		//call the func
+	});
+
 	forEach(bodies,function(b){physics.updateLocation(b);});
 
 	redrawIdontLike();
@@ -39,10 +44,15 @@ function Body(radius,x,y,color,rotationSpeed){
 	this.rotation=0;
 	!rotationSpeed ? this.rotationSpeed=0 : this.rotationSpeed=rotationSpeed;
 
-	this.parent=-1;
+	this.parent=0;
 	this.parentForce=0;
-	this.influencer=-1;
+	this.influencer=0;
 	this.influencerForce=0;
+	this.semiMajorAxis=0; //null
+	this.getSemiMajorAxis=function(){
+		//getSemiMajorAxis(parent,child)
+		this.semiMajorAxis=getSemiMajorAxis(bodies[this.parent],this);
+	}
 }
 
 
