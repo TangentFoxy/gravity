@@ -10,7 +10,10 @@ function initialize() {
 }
 
 function loop(){
-	forEachCompare(bodies,function(a,b){physics.applyGravity(a,b);});
+	forEachCompare(bodies,function(a,b){
+		physics.applyGravity(a,b);
+		//
+	});
 	forEach(bodies,function(b){physics.updateLocation(b);});
 	// barycenters tend to not stay correct for long,
 	// this may be because of glitchiness with colliding things that don't collide
@@ -34,9 +37,9 @@ function randomSystem(min,max){
 	// 2*radius*2.4 TO 2*radius*4.2 seems best!?
 	var total=random.integer(min,max);
 	var b=[];
-	b[0]=new Body(random.number(10000,50000),0,0);
+	b[0]=new Body(random.number(50,100),0,0);
 	for (var i=1;i<total;i++){
-		b[i]=new Body(random.number(100,500),
+		b[i]=new Body(random.number(5,10),
 			random.number(-window.innerWidth/2,window.innerWidth/2),
 			random.number(-window.innerHeight/2,window.innerHeight/2));
 		//this is where a setOrbit call would go
@@ -46,13 +49,18 @@ function randomSystem(min,max){
 	return b;
 }
 
-function Body(mass,x,y,color,rotationSpeed){
+function Body(radius,x,y,color,rotationSpeed){
 	Vector.call(this);
-	Circle.call(this,Math.pow(mass,1/3),x,y,color);
+	Circle.call(this,radius,x,y,color);
 
-	this.mass=mass;
+	this.mass=Math.pow(radius,2.7);
 	this.rotation=0;
 	!rotationSpeed ? this.rotationSpeed=0 : this.rotationSpeed=rotationSpeed;
+
+	this.parent=-1;
+	this.parentForce=0;
+	this.influencer=-1;
+	this.influencerForce=0;
 }
 
 

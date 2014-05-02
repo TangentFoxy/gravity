@@ -25,9 +25,19 @@ function mapCenterDot(){
 	render[1].arc(0,0,1,0,Math.Tau);
 	render[1].fillStyle='#F00'; //red
 	render[1].fill();
+
+	/*render[1].beginPath();
+	render[1].moveTo(0,render.c1.height/2);
+	render[1].lineTo(render.c1.width,render.c1.height/2);
+	render[1].moveTo(render.c1.width/2,0);
+	render[1].lineTo(render.c1.width/2,render.c1.height);
+	render[1].fillStyle='#F00'; //red
+	render[1].fill();*/
 }
 
 function redrawIdontLike(){
+	//render[0].setTransform(1,0,0,1,render.c1.width/2,render.c1.height/2);
+
 	// use the old drawing method here,
 	//NOT based on the barycenter because that isn't working wtf
 	render[0].clearRect(-window.innerWidth/2,-window.innerHeight/2,window.innerWidth,window.innerHeight);
@@ -41,9 +51,10 @@ function redrawIdontLike(){
 
 	//MAP
 
-	render[1].clearRect(-render.c1.width/2,-render.c1.height/2,render.c1.width,render.c1.height);
+	//render[1].clearRect(-render.c1.width/2,-render.c1.height/2,render.c1.width,render.c1.height);
+	render[1].clearRect(0,0,render.c1.width,render.c1.height);
 	var scale=estimateScale();
-	render[1].setTransform(scale,0,0,scale);
+	render[1].setTransform(scale,0,0,scale,render.c1.width/2,render.c1.height/2);
 
 	forEach(bodies,function(b){
 		render[1].beginPath();
@@ -55,7 +66,7 @@ function redrawIdontLike(){
 		render[1].fill();
 	});
 
-	render[1].setTransform(1,0,0,1); //this is required for center dot
+	render[1].setTransform(1,0,0,1,0,0); //this is required for center dot
 	mapCenterDot();
 }
 
