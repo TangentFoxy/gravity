@@ -21,6 +21,8 @@ function resizeMap(){
 	render[1].setTransform(1,0,0,1,render.c1.width/2,render.c1.height/2);
 }
 function mapCenterDot(){
+	render[1].setTransform(1,0,0,1,render.c1.width/2,render.c1.height/2); //this is required for center dot
+
 	render[1].beginPath();
 	render[1].arc(0,0,1,0,Math.Tau);
 	render[1].fillStyle='#F00'; //red
@@ -33,6 +35,15 @@ function mapCenterDot(){
 	render[1].lineTo(render.c1.width/2,render.c1.height);
 	render[1].fillStyle='#F00'; //red
 	render[1].fill();*/
+
+	render[1].beginPath();
+	render[1].moveTo(-render.c1.width/2,0); //left center
+	render[1].lineTo(render.c1.width/2,0); //right center
+	render[1].moveTo(0,-render.c1.height/2); //top center
+	render[1].lineTo(0,render.c1.height/2); //bottom center
+	render[1].strokeStyle='#400'; //red
+	render[1].lineWidth=0.4;
+	render[1].stroke();
 }
 
 function redrawIdontLike(){
@@ -66,7 +77,6 @@ function redrawIdontLike(){
 		render[1].fill();
 	});
 
-	render[1].setTransform(1,0,0,1,0,0); //this is required for center dot
 	mapCenterDot();
 }
 
