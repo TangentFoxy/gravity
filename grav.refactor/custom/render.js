@@ -1,3 +1,5 @@
+var focusBody=0;
+
 render.c0.width=window.innerWidth;
 render.c0.height=window.innerHeight;
 	// old draw around 0,0 used this, and we still use it because we base on 0,0 being centered

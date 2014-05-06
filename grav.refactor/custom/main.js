@@ -1,7 +1,9 @@
 var timing=1; //normally want it at 33 ?
-var focusBody=0;
 
 function initialize() {
+	//console.log(render.c1.offsetTop);
+	//render.c1.offsetTop=window.innerWidth-render.c1.height;
+	render.c1.style.top=window.innerHeight-render.c1.height;
 	bodies=new randomSystem(2,20);
 	game=new Interval('loop();',timing);
 }
@@ -10,6 +12,7 @@ function loop(){
 	forEachCompare(bodies,function(a,b){
 		physics.applyGravity(a,b);
 		//do orbital stuff
+		if (radialCollisionCheck(a,b)) combine(a,b);
 	});
 	forEach(bodies,function(b){physics.updateLocation(b);});
 
