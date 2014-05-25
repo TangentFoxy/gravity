@@ -1,0 +1,35 @@
+Documentation
+=============
+
+main.js
+-------
+
+`initialize()` - Where program starts.
+
+`loop()` - Main game/physics loop.
+
+`randomSystem(min,max)` - Returns randomly generated system between min/max
+number of Bodies.
+
+`Body()` - Constructs Body object (star/planet/asteroid).
+
+physics.js
+----------
+
+`getSemiMajorAxis(parent,child)` - Returns the semimajor axis of an orbit.
+
+`getParentAndInfluencer(a,b)` - Checks and sets parent/influencer (next highest
+influence besides parent) of Bodies.
+
+render.js
+---------
+
+`resizeMap()` - Sizes and places minimap as needed. Run once at beginning.
+
+`mapCenterDot()` - Draws lines/dot on minimap.
+
+`redrawIdontLike()` - A redraw method I really hate because it should be simple
+to use the canvas to do half of this and it just doesn't work that way.
+
+`estimateScale()` - Estimates the proper scale to use on the minimap. Is broken
+and shitty.
