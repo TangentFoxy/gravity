@@ -1,28 +1,27 @@
-var timing=1; //normally want it at 33 ?
+var timing=1; //how many milliseconds between loops (normally 33?)
 
 function initialize() {
-	//console.log(render.c1.offsetTop);
-	//render.c1.offsetTop=window.innerWidth-render.c1.height;
+	//position minimap
 	render.c1.style.top=window.innerHeight-render.c1.height;
-	bodies=new randomSystem(2,20);
+	//create system
+	bodies=new randomSystem(20,20);
+	//start game loop
 	game=new Interval('loop();',timing);
 }
 
 function loop(){
+	//apply gravity and calculate parent/influencers
 	forEachCompare(bodies,function(a,b){
 		physics.applyGravity(a,b);
 		getParentAndInfluencer(a,b);
 	});
+	//check for Body collisions and combine them as needed
 	forEachCompare(bodies,function(a,b){
 		if (radialCollisionCheck(a,b)) combine(a,b);
 	});
-
-	forEach(bodies,function(b){
-		//call the func
-	});
-
+	//update locations of Bodies
 	forEach(bodies,function(b){physics.updateLocation(b);});
-
+	//redraw
 	redrawIdontLike();
 }
 

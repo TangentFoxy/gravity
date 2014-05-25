@@ -11,10 +11,15 @@ main.js
 `randomSystem(min,max)` - Returns randomly generated system between min/max
 number of Bodies.
 
-`Body()` - Constructs Body object (star/planet/asteroid).
+`Body(radius,x,y,color,rotationSpeed)` - Constructs Body object
+(star/planet/asteroid).
 
 physics.js
 ----------
+
+`radialCollisionCheck(a,b)` - Returns true if collides, false if doesn't.
+
+`combine(a,b)` - Combines Bodies.
 
 `getSemiMajorAxis(parent,child)` - Returns the semimajor axis of an orbit.
 
