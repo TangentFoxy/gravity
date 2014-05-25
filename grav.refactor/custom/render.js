@@ -62,8 +62,8 @@ function redrawIdontLike(){
 
 	//MAP
 
-	//render[1].clearRect(-render.c1.width/2,-render.c1.height/2,render.c1.width,render.c1.height);
-	render[1].clearRect(0,0,render.c1.width,render.c1.height);
+	render[1].clearRect(-render.c1.width/2,-render.c1.height/2,render.c1.width,render.c1.height);
+	//render[1].clearRect(0,0,render.c1.width,render.c1.height);
 	var scale=estimateScale();
 	render[1].setTransform(scale,0,0,scale,render.c1.width/2,render.c1.height/2);
 
