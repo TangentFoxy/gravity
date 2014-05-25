@@ -2,14 +2,6 @@ physics.G=1/5;			//Gravitational Constant (incorrect by default)
 physics.timeStep=0.5;	//timeStep is multiplied by physics calculations
 						// to adjust speed vs accuracy of simulation
 
-function altGravity(a,b){
-	//wtf is this
-	var rx=a.x-b.x;		var ry=a.y-b.y;
-	var R2=rx*rx+ry*ry;	var Rdiv=Math.pow(R2,-1.5);
-	a.Vx-=a.mass*Rdiv*rx*physics.timeStep;	b.Vx+=b.mass*Rdiv*rx*physics.timeStep;
-	a.Vy-=a.mass*Rdiv*ry*physics.timeStep;	b.Vy+=b.mass*Rdiv*ry*physics.timeStep;
-}
-
 function getSemiMajorAxis(parent,child){
 	var tmp=new Vector(child);
 	tmp.subtract(parent);
