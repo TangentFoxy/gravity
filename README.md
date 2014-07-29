@@ -1,3 +1,9 @@
+This project has sort of moved!
+-------------------------------
+
+Check out [datGravity](http://github.com/Guard13007/datGravity) because that is the successor to this
+project. I am ceased trying to fix this up and started over for the forth time in a new repository.
+
 Quick-Start Stuff!
 ==================
 
